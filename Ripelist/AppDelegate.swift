@@ -18,16 +18,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
     
+    lazy var returningUser: AnyObject? = {
+        return NSUserDefaults.standardUserDefaults().objectForKey("hasLaunchedOnce")
+    }()
+    
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         // White status bar
         application.setStatusBarStyle(.LightContent, animated: false)
-        // Show welcome screen on first app launch
-        switch NSUserDefaults.standardUserDefaults().objectForKey("hasLaunchedOnce") {
-        case nil:
-            self.setRootViewController(toViewController: "NoticeVC")
-        default:
-            self.setRootViewController(toViewController: "HomeVC")
-        }
+        
+        setRootVC(returningUser)
+        
+        
         // Parse, Facebook, Flurry, Apptentive integration
         self.integrateThirdPartyServices(withLaunchOptions: launchOptions)
         
@@ -53,6 +54,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         // Return from the Facebook SDK
         return FBSDKApplicationDelegate.sharedInstance().application(application, didFinishLaunchingWithOptions: launchOptions)
+    }
+    
+    private func setRootVC(returningUser: AnyObject?) {
+        
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+
+        switch returningUser {
+        case nil:
+            window?.rootViewController = storyboard.instantiateViewControllerWithIdentifier("NoticeVC") as? NoticeViewController
+        default:
+            window?.rootViewController = storyboard.instantiateViewControllerWithIdentifier("HomeVC") as? HomeViewController
+        }
     }
     
     // Facebook Authorization
@@ -138,18 +151,5 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         Flurry.logEvent("Start Session")
         // Apptentive integration
         Apptentive.sharedConnection().APIKey = Service.Apptentive.apiKey
-    }
-    
-    func setRootViewController(toViewController viewController: String) {
-        let storyboard = UIStoryboard(name: "Main", bundle: nil)
-        
-        switch viewController {
-        case "NoticeView":
-            let noticeVC = storyboard.instantiateViewControllerWithIdentifier("NoticeView") as! NoticeViewController
-            self.window?.rootViewController = noticeVC
-        default:
-            let homeVC = storyboard.instantiateViewControllerWithIdentifier("HomeVC") as! HomeViewController
-            self.window?.rootViewController = homeVC
-        }
     }
 }
