@@ -40,6 +40,7 @@
 		973527911AA909AB009D588E /* CreateListingCViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 973527901AA909AB009D588E /* CreateListingCViewController.swift */; };
 		973666221D74F26300D28B8B /* Config.plist in Resources */ = {isa = PBXBuildFile; fileRef = 973666211D74F26300D28B8B /* Config.plist */; };
 		973666261D74F2A400D28B8B /* Config.swift in Sources */ = {isa = PBXBuildFile; fileRef = 973666251D74F2A400D28B8B /* Config.swift */; };
+		973666281D74F72C00D28B8B /* Selector+Convenience.swift in Sources */ = {isa = PBXBuildFile; fileRef = 973666271D74F72C00D28B8B /* Selector+Convenience.swift */; };
 		97442C8F1ACC614E000FE0FC /* YourListingDetailsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97442C8E1ACC614E000FE0FC /* YourListingDetailsVC.swift */; };
 		97485AC01AF885D1004A4AB7 /* Categories.plist in Resources */ = {isa = PBXBuildFile; fileRef = 97485ABF1AF885D1004A4AB7 /* Categories.plist */; };
 		9750DF601AB0F72A007AEDD6 /* TextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9750DF5F1AB0F72A007AEDD6 /* TextField.swift */; };
@@ -190,6 +191,7 @@
 		973527901AA909AB009D588E /* CreateListingCViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = CreateListingCViewController.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		973666211D74F26300D28B8B /* Config.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Config.plist; sourceTree = "<group>"; };
 		973666251D74F2A400D28B8B /* Config.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Config.swift; sourceTree = "<group>"; };
+		973666271D74F72C00D28B8B /* Selector+Convenience.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Selector+Convenience.swift"; sourceTree = "<group>"; };
 		97442C8E1ACC614E000FE0FC /* YourListingDetailsVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = YourListingDetailsVC.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		97485ABF1AF885D1004A4AB7 /* Categories.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Categories.plist; sourceTree = "<group>"; };
 		9750DF5F1AB0F72A007AEDD6 /* TextField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TextField.swift; sourceTree = "<group>"; };
@@ -676,6 +678,7 @@
 				977C06B31ADA24AC00FD7B2A /* Main.storyboard */,
 				97CF710C1A9E4AD400826BF0 /* NoticeViewController.swift */,
 				979756EE1CD9336C00A782DB /* NavigationVC.swift */,
+				973666271D74F72C00D28B8B /* Selector+Convenience.swift */,
 				970824E61AF2DF8800186004 /* Login */,
 				97CD1D0D1AA5637700259D98 /* Listings Tab */,
 				97F62FEB1AA7CB15007A5E4F /* Posts Tab */,
@@ -1081,6 +1084,7 @@
 				975AA6471B333315000F610A /* EditRequestViewController.swift in Sources */,
 				97C45A2B1B2222E300427E51 /* EditListingDescriptionVC.swift in Sources */,
 				971CC8A31BB1FBFB00E08CCD /* DTIActivityIndicatorView.swift in Sources */,
+				973666281D74F72C00D28B8B /* Selector+Convenience.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

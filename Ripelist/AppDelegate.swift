@@ -153,7 +153,3 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
     }
 }
- 
-private extension Selector {
-    static let didReceiveRemoteNotification = #selector(UIApplicationDelegate.application(_:didReceiveRemoteNotification:fetchCompletionHandler:))
-}
