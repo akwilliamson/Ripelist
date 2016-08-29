@@ -27,10 +27,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         application.setStatusBarStyle(.LightContent, animated: false)
         
         setRootVC(returningUser)
-        
-        
-        // Parse, Facebook, Flurry, Apptentive integration
-        self.integrateThirdPartyServices(withLaunchOptions: launchOptions)
+        integrateSDKs(launchOptions)
         
         if application.applicationState != .Background {
             
@@ -135,20 +132,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         FBSDKAppEvents.activateApp()
     }
     
-    func integrateThirdPartyServices(withLaunchOptions launchOptions: [NSObject : AnyObject]?) -> Void {
-        
-        let configuration = ParseClientConfiguration {
+    private func integrateSDKs(launchOptions: [NSObject : AnyObject]?) -> Void {
+        // Parse configuration
+        let config = ParseClientConfiguration {
             $0.applicationId = Service.Parse.appId
             $0.clientKey = Service.Parse.clientKey
             $0.server = Service.Parse.url
         }
-        
-        Parse.initializeWithConfiguration(configuration)
+        Parse.initializeWithConfiguration(config)
         // Facebook login integration
         PFFacebookUtils.initializeFacebookWithApplicationLaunchOptions(launchOptions)
         // Flurry analytics integration
         Flurry.startSession(Service.Flurry.apiKey)
-        Flurry.logEvent("Start Session")
         // Apptentive integration
         Apptentive.sharedConnection().APIKey = Service.Apptentive.apiKey
     }
