@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>RequestSwapType</key>
+	<array>
+		<string>For Cash</string>
+		<string>Cash/Trade</string>
+		<string>For Trade</string>
+		<string>Trade/Free</string>
+		<string>For Free</string>
+	</array>
+	<key>ListingSwapType</key>
+	<array>
+		<string>For Sale</string>
+		<string>For Trade</string>
+		<string>Sale/Trade</string>
+		<string>For Free</string>
+	</array>
+	<key>CategoryType</key>
+	<array>
+		<string>Dirt</string>
+		<string>Animal</string>
+		<string>Kitchen</string>
+		<string>Event</string>
+		<string>Yard</string>
+	</array>
+	<key>AmountType</key>
+	<array>
+		<string>N/A</string>
+		<string>Each</string>
+		<string>All</string>
+		<string>Box</string>
+		<string>Bag</string>
+		<string>Bundle</string>
+		<string>Pound</string>
+		<string>Ounce</string>
+		<string>Quart</string>
+		<string>Gallon</string>
+		<string>Jar</string>
+		<string>Bottle</string>
+		<string>Can</string>
+		<string>Dozen</string>
+		<string>1/2 Dozen</string>
+		<string>Handful</string>
+	</array>
+</dict>
+</plist>

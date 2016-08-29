@@ -1,0 +1,63 @@
+PODS:
+  - ActionSheetPicker-3.0 (2.2.0)
+  - apptentive-ios (3.2.1)
+  - Bolts (1.8.4):
+    - Bolts/AppLinks (= 1.8.4)
+    - Bolts/Tasks (= 1.8.4)
+  - Bolts/AppLinks (1.8.4):
+    - Bolts/Tasks
+  - Bolts/Tasks (1.8.4)
+  - FBSDKCoreKit (4.14.0):
+    - Bolts (~> 1.7)
+  - FBSDKLoginKit (4.14.0):
+    - FBSDKCoreKit
+  - Flurry-iOS-SDK/FlurrySDK (7.6.6)
+  - JSQMessagesViewController (7.3.4):
+    - JSQSystemSoundPlayer (~> 2.0.1)
+  - JSQSystemSoundPlayer (2.0.1)
+  - LKAlertController (1.9.1)
+  - MBProgressHUD (1.0.0)
+  - Parse (1.14.2):
+    - Bolts/Tasks (~> 1.8)
+  - ParseFacebookUtilsV4 (1.11.1):
+    - Bolts/Tasks (>= 1.6)
+    - FBSDKCoreKit (~> 4.10)
+    - FBSDKLoginKit (~> 4.10)
+    - FBSDKTVOSKit (~> 4.10)
+    - Parse (~> 1.12)
+  - ParseUI (1.2.0):
+    - Bolts/Tasks (~> 1.3)
+    - Parse (~> 1.9)
+  - TOCropViewController (2.0.7)
+
+DEPENDENCIES:
+  - ActionSheetPicker-3.0
+  - apptentive-ios
+  - Flurry-iOS-SDK/FlurrySDK
+  - JSQMessagesViewController
+  - LKAlertController
+  - MBProgressHUD
+  - Parse
+  - ParseFacebookUtilsV4
+  - ParseUI
+  - TOCropViewController
+
+SPEC CHECKSUMS:
+  ActionSheetPicker-3.0: d11a4c12c6aaf704b8a3f56d179198c99f3e41e6
+  apptentive-ios: bb0b126f7d2a3bc87fac843da3a71df7f50d433e
+  Bolts: 8a7995239dbe724f9cba2248b766d48b7ebdd322
+  FBSDKCoreKit: 6e020b5db0b5bd1e01f5fb0902131befd129a502
+  FBSDKLoginKit: da563567a108050ef83739c8c8c001ee9e25fa13
+  Flurry-iOS-SDK: 97bbeec09cca666c2f1772f6e161c4f8ccff611e
+  JSQMessagesViewController: 39fed975e3c9f8eba7292071e29eeb541d105e66
+  JSQSystemSoundPlayer: c5850e77a4363ffd374cd851154b9af93264ed8d
+  LKAlertController: 1e85a645e0bd3223a8f79abb9b7b54fe10036f6f
+  MBProgressHUD: 4890f671c94e8a0f3cf959aa731e9de2f036d71a
+  Parse: 4335d65f40cb3d43190d723144bbe1afb9c38230
+  ParseFacebookUtilsV4: 2f30c2b7021c8005d3042781da7ef87d06589421
+  ParseUI: af2eba584799da4a9fbdac0e178662d7438b502e
+  TOCropViewController: cec24e4385929683b217d08bfdc8791975cddc04
+
+PODFILE CHECKSUM: b7349319829a1c1acadd24e239d542f124b7010c
+
+COCOAPODS: 1.0.1

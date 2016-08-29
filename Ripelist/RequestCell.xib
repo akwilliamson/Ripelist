@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="9532" systemVersion="15D21" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9530"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="RequestCell" rowHeight="80" id="wfI-Ls-7li" customClass="RequestCell" customModule="Ripelist" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="450" height="80"/>
+            <autoresizingMask key="autoresizingMask"/>
+            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="wfI-Ls-7li" id="GmC-R6-OUM">
+                <rect key="frame" x="0.0" y="0.0" width="417" height="79.5"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <label opaque="NO" userInteractionEnabled="NO" tag="1" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Title of Request" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ZUQ-R0-ofu">
+                        <rect key="frame" x="79" y="8" width="338" height="21"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="21" id="z6a-3d-f1R"/>
+                        </constraints>
+                        <fontDescription key="fontDescription" name="ArialRoundedMTBold" family="Arial Rounded MT Bold" pointSize="18"/>
+                        <color key="textColor" red="0.28627450980000002" green="0.51372549020000002" blue="0.13725490200000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" tag="2" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="U8V-YG-FKE" userLabel="Swap Label">
+                        <rect key="frame" x="79" y="37" width="0.0" height="15"/>
+                        <color key="backgroundColor" red="0.98039215690000003" green="0.77647058820000003" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="15" id="Znc-Bt-Vnq"/>
+                        </constraints>
+                        <fontDescription key="fontDescription" type="boldSystem" pointSize="10"/>
+                        <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <nil key="highlightedColor"/>
+                        <userDefinedRuntimeAttributes>
+                            <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                <real key="value" value="8"/>
+                            </userDefinedRuntimeAttribute>
+                        </userDefinedRuntimeAttributes>
+                    </label>
+                    <label opaque="NO" userInteractionEnabled="NO" tag="5" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="By: johnwayne" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="msQ-4F-ovp" userLabel="Posted By">
+                        <rect key="frame" x="365" y="60" width="56.5" height="15"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="15" id="QmN-1t-aTo"/>
+                        </constraints>
+                        <fontDescription key="fontDescription" name="ArialRoundedMTBold" family="Arial Rounded MT Bold" pointSize="8"/>
+                        <color key="textColor" red="0.28680727220000002" green="0.51256963010000001" blue="0.13722205649999999" alpha="1" colorSpace="calibratedRGB"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <label opaque="NO" userInteractionEnabled="NO" tag="3" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="nPb-Bz-jxX" userLabel="Distance Away">
+                        <rect key="frame" x="79" y="57" width="0.0" height="18"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="18" id="dhV-n0-MiK"/>
+                        </constraints>
+                        <fontDescription key="fontDescription" type="boldSystem" pointSize="14"/>
+                        <color key="textColor" red="0.34509803919999998" green="0.61176470589999998" blue="0.1647058824" alpha="1" colorSpace="calibratedRGB"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="request" translatesAutoresizingMaskIntoConstraints="NO" id="MR9-xY-hgj">
+                        <rect key="frame" x="8" y="8" width="63" height="63"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="63" id="Jt9-6v-Jph"/>
+                            <constraint firstAttribute="width" constant="63" id="ySf-t6-6Pa"/>
+                        </constraints>
+                    </imageView>
+                </subviews>
+                <constraints>
+                    <constraint firstItem="msQ-4F-ovp" firstAttribute="bottom" secondItem="nPb-Bz-jxX" secondAttribute="bottom" id="EYg-7R-mld"/>
+                    <constraint firstItem="ZUQ-R0-ofu" firstAttribute="top" secondItem="MR9-xY-hgj" secondAttribute="top" id="OqS-vh-6ct"/>
+                    <constraint firstItem="ZUQ-R0-ofu" firstAttribute="top" secondItem="MR9-xY-hgj" secondAttribute="top" id="Oy8-8U-bgV"/>
+                    <constraint firstItem="U8V-YG-FKE" firstAttribute="leading" secondItem="MR9-xY-hgj" secondAttribute="trailing" constant="8" id="U1H-mh-LHe"/>
+                    <constraint firstAttribute="trailingMargin" secondItem="msQ-4F-ovp" secondAttribute="trailing" constant="-13" id="eeU-5Z-VyG"/>
+                    <constraint firstItem="nPb-Bz-jxX" firstAttribute="leading" secondItem="MR9-xY-hgj" secondAttribute="trailing" constant="8" id="mLW-32-8fo"/>
+                    <constraint firstItem="ZUQ-R0-ofu" firstAttribute="leading" secondItem="MR9-xY-hgj" secondAttribute="trailing" constant="8" id="pTY-bf-Anj"/>
+                    <constraint firstAttribute="topMargin" secondItem="MR9-xY-hgj" secondAttribute="top" id="vTG-iJ-8Tu"/>
+                    <constraint firstAttribute="leadingMargin" secondItem="MR9-xY-hgj" secondAttribute="leading" id="w3W-Tg-IDG"/>
+                    <constraint firstItem="nPb-Bz-jxX" firstAttribute="top" secondItem="U8V-YG-FKE" secondAttribute="bottom" constant="5" id="xew-iF-PfP"/>
+                    <constraint firstItem="U8V-YG-FKE" firstAttribute="top" secondItem="ZUQ-R0-ofu" secondAttribute="bottom" constant="8" id="zn4-ND-RCo"/>
+                </constraints>
+                <variation key="default">
+                    <mask key="constraints">
+                        <exclude reference="OqS-vh-6ct"/>
+                    </mask>
+                </variation>
+            </tableViewCellContentView>
+            <constraints>
+                <constraint firstAttribute="trailing" secondItem="msQ-4F-ovp" secondAttribute="trailing" constant="28" id="cUX-mK-JMy"/>
+                <constraint firstAttribute="trailing" secondItem="ZUQ-R0-ofu" secondAttribute="trailing" constant="33" id="fod-jb-8tH"/>
+            </constraints>
+            <variation key="default">
+                <mask key="constraints">
+                    <exclude reference="cUX-mK-JMy"/>
+                </mask>
+            </variation>
+            <connections>
+                <outlet property="distanceAwayLabel" destination="nPb-Bz-jxX" id="ts2-zG-QfT"/>
+                <outlet property="swapTypeLabel" destination="U8V-YG-FKE" id="Fpa-R4-dhZ"/>
+                <outlet property="titleLabel" destination="ZUQ-R0-ofu" id="MzM-5U-IaU"/>
+                <outlet property="usernameLabel" destination="msQ-4F-ovp" id="irR-gr-c0T"/>
+            </connections>
+            <point key="canvasLocation" x="555" y="367"/>
+        </tableViewCell>
+    </objects>
+    <resources>
+        <image name="request" width="515" height="513"/>
+    </resources>
+</document>

@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11198.2" systemVersion="15F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11161"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+    </dependencies>
+    <customFonts key="customFonts">
+        <array key="Amaranth-Regular.ttf">
+            <string>Amaranth</string>
+        </array>
+    </customFonts>
+    <scenes>
+        <!--OnboardVC-->
+        <scene sceneID="BF7-WC-8Is">
+            <objects>
+                <viewController storyboardIdentifier="onboard_vc" id="ldc-1Z-ikT" customClass="OnboardVC" customModule="Ripelist" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="Jjs-kW-cNG"/>
+                        <viewControllerLayoutGuide type="bottom" id="mRz-RU-RKt"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="u3u-Pc-5x5">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="yZA-Oa-sYv" userLabel="Back Button">
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="50" id="PvA-q2-jZZ"/>
+                                    <constraint firstAttribute="height" constant="50" id="wz9-9n-Jew"/>
+                                </constraints>
+                                <state key="normal" image="ui_arrow"/>
+                                <connections>
+                                    <action selector="backArrowTapped:" destination="ldc-1Z-ikT" eventType="touchUpInside" id="hWk-YQ-Gf6"/>
+                                </connections>
+                            </button>
+                            <label opaque="NO" userInteractionEnabled="NO" alpha="0.0" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zsh-tO-hhp" userLabel="Notify Label">
+                                <color key="backgroundColor" red="0.97039997577667236" green="0.73616838455200195" blue="0.035761818289756775" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="50" id="9cX-Tp-14o"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" name="ArialRoundedMTBold" family="Arial Rounded MT Bold" pointSize="16"/>
+                                <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Ripelist" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="NfE-6R-Gs7" userLabel="Ripelist Logo">
+                                <fontDescription key="fontDescription" name="Amaranth" family="Amaranth" pointSize="75"/>
+                                <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <nil key="highlightedColor"/>
+                                <color key="shadowColor" red="0.97039997577667236" green="0.73616838455200195" blue="0.035761818289756775" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <size key="shadowOffset" width="2" height="2"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="@@@" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="o0e-3y-5kU">
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="20" id="tAV-Dt-amF"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" name="ArialRoundedMTBold" family="Arial Rounded MT Bold" pointSize="20"/>
+                                <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <nil key="highlightedColor"/>
+                                <color key="shadowColor" red="0.97039997577667236" green="0.73616838455200195" blue="0.035761818289756775" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <size key="shadowOffset" width="1" height="0.0"/>
+                            </label>
+                            <textField opaque="NO" clipsSubviews="YES" alpha="0.75" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Password" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="PR0-jN-l3D" customClass="PadTextField" customModule="Ripelist" customModuleProvider="target">
+                                <color key="backgroundColor" red="0.98039215686274506" green="0.98039215686274506" blue="0.98039215686274506" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <color key="textColor" red="0.33333333333333331" green="0.33333333333333331" blue="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <fontDescription key="fontDescription" name="ArialRoundedMTBold" family="Arial Rounded MT Bold" pointSize="20"/>
+                                <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" secureTextEntry="YES"/>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                        <real key="value" value="0.0"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                                <connections>
+                                    <outlet property="delegate" destination="ldc-1Z-ikT" id="bgS-pw-Ehu"/>
+                                </connections>
+                            </textField>
+                            <button opaque="NO" alpha="0.75" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="OLS-JT-2YX">
+                                <color key="backgroundColor" red="0.97039997577667236" green="0.73616838455200195" blue="0.035761818289756775" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <fontDescription key="fontDescription" name="ArialRoundedMTBold" family="Arial Rounded MT Bold" pointSize="15"/>
+                                <state key="normal" title="Login">
+                                    <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                </state>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                        <real key="value" value="25"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                                <connections>
+                                    <action selector="onboardButtonTapped:" destination="ldc-1Z-ikT" eventType="touchUpInside" id="R9g-Gg-Upi"/>
+                                </connections>
+                            </button>
+                            <activityIndicatorView opaque="NO" alpha="0.0" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="white" translatesAutoresizingMaskIntoConstraints="NO" id="Ftc-UF-Z82"/>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="AuW-B2-j5m">
+                                <fontDescription key="fontDescription" name="ArialRoundedMTBold" family="Arial Rounded MT Bold" pointSize="11"/>
+                                <size key="titleShadowOffset" width="2.2250738585072014e-308" height="2.2250738585072014e-308"/>
+                                <state key="normal" title="Reset Password">
+                                    <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                    <color key="titleShadowColor" red="0.33333333333333331" green="0.33333333333333331" blue="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                </state>
+                                <connections>
+                                    <action selector="resetPasswordTapped:" destination="ldc-1Z-ikT" eventType="touchUpInside" id="Sow-nn-Vp3"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="SBf-An-okr">
+                                <fontDescription key="fontDescription" name="ArialRoundedMTBold" family="Arial Rounded MT Bold" pointSize="11"/>
+                                <size key="titleShadowOffset" width="2.2250738585072014e-308" height="2.2250738585072014e-308"/>
+                                <state key="normal" title="Sign Up">
+                                    <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                    <color key="titleShadowColor" red="0.33333333333333331" green="0.33333333333333331" blue="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                </state>
+                                <connections>
+                                    <action selector="switchOnboardTapped:" destination="ldc-1Z-ikT" eventType="touchUpInside" id="axQ-XN-Yyy"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mgQ-br-TqQ">
+                                <color key="backgroundColor" red="0.177870973944664" green="0.26836246252059937" blue="0.52468329668045044" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <fontDescription key="fontDescription" name="ArialRoundedMTBold" family="Arial Rounded MT Bold" pointSize="15"/>
+                                <state key="normal" title="  Login with Facebook" image="fb_logo">
+                                    <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                </state>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                        <real key="value" value="25"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                                <connections>
+                                    <action selector="fbLoginButtonTapped:" destination="ldc-1Z-ikT" eventType="touchUpInside" id="bQc-9C-TZo"/>
+                                </connections>
+                            </button>
+                            <textField opaque="NO" clipsSubviews="YES" alpha="0.75" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Email" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="HJu-Ir-Vet" customClass="PadTextField" customModule="Ripelist" customModuleProvider="target">
+                                <color key="backgroundColor" red="0.98039215686274506" green="0.98039215686274506" blue="0.98039215686274506" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="45" id="tan-4q-03w"/>
+                                </constraints>
+                                <color key="textColor" red="0.33333333333333331" green="0.33333333333333331" blue="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <fontDescription key="fontDescription" name="ArialRoundedMTBold" family="Arial Rounded MT Bold" pointSize="20"/>
+                                <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" returnKeyType="next" enablesReturnKeyAutomatically="YES"/>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                        <real key="value" value="0.0"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                                <connections>
+                                    <outlet property="delegate" destination="ldc-1Z-ikT" id="SjO-Fi-8P0"/>
+                                </connections>
+                            </textField>
+                        </subviews>
+                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstItem="PR0-jN-l3D" firstAttribute="height" secondItem="HJu-Ir-Vet" secondAttribute="height" id="376-4X-Qg8"/>
+                            <constraint firstItem="OLS-JT-2YX" firstAttribute="height" secondItem="PR0-jN-l3D" secondAttribute="height" id="D8c-R6-WpS"/>
+                            <constraint firstAttribute="trailing" secondItem="zsh-tO-hhp" secondAttribute="trailing" id="E2Z-vs-dof"/>
+                            <constraint firstItem="OLS-JT-2YX" firstAttribute="leading" secondItem="PR0-jN-l3D" secondAttribute="leading" id="G7V-OS-2Jp"/>
+                            <constraint firstItem="Ftc-UF-Z82" firstAttribute="centerY" secondItem="OLS-JT-2YX" secondAttribute="centerY" id="GYP-US-Fcg"/>
+                            <constraint firstItem="PR0-jN-l3D" firstAttribute="centerY" secondItem="u3u-Pc-5x5" secondAttribute="centerY" id="GtK-rS-e6F"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="HJu-Ir-Vet" secondAttribute="trailing" constant="10" id="KqD-e3-5gv"/>
+                            <constraint firstItem="mgQ-br-TqQ" firstAttribute="top" secondItem="OLS-JT-2YX" secondAttribute="bottom" constant="72" id="L3D-KE-gZY"/>
+                            <constraint firstItem="PR0-jN-l3D" firstAttribute="top" secondItem="HJu-Ir-Vet" secondAttribute="bottom" constant="5" id="MFC-0H-avx"/>
+                            <constraint firstItem="SBf-An-okr" firstAttribute="top" secondItem="OLS-JT-2YX" secondAttribute="bottom" id="Nmi-50-Z51"/>
+                            <constraint firstItem="NfE-6R-Gs7" firstAttribute="centerX" secondItem="u3u-Pc-5x5" secondAttribute="centerX" id="Q1D-7E-oyk"/>
+                            <constraint firstItem="o0e-3y-5kU" firstAttribute="leading" secondItem="HJu-Ir-Vet" secondAttribute="leading" id="T1h-t8-Nmj"/>
+                            <constraint firstItem="mgQ-br-TqQ" firstAttribute="leading" secondItem="PR0-jN-l3D" secondAttribute="leading" id="UxO-0x-AhR"/>
+                            <constraint firstItem="OLS-JT-2YX" firstAttribute="leading" secondItem="Ftc-UF-Z82" secondAttribute="trailing" constant="-39" id="WxF-ra-3VN"/>
+                            <constraint firstItem="zsh-tO-hhp" firstAttribute="top" secondItem="u3u-Pc-5x5" secondAttribute="top" constant="-50" id="XVd-Pg-Uj4"/>
+                            <constraint firstItem="mgQ-br-TqQ" firstAttribute="width" secondItem="PR0-jN-l3D" secondAttribute="width" id="YWZ-7c-zy5"/>
+                            <constraint firstItem="OLS-JT-2YX" firstAttribute="trailing" secondItem="PR0-jN-l3D" secondAttribute="trailing" id="Zvd-Mm-Yr0"/>
+                            <constraint firstItem="AuW-B2-j5m" firstAttribute="leading" secondItem="OLS-JT-2YX" secondAttribute="leading" constant="20" id="aCD-Xf-uGa"/>
+                            <constraint firstItem="PR0-jN-l3D" firstAttribute="trailing" secondItem="HJu-Ir-Vet" secondAttribute="trailing" id="cep-r6-mhv"/>
+                            <constraint firstItem="mgQ-br-TqQ" firstAttribute="trailing" secondItem="PR0-jN-l3D" secondAttribute="trailing" id="djo-64-K6Y"/>
+                            <constraint firstItem="o0e-3y-5kU" firstAttribute="trailing" secondItem="HJu-Ir-Vet" secondAttribute="trailing" id="fQ9-ar-qT5"/>
+                            <constraint firstItem="AuW-B2-j5m" firstAttribute="top" secondItem="OLS-JT-2YX" secondAttribute="bottom" id="fQe-GV-g3H"/>
+                            <constraint firstItem="yZA-Oa-sYv" firstAttribute="leading" secondItem="u3u-Pc-5x5" secondAttribute="leading" id="jQh-97-RV7"/>
+                            <constraint firstItem="zsh-tO-hhp" firstAttribute="leading" secondItem="u3u-Pc-5x5" secondAttribute="leading" id="kM4-iq-dkf"/>
+                            <constraint firstItem="PR0-jN-l3D" firstAttribute="width" secondItem="HJu-Ir-Vet" secondAttribute="width" id="kl9-RO-9YZ"/>
+                            <constraint firstItem="PR0-jN-l3D" firstAttribute="leading" secondItem="HJu-Ir-Vet" secondAttribute="leading" id="nXz-7h-eSE"/>
+                            <constraint firstItem="HJu-Ir-Vet" firstAttribute="top" secondItem="o0e-3y-5kU" secondAttribute="bottom" id="pbP-AA-nQz"/>
+                            <constraint firstItem="SBf-An-okr" firstAttribute="trailing" secondItem="OLS-JT-2YX" secondAttribute="trailing" constant="-20" id="vmC-xE-dfY"/>
+                            <constraint firstItem="NfE-6R-Gs7" firstAttribute="top" secondItem="u3u-Pc-5x5" secondAttribute="top" constant="45" id="wUu-oF-WS9"/>
+                            <constraint firstItem="mgQ-br-TqQ" firstAttribute="height" secondItem="PR0-jN-l3D" secondAttribute="height" id="xH4-CY-qQj"/>
+                            <constraint firstItem="yZA-Oa-sYv" firstAttribute="top" secondItem="u3u-Pc-5x5" secondAttribute="top" id="xce-i0-euD"/>
+                            <constraint firstItem="OLS-JT-2YX" firstAttribute="top" secondItem="PR0-jN-l3D" secondAttribute="bottom" constant="8" id="zUU-Lq-Ifp"/>
+                            <constraint firstItem="HJu-Ir-Vet" firstAttribute="leading" secondItem="u3u-Pc-5x5" secondAttribute="leadingMargin" constant="10" id="znv-Cz-x14"/>
+                        </constraints>
+                        <userDefinedRuntimeAttributes>
+                            <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                <real key="value" value="0.0"/>
+                            </userDefinedRuntimeAttribute>
+                        </userDefinedRuntimeAttributes>
+                    </view>
+                    <connections>
+                        <outlet property="activityIndicator" destination="Ftc-UF-Z82" id="wBU-D8-Zfs"/>
+                        <outlet property="emailTextField" destination="HJu-Ir-Vet" id="BtK-nr-l6m"/>
+                        <outlet property="errorBottom" destination="pbP-AA-nQz" id="mVw-qO-Ad3"/>
+                        <outlet property="errorLabel" destination="o0e-3y-5kU" id="nKR-qa-iK7"/>
+                        <outlet property="facebookLoginButton" destination="mgQ-br-TqQ" id="wnC-Ks-VTZ"/>
+                        <outlet property="loginButton" destination="OLS-JT-2YX" id="quV-8l-TE7"/>
+                        <outlet property="logoLabel" destination="NfE-6R-Gs7" id="4Cz-g5-MVU"/>
+                        <outlet property="notifyLabel" destination="zsh-tO-hhp" id="Ch6-0O-Bnr"/>
+                        <outlet property="notifyY" destination="XVd-Pg-Uj4" id="gcR-SY-p77"/>
+                        <outlet property="passwordTextField" destination="PR0-jN-l3D" id="SZc-fq-ODW"/>
+                        <outlet property="resetPasswordButton" destination="AuW-B2-j5m" id="1wN-66-0lk"/>
+                        <outlet property="switchOnboardButton" destination="SBf-An-okr" id="BK8-XI-neX"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="FcC-h5-PTU" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-2933" y="-4206"/>
+        </scene>
+    </scenes>
+    <resources>
+        <image name="fb_logo" width="20" height="20"/>
+        <image name="ui_arrow" width="7" height="12"/>
+    </resources>
+</document>

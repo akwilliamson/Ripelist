@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="9532" systemVersion="15D21" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9530"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="ListingCell" rowHeight="80" id="YK1-xK-2Uc" customClass="ListingCell" customModule="Ripelist" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="450" height="80"/>
+            <autoresizingMask key="autoresizingMask"/>
+            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="YK1-xK-2Uc" id="LX6-FD-CTD">
+                <rect key="frame" x="0.0" y="0.0" width="417" height="79.5"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="WEK-Kr-Yoh" customClass="PFImageView">
+                        <rect key="frame" x="8" y="8" width="63" height="63.5"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="63" id="A1R-UW-7hy"/>
+                            <constraint firstAttribute="width" constant="63" id="dDt-jS-2hv"/>
+                        </constraints>
+                    </imageView>
+                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" tag="3" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Sale" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="N6B-DS-IRo">
+                        <rect key="frame" x="79" y="37" width="40" height="15"/>
+                        <color key="backgroundColor" red="0.98039215690000003" green="0.77647058820000003" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="15" id="cZs-vl-Fwd"/>
+                            <constraint firstAttribute="width" constant="40" id="sRH-w5-8kh"/>
+                        </constraints>
+                        <fontDescription key="fontDescription" name="ArialRoundedMTBold" family="Arial Rounded MT Bold" pointSize="10"/>
+                        <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <nil key="highlightedColor"/>
+                        <userDefinedRuntimeAttributes>
+                            <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                <real key="value" value="8"/>
+                            </userDefinedRuntimeAttribute>
+                        </userDefinedRuntimeAttributes>
+                    </label>
+                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" tag="4" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Trade" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cmP-vo-MVb">
+                        <rect key="frame" x="124" y="37" width="40" height="15"/>
+                        <color key="backgroundColor" red="0.98188920449999995" green="0.77492818320000001" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="40" id="1o5-9e-GdD"/>
+                            <constraint firstAttribute="height" constant="15" id="TlF-0e-npF"/>
+                        </constraints>
+                        <fontDescription key="fontDescription" name="ArialRoundedMTBold" family="Arial Rounded MT Bold" pointSize="10"/>
+                        <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <nil key="highlightedColor"/>
+                        <userDefinedRuntimeAttributes>
+                            <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                <real key="value" value="8"/>
+                            </userDefinedRuntimeAttribute>
+                        </userDefinedRuntimeAttributes>
+                    </label>
+                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" tag="5" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Free" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="uEh-YE-vYa">
+                        <rect key="frame" x="169" y="37" width="40" height="15"/>
+                        <color key="backgroundColor" red="0.98188920449999995" green="0.77492818320000001" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="15" id="AIx-jz-0G5"/>
+                            <constraint firstAttribute="width" constant="40" id="aPJ-2F-sCY"/>
+                        </constraints>
+                        <fontDescription key="fontDescription" name="ArialRoundedMTBold" family="Arial Rounded MT Bold" pointSize="10"/>
+                        <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <nil key="highlightedColor"/>
+                        <userDefinedRuntimeAttributes>
+                            <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                <real key="value" value="8"/>
+                            </userDefinedRuntimeAttribute>
+                        </userDefinedRuntimeAttributes>
+                    </label>
+                    <label opaque="NO" userInteractionEnabled="NO" tag="3" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="T9t-Sf-coN" userLabel="Distance Away">
+                        <rect key="frame" x="79" y="57" width="0.0" height="18.5"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="18" id="e5M-X2-QGR"/>
+                        </constraints>
+                        <fontDescription key="fontDescription" type="boldSystem" pointSize="14"/>
+                        <color key="textColor" red="0.34509803919999998" green="0.61176470589999998" blue="0.1647058824" alpha="1" colorSpace="calibratedRGB"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <label opaque="NO" userInteractionEnabled="NO" tag="5" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="By: johnwayne" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UYi-15-WVA" userLabel="Posted By">
+                        <rect key="frame" x="365" y="61" width="56.5" height="15"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="15" id="OB4-aN-4ja"/>
+                        </constraints>
+                        <fontDescription key="fontDescription" name="ArialRoundedMTBold" family="Arial Rounded MT Bold" pointSize="8"/>
+                        <color key="textColor" red="0.28680727220000002" green="0.51256963010000001" blue="0.13722205649999999" alpha="1" colorSpace="calibratedRGB"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <label opaque="NO" userInteractionEnabled="NO" tag="1" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Title of Listing" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="MgU-i9-fgs">
+                        <rect key="frame" x="79" y="8" width="338" height="21"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="21" id="1YA-cH-LOF"/>
+                        </constraints>
+                        <fontDescription key="fontDescription" name="ArialRoundedMTBold" family="Arial Rounded MT Bold" pointSize="18"/>
+                        <color key="textColor" red="0.28627450980000002" green="0.51372549020000002" blue="0.13725490200000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                </subviews>
+                <constraints>
+                    <constraint firstItem="MgU-i9-fgs" firstAttribute="top" secondItem="WEK-Kr-Yoh" secondAttribute="top" id="3PZ-Pa-Rvf"/>
+                    <constraint firstItem="UYi-15-WVA" firstAttribute="bottom" secondItem="T9t-Sf-coN" secondAttribute="bottom" id="6p3-rv-OBg"/>
+                    <constraint firstItem="cmP-vo-MVb" firstAttribute="top" secondItem="N6B-DS-IRo" secondAttribute="top" id="7OU-1X-UbE"/>
+                    <constraint firstAttribute="leadingMargin" secondItem="WEK-Kr-Yoh" secondAttribute="leading" id="AAg-Oy-vUT"/>
+                    <constraint firstItem="N6B-DS-IRo" firstAttribute="leading" secondItem="WEK-Kr-Yoh" secondAttribute="trailing" constant="8" id="B36-z9-NZd"/>
+                    <constraint firstItem="T9t-Sf-coN" firstAttribute="leading" secondItem="WEK-Kr-Yoh" secondAttribute="trailing" constant="8" id="DiC-Bm-OKU"/>
+                    <constraint firstItem="uEh-YE-vYa" firstAttribute="leading" secondItem="cmP-vo-MVb" secondAttribute="trailing" constant="5" id="DkI-vc-BQQ"/>
+                    <constraint firstAttribute="topMargin" secondItem="WEK-Kr-Yoh" secondAttribute="top" id="KEu-OU-ZYW"/>
+                    <constraint firstItem="N6B-DS-IRo" firstAttribute="top" secondItem="MgU-i9-fgs" secondAttribute="bottom" constant="8" id="MSC-Oy-Ld8"/>
+                    <constraint firstItem="cmP-vo-MVb" firstAttribute="leading" secondItem="N6B-DS-IRo" secondAttribute="trailing" constant="5" id="S0c-IH-wbb"/>
+                    <constraint firstItem="MgU-i9-fgs" firstAttribute="leading" secondItem="WEK-Kr-Yoh" secondAttribute="trailing" constant="8" id="Tbr-JP-jgQ"/>
+                    <constraint firstItem="MgU-i9-fgs" firstAttribute="top" secondItem="WEK-Kr-Yoh" secondAttribute="top" id="bbh-iE-Y4z"/>
+                    <constraint firstAttribute="trailingMargin" secondItem="UYi-15-WVA" secondAttribute="trailing" constant="-13" id="cOa-e3-3Dz"/>
+                    <constraint firstItem="T9t-Sf-coN" firstAttribute="top" secondItem="N6B-DS-IRo" secondAttribute="bottom" constant="5" id="eMm-Gt-OzP"/>
+                    <constraint firstItem="uEh-YE-vYa" firstAttribute="top" secondItem="N6B-DS-IRo" secondAttribute="top" id="qjx-aF-ec3"/>
+                    <constraint firstAttribute="bottomMargin" secondItem="UYi-15-WVA" secondAttribute="bottom" constant="-4.5" id="s22-GP-wfD"/>
+                </constraints>
+                <variation key="default">
+                    <mask key="constraints">
+                        <exclude reference="bbh-iE-Y4z"/>
+                        <exclude reference="s22-GP-wfD"/>
+                    </mask>
+                </variation>
+            </tableViewCellContentView>
+            <constraints>
+                <constraint firstAttribute="trailing" secondItem="UYi-15-WVA" secondAttribute="trailing" constant="28" id="Ors-Ko-YHn"/>
+                <constraint firstAttribute="trailing" secondItem="UYi-15-WVA" secondAttribute="trailing" constant="28" id="YAY-h9-XVB"/>
+                <constraint firstAttribute="trailing" secondItem="MgU-i9-fgs" secondAttribute="trailing" constant="33" id="pWt-1Q-gJh"/>
+            </constraints>
+            <variation key="default">
+                <mask key="constraints">
+                    <exclude reference="Ors-Ko-YHn"/>
+                    <exclude reference="YAY-h9-XVB"/>
+                </mask>
+            </variation>
+            <connections>
+                <outlet property="distanceAwayLabel" destination="T9t-Sf-coN" id="L9P-Ef-may"/>
+                <outlet property="forFreeLabel" destination="uEh-YE-vYa" id="sn8-My-e80"/>
+                <outlet property="forSaleLabel" destination="N6B-DS-IRo" id="GSj-sx-mMF"/>
+                <outlet property="forTradeLabel" destination="cmP-vo-MVb" id="CKy-jY-8aQ"/>
+                <outlet property="listingImageView" destination="WEK-Kr-Yoh" id="cpe-or-caB"/>
+                <outlet property="titleLabel" destination="MgU-i9-fgs" id="rb6-i4-wlM"/>
+                <outlet property="usernameLabel" destination="UYi-15-WVA" id="nrN-Mx-SwB"/>
+            </connections>
+            <point key="canvasLocation" x="555" y="367"/>
+        </tableViewCell>
+    </objects>
+</document>

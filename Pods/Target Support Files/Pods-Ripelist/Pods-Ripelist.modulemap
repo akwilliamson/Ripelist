@@ -1,0 +1,6 @@
+framework module Pods_Ripelist {
+  umbrella header "Pods-Ripelist-umbrella.h"
+
+  export *
+  module * { export * }
+}
