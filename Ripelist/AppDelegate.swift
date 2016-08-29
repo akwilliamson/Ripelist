@@ -24,7 +24,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Show welcome screen on first app launch
         switch NSUserDefaults.standardUserDefaults().objectForKey("hasLaunchedOnce") {
         case nil:
-            self.setRootViewController(toViewController: "NoticeView")
+            self.setRootViewController(toViewController: "NoticeVC")
         default:
             self.setRootViewController(toViewController: "HomeVC")
         }

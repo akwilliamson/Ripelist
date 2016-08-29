@@ -10,7 +10,7 @@
         <!--Notice View Controller-->
         <scene sceneID="ufC-wZ-h7g">
             <objects>
-                <viewController storyboardIdentifier="NoticeView" id="vXZ-lx-hvc" customClass="NoticeViewController" customModule="Ripelist" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="NoticeVC" id="vXZ-lx-hvc" customClass="NoticeViewController" customModule="Ripelist" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="m26-dr-8fa"/>
                         <viewControllerLayoutGuide type="bottom" id="bbF-Pc-0Cn"/>

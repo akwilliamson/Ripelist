@@ -117,7 +117,7 @@
 		97CE50E21B7D455700D8D897 /* WatchlistTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97CE50E11B7D455700D8D897 /* WatchlistTableViewController.swift */; };
 		97CE564F1ADA1DFA0078678A /* ConversationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97CE564E1ADA1DFA0078678A /* ConversationViewController.swift */; };
 		97CF710B1A9E4AD400826BF0 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97CF710A1A9E4AD400826BF0 /* AppDelegate.swift */; };
-		97CF710D1A9E4AD400826BF0 /* NoticeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97CF710C1A9E4AD400826BF0 /* NoticeViewController.swift */; };
+		97CF710D1A9E4AD400826BF0 /* NoticeVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97CF710C1A9E4AD400826BF0 /* NoticeVC.swift */; };
 		97CF71121A9E4AD400826BF0 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 97CF71111A9E4AD400826BF0 /* Images.xcassets */; };
 		97CF71151A9E4AD400826BF0 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 97CF71131A9E4AD400826BF0 /* LaunchScreen.xib */; };
 		97D185B31B3B427F009E576E /* CustomSegmentedControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97D185B21B3B427F009E576E /* CustomSegmentedControl.swift */; };
@@ -271,7 +271,7 @@
 		97CF71051A9E4AD400826BF0 /* Ripelist.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Ripelist.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		97CF71091A9E4AD400826BF0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		97CF710A1A9E4AD400826BF0 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		97CF710C1A9E4AD400826BF0 /* NoticeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoticeViewController.swift; sourceTree = "<group>"; };
+		97CF710C1A9E4AD400826BF0 /* NoticeVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoticeVC.swift; sourceTree = "<group>"; };
 		97CF71111A9E4AD400826BF0 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		97CF71141A9E4AD400826BF0 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
 		97D185B21B3B427F009E576E /* CustomSegmentedControl.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomSegmentedControl.swift; sourceTree = "<group>"; };
@@ -676,7 +676,7 @@
 				97CF710A1A9E4AD400826BF0 /* AppDelegate.swift */,
 				97ABF3DD1A9FB2E500013A34 /* HomeViewController.swift */,
 				977C06B31ADA24AC00FD7B2A /* Main.storyboard */,
-				97CF710C1A9E4AD400826BF0 /* NoticeViewController.swift */,
+				97CF710C1A9E4AD400826BF0 /* NoticeVC.swift */,
 				979756EE1CD9336C00A782DB /* NavigationVC.swift */,
 				973666271D74F72C00D28B8B /* Selector+Convenience.swift */,
 				970824E61AF2DF8800186004 /* Login */,
@@ -1047,7 +1047,7 @@
 				977E659A1D3DE55A008F38FB /* OnboardUtils.swift in Sources */,
 				9756B4141D3C899A00A2C2A8 /* ExString.swift in Sources */,
 				97029A041BFACA5300F3FF9C /* ListingCell.swift in Sources */,
-				97CF710D1A9E4AD400826BF0 /* NoticeViewController.swift in Sources */,
+				97CF710D1A9E4AD400826BF0 /* NoticeVC.swift in Sources */,
 				976BC8801AC63B8C00C29EC2 /* RequestDetailsVC.swift in Sources */,
 				97895FF21AE874FB00F22FD0 /* UIAlertController.swift in Sources */,
 				9773DF281BF708ED005A881F /* LocationService.swift in Sources */,
