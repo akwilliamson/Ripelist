@@ -6,8 +6,7 @@ This application is under active development and will continue to be modified an
 
 ## Goals
 
-By releasing the source code for Ripelist we hope to drive the mission of accessible food for all by developing a for-community, by-community mantra. In addition, public
-Review and contribution to the application's code base will help strengthen and improve the app.
+By releasing the source code for Ripelist we hope to drive the mission of accessible food for all by developing a for-community-by-community mantra. In addition, public review and contribution to the application's code base will help strengthen and improve the app.
 
 ## Requirements
 
@@ -31,7 +30,7 @@ Make sure you have Cocoapods set up and that the proper pods are installed via `
 
 ## Feedback
 
-Have an idea or question about future features for White House for iOS? Open a ticket on GitHub.
+Have an idea or question about future features for Ripelist? Open a ticket on GitHub.
 
 ## License
 
