@@ -30,7 +30,7 @@ extern NSString *const ATBackendBecameReadyNotification;
 @protocol ATBackendMessageDelegate;
 
 /*! Handles all of the backend activities, such as sending feedback. */
-@interface ApptentiveBackend : NSObject <ApptentiveConversationUpdaterDelegate, ATDeviceUpdaterDelegate, ATPersonUpdaterDelegate, NSFetchedResultsControllerDelegate, UIAlertViewDelegate>
+@interface ApptentiveBackend : NSObject <ApptentiveConversationUpdaterDelegate, ATDeviceUpdaterDelegate, ATPersonUpdaterDelegate, NSFetchedResultsControllerDelegate>
 /*! The feedback currently being worked on by the user. */
 @property (strong, nonatomic) ATFeedback *currentFeedback;
 @property (copy, nonatomic) NSDictionary *currentCustomData;
@@ -85,9 +85,6 @@ extern NSString *const ATBackendBecameReadyNotification;
 - (NSURL *)apptentiveHomepageURL;
 - (NSURL *)apptentivePrivacyPolicyURL;
 
-- (NSString *)distributionName;
-- (NSString *)distributionVersion;
-
 - (NSUInteger)unreadMessageCount;
 
 - (void)messageCenterEnteredForeground;
@@ -107,7 +104,9 @@ extern NSString *const ATBackendBecameReadyNotification;
 
 - (void)updatePersonIfNeeded;
 
-- (NSURLCache *)imageCache;
+@property (readonly, nonatomic) NSURLCache *imageCache;
+
+- (void)resetBackendData;
 
 @end
 

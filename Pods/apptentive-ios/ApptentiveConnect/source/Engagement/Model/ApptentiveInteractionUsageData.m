@@ -103,6 +103,10 @@
 		predicateEvaluationDictionary[@"app_release/build"] = self.applicationBuild;
 	}
 
+	if (self.isDebugBuild) {
+		predicateEvaluationDictionary[@"application/debug"] = self.isDebugBuild;
+	}
+
 	if (self.sdkVersion) {
 		predicateEvaluationDictionary[@"sdk/version"] = [Apptentive versionObjectWithVersion:self.sdkVersion];
 	} else {
@@ -256,6 +260,18 @@
 	return _applicationBuild;
 }
 
+- (NSNumber *)isDebugBuild {
+	if (!_isDebugBuild) {
+#if APPTENTIVE_DEBUG
+		_isDebugBuild = @YES;
+#else
+		_isDebugBuild = @NO;
+#endif
+	}
+
+	return _isDebugBuild;
+}
+
 - (NSString *)sdkVersion {
 	if (!_sdkVersion) {
 		_sdkVersion = [kApptentiveVersionString copy];
@@ -265,14 +281,14 @@
 
 - (NSString *)sdkDistribution {
 	if (!_sdkDistribution) {
-		_sdkDistribution = [[[Apptentive sharedConnection].backend distributionName] copy];
+		_sdkDistribution = [[Apptentive sharedConnection].distributionName copy];
 	}
 	return _sdkDistribution;
 }
 
 - (NSString *)sdkDistributionVersion {
 	if (!_sdkDistributionVersion) {
-		_sdkDistributionVersion = [[[Apptentive sharedConnection].backend distributionVersion] copy];
+		_sdkDistributionVersion = [[Apptentive sharedConnection].distributionVersion copy];
 	}
 	return _sdkDistributionVersion;
 }

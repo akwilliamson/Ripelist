@@ -19,7 +19,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
     
     lazy var returningUser: AnyObject? = {
-        return NSUserDefaults.standardUserDefaults().objectForKey("hasLaunchedOnce")
+        return UserDefaults.standardUserDefaults().objectForKey("hasLaunchedOnce")
     }()
     
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
@@ -65,6 +65,22 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
     }
     
+    private func integrateSDKs(launchOptions: [NSObject : AnyObject]?) -> Void {
+        // Parse configuration
+        let config = ParseClientConfiguration {
+            $0.applicationId = Service.Parse.appId
+            $0.clientKey = Service.Parse.clientKey
+            $0.server = Service.Parse.url
+        }
+        Parse.initializeWithConfiguration(config)
+        // Facebook login integration
+        PFFacebookUtils.initializeFacebookWithApplicationLaunchOptions(launchOptions)
+        // Flurry analytics integration
+        Flurry.startSession(Service.Flurry.apiKey)
+        // Apptentive integration
+        Apptentive.sharedConnection().APIKey = Service.Apptentive.apiKey
+    }
+    
     // Facebook Authorization
     func application(application: UIApplication, openURL url: NSURL, sourceApplication: String?, annotation: AnyObject) -> Bool {
             return FBSDKApplicationDelegate.sharedInstance().application(application, openURL: url, sourceApplication: sourceApplication, annotation: annotation)
@@ -72,11 +88,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     // Push Notifications
     func application(application: UIApplication, didRegisterUserNotificationSettings notificationSettings: UIUserNotificationSettings) {
-        print("Did register notification settings.")
     }
     
     func application(application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: NSData) {
-        print("Did register for push notifications.")
         let installation = PFInstallation.currentInstallation()
         installation?.setDeviceTokenFromData(deviceToken)
         installation?.saveInBackground()
@@ -132,19 +146,4 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         FBSDKAppEvents.activateApp()
     }
     
-    private func integrateSDKs(launchOptions: [NSObject : AnyObject]?) -> Void {
-        // Parse configuration
-        let config = ParseClientConfiguration {
-            $0.applicationId = Service.Parse.appId
-            $0.clientKey = Service.Parse.clientKey
-            $0.server = Service.Parse.url
-        }
-        Parse.initializeWithConfiguration(config)
-        // Facebook login integration
-        PFFacebookUtils.initializeFacebookWithApplicationLaunchOptions(launchOptions)
-        // Flurry analytics integration
-        Flurry.startSession(Service.Flurry.apiKey)
-        // Apptentive integration
-        Apptentive.sharedConnection().APIKey = Service.Apptentive.apiKey
-    }
 }

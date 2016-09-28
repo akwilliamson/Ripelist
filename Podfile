@@ -14,5 +14,4 @@ target 'Ripelist' do
   pod 'Parse'
   pod 'ParseFacebookUtilsV4'
   pod 'Flurry-iOS-SDK/FlurrySDK'
-
 end

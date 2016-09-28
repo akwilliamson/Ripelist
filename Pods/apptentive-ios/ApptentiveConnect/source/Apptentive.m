@@ -21,14 +21,6 @@
 #import "ApptentiveAboutViewController.h"
 #import "ApptentiveStyleSheet.h"
 
-// Can't get CocoaPods to do the right thing for debug builds.
-// So, do it explicitly.
-#if COCOAPODS
-#if DEBUG
-#define APPTENTIVE_DEBUG_LOG_VIEWER 1
-#endif
-#endif
-
 NSString *const ApptentiveMessageCenterUnreadCountChangedNotification = @"ApptentiveMessageCenterUnreadCountChangedNotification";
 
 NSString *const ApptentiveAppRatingFlowUserAgreedToRateAppNotification = @"ApptentiveAppRatingFlowUserAgreedToRateAppNotification";
@@ -78,13 +70,17 @@ NSString *const ApptentiveCustomPersonDataPreferenceKey = @"ApptentiveCustomPers
 	return apptentiveDirectoryPath;
 }
 
-+ (Apptentive *)sharedConnection {
++ (instancetype)sharedConnection {
 	static Apptentive *sharedConnection = nil;
 	static dispatch_once_t onceToken;
 	dispatch_once(&onceToken, ^{
 		sharedConnection = [[Apptentive alloc] init];
 	});
 	return sharedConnection;
+}
+
++ (instancetype)shared {
+	return [self sharedConnection];
 }
 
 - (id)init {
@@ -111,7 +107,25 @@ NSString *const ApptentiveCustomPersonDataPreferenceKey = @"ApptentiveCustomPers
 }
 
 - (void)setAPIKey:(NSString *)APIKey {
-	if (![self.webClient.APIKey isEqualToString:APIKey]) {
+	NSString *distributionName = @"source";
+	NSString *distributionVersion = kApptentiveVersionString;
+
+#if APPTENTIVE_BINARY
+	distributionName = @"binary";
+#endif
+
+#if APPTENTIVE_COCOAPODS
+	distributionName = @"CocoaPods-Source";
+#endif
+
+	[self setAPIKey:APIKey distributionName:distributionName distributionVersion:distributionVersion];
+}
+
+- (void)setAPIKey:(NSString *)APIKey distributionName:(NSString *)distributionName distributionVersion:(NSString *)distributionVersion {
+	_distributionName = distributionName;
+	_distributionVersion = distributionVersion;
+
+	if (![self.webClient.APIKey isEqualToString:APIKey] && APIKey != nil) {
 		_webClient = [[ApptentiveWebClient alloc] initWithBaseURL:[NSURL URLWithString:@"https://api.apptentive.com"] APIKey:APIKey];
 
 		_backend = [[ApptentiveBackend alloc] init];
@@ -510,10 +524,6 @@ NSString *const ApptentiveCustomPersonDataPreferenceKey = @"ApptentiveCustomPers
 	return (apptentivePayload != nil);
 }
 
-- (void)resetUpgradeData {
-	[self.engagementBackend resetUpgradeVersionInfo];
-}
-
 - (void)dismissMessageCenterAnimated:(BOOL)animated completion:(void (^)(void))completion {
 	[self.backend dismissMessageCenterAnimated:animated completion:completion];
 }
@@ -577,7 +587,20 @@ NSString *const ApptentiveCustomPersonDataPreferenceKey = @"ApptentiveCustomPers
 #pragma mark - Debugging and diagnostics
 
 - (void)setAPIKey:(NSString *)APIKey baseURL:(NSURL *)baseURL {
-	if (![APIKey isEqualToString:self.webClient.APIKey] || ![baseURL isEqual:self.webClient.baseURL]) {
+	NSString *distributionName = @"source";
+	NSString *distributionVersion = kApptentiveVersionString;
+
+#if APPTENTIVE_BINARY
+	distributionName = @"binary";
+#endif
+
+#if APPTENTIVE_COCOAPODS
+	distributionName = @"CocoaPods-Source";
+#endif
+
+	_distributionName = distributionName;
+	_distributionVersion = distributionVersion;
+if (![APIKey isEqualToString:self.webClient.APIKey] || ![baseURL isEqual:self.webClient.baseURL]) {
 		_webClient = [[ApptentiveWebClient alloc] initWithBaseURL:baseURL APIKey:APIKey];
 
 		_backend = [[ApptentiveBackend alloc] init];

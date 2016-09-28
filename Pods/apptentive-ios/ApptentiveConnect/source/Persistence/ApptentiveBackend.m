@@ -43,8 +43,6 @@ NSString *const ATLegacyUUIDPreferenceKey = @"ATLegacyUUIDPreferenceKey";
 NSString *const ATInfoDistributionKey = @"ATInfoDistributionKey";
 NSString *const ATInfoDistributionVersionKey = @"ATInfoDistributionVersionKey";
 
-static NSURLCache *imageCache = nil;
-
 
 @interface ApptentiveBackend ()
 - (void)updateConfigurationIfNeeded;
@@ -69,7 +67,6 @@ static NSURLCache *imageCache = nil;
 - (void)personDataChanged:(NSNotification *)notification;
 - (void)deviceDataChanged:(NSNotification *)notification;
 - (void)startMonitoringUnreadMessages;
-- (void)checkForProperConfiguration;
 
 @property (strong, nonatomic) UIViewController *presentingViewController;
 @property (assign, nonatomic) BOOL working;
@@ -298,39 +295,7 @@ static NSURLCache *imageCache = nil;
 }
 
 - (NSString *)deviceUUID {
-	static dispatch_once_t onceToken;
-	dispatch_once(&onceToken, ^{
-		NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-		NSString *uuid = [defaults objectForKey:ATUUIDPreferenceKey];
-
-		if (uuid && [uuid hasPrefix:@"ios:"]) {
-			// Existing UUID is a legacy value. Back it up.
-			[defaults setObject:uuid forKey:ATLegacyUUIDPreferenceKey];
-		}
-
-		UIDevice *device = [UIDevice currentDevice];
-		if ([NSUUID class] && [device respondsToSelector:@selector(identifierForVendor)]) {
-			NSString *vendorID = [[device identifierForVendor] UUIDString];
-			if (vendorID && ![vendorID isEqualToString:uuid]) {
-				uuid = vendorID;
-				[defaults setObject:uuid forKey:ATUUIDPreferenceKey];
-			}
-		}
-		if (!uuid) {
-			// Fall back.
-			CFUUIDRef uuidRef = CFUUIDCreate(NULL);
-			CFStringRef uuidStringRef = CFUUIDCreateString(NULL, uuidRef);
-
-			uuid = [NSString stringWithFormat:@"ios:%@", (__bridge NSString *)uuidStringRef];
-
-			CFRelease(uuidRef), uuidRef = NULL;
-			CFRelease(uuidStringRef), uuidStringRef = NULL;
-			[defaults setObject:uuid forKey:ATUUIDPreferenceKey];
-			[defaults synchronize];
-		}
-		self.cachedDeviceUUID = uuid;
-	});
-	return self.cachedDeviceUUID;
+	return [UIDevice currentDevice].identifierForVendor.UUIDString;
 }
 
 - (NSString *)appName {
@@ -388,17 +353,6 @@ static NSURLCache *imageCache = nil;
 	}
 	NSString *imageCachePath = [cachePath stringByAppendingPathComponent:@"images.cache"];
 	return imageCachePath;
-}
-
-- (NSURLCache *)imageCache {
-	static dispatch_once_t onceToken;
-	dispatch_once(&onceToken, ^{
-		NSString *imageCachePath = [self imageCachePath];
-		if (imageCachePath) {
-			imageCache = [[NSURLCache alloc] initWithMemoryCapacity:1*1024*1024 diskCapacity:10*1024*1024 diskPath:imageCachePath];
-		}
-	});
-	return imageCache;
 }
 
 #pragma mark Message Center
@@ -461,11 +415,6 @@ static NSURLCache *imageCache = nil;
 		// Call completion block even if we do nothing.
 		completion();
 	}
-}
-
-#pragma mark UIAlertViewDelegate
-
-- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
 }
 
 #pragma mark Accessors
@@ -654,24 +603,6 @@ static NSURLCache *imageCache = nil;
 	return [NSURL URLWithString:@"http://www.apptentive.com/privacy"];
 }
 
-- (NSString *)distributionName {
-	static NSString *cachedDistributionName = nil;
-	static dispatch_once_t onceToken = 0;
-	dispatch_once(&onceToken, ^{
-		cachedDistributionName = (NSString *)[[Apptentive resourceBundle] objectForInfoDictionaryKey:ATInfoDistributionKey];
-	});
-	return cachedDistributionName;
-}
-
-- (NSString *)distributionVersion {
-	static NSString *cachedDistributionVersion = nil;
-	static dispatch_once_t onceToken = 0;
-	dispatch_once(&onceToken, ^{
-		cachedDistributionVersion = (NSString *)[[Apptentive resourceBundle] objectForInfoDictionaryKey:ATInfoDistributionVersionKey];
-	});
-	return cachedDistributionVersion;
-}
-
 - (NSUInteger)unreadMessageCount {
 	return self.previousUnreadCount;
 }
@@ -814,6 +745,28 @@ static NSURLCache *imageCache = nil;
 	[self.messageDelegate backend:self messageProgressDidChange:progress];
 }
 
+#pragma mark - Debugging
+
+- (void)resetBackendData {
+	[[NSUserDefaults standardUserDefaults] removeObjectForKey:ATUUIDPreferenceKey];
+	[[NSUserDefaults standardUserDefaults] removeObjectForKey:ATLegacyUUIDPreferenceKey];
+	[[NSUserDefaults standardUserDefaults] removeObjectForKey:ATInfoDistributionKey];
+	[[NSUserDefaults standardUserDefaults] removeObjectForKey:ATInfoDistributionVersionKey];
+	[[NSUserDefaults standardUserDefaults] removeObjectForKey:ATAppConfigurationAppDisplayNameKey];
+	[[NSUserDefaults standardUserDefaults] removeObjectForKey:ATAppConfigurationHideBrandingKey];
+	[[NSUserDefaults standardUserDefaults] removeObjectForKey:ATAppConfigurationNotificationPopupsEnabledKey];
+	[[NSUserDefaults standardUserDefaults] removeObjectForKey:ATAppConfigurationMessageCenterForegroundRefreshIntervalKey];
+	[[NSUserDefaults standardUserDefaults] removeObjectForKey:ATAppConfigurationMessageCenterBackgroundRefreshIntervalKey];
+	[[NSUserDefaults standardUserDefaults] removeObjectForKey:ATMessagesLastRetrievedMessageIDPreferenceKey];
+
+	[ApptentiveConversationUpdater resetConversation];
+	[ApptentiveDeviceUpdater resetDeviceInfo];
+	[ApptentivePersonUpdater resetPersonInfo];
+	[ApptentiveAppConfigurationUpdater resetAppConfiguration];
+
+	[self.dataManager shutDownAndCleanUp];
+}
+
 #pragma mark - Private methods
 
 /* Methods which are safe to run when sharedBackend is still nil. */
@@ -833,6 +786,10 @@ static NSURLCache *imageCache = nil;
 
 	self.activeMessageTasks = [NSMutableSet set];
 
+	if ([self imageCachePath]) {
+		_imageCache = [[NSURLCache alloc] initWithMemoryCapacity:1 * 1024 * 1024 diskCapacity:10 * 1024 * 1024 diskPath:[self imageCachePath]];
+	}
+
 	[self checkForMessagesAtBackgroundRefreshInterval];
 }
 
@@ -850,7 +807,6 @@ static NSURLCache *imageCache = nil;
 	[ApptentiveMetrics sharedMetrics];
 
 	// One-shot actions at startup.
-	[self performSelector:@selector(checkForProperConfiguration) withObject:nil afterDelay:1];
 	[self performSelector:@selector(checkForEngagementManifest) withObject:nil afterDelay:3];
 	[self performSelector:@selector(updateDeviceIfNeeded) withObject:nil afterDelay:7];
 	[self performSelector:@selector(checkForMessages) withObject:nil afterDelay:8];
@@ -872,7 +828,7 @@ static NSURLCache *imageCache = nil;
 }
 
 - (void)continueStartupWithDataManagerFailure {
-	[self performSelector:@selector(checkForProperConfiguration) withObject:nil afterDelay:1];
+	ApptentiveLogError(@"Data manager failed to start up.");
 }
 
 - (void)updateWorking {
@@ -995,21 +951,4 @@ static NSURLCache *imageCache = nil;
 	}
 }
 
-- (void)checkForProperConfiguration {
-	static BOOL checkedAlready = NO;
-	if (checkedAlready) {
-		// Don't display more than once.
-		return;
-	}
-	checkedAlready = YES;
-#if TARGET_IPHONE_SIMULATOR
-	if ([Apptentive resourceBundle] == nil) {
-		UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Unable to Find Resources" message:@"Unable to find `ApptentiveResources.bundle`. Did you remember to add it to your target's Copy Bundle Resources build phase?" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-		[alert show];
-	} else if (self.persistentStoreCoordinator == nil || self.managedObjectContext == nil) {
-		UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Unable to Setup Core Data" message:@"Unable to setup Core Data store. Did you link against Core Data? If so, something else may be wrong." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-		[alert show];
-	}
-#endif
-}
 @end
