@@ -5,7 +5,7 @@ enum FBPermission: String {
     case Email         = "email"
 }
 
-enum Error {
+enum CustomError {
     
     case invalidCredentials
     case invalidName
