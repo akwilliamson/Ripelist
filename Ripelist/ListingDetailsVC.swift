@@ -11,6 +11,7 @@ import MapKit
 import LKAlertController
 import MBProgressHUD
 import ParseUI
+
 fileprivate func < <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
   switch (lhs, rhs) {
   case let (l?, r?):
@@ -127,7 +128,7 @@ class ListingDetailsViewController: UIViewController {
     func populateImage() {
         let imageFile = localPost.getImageFile()
         if let imageFile = imageFile {
-            imageFile.getDataInBackground(block: { (data: Data?, error: NSError?) -> Void in
+            imageFile.getDataInBackground(block: { (data, error) in
                 if let data = data {
                     self.listingImageView.image = UIImage(data: data)
                 }
@@ -206,17 +207,17 @@ class ListingDetailsViewController: UIViewController {
     
     func showFeatureAlert() -> Alert {
         let alert = Alert(title: "User Profile", message: "A feature to see other posts by this user. Should we build it?")
-            .addAction("Yes build it now!", style: .Default) { action in
+            .addAction("Yes build it now!", style: .default) { action in
                 let feedback = PFObject(className: "Feedback")
                 feedback["userProfile"] = true
-                feedback["user"] = PFUser.currentUser()
+                feedback["user"] = PFUser.current()
                 feedback.saveInBackground()
-            }.addAction("Not that important", style: .Default) { action in
+            }.addAction("Not that important", style: .default) { action in
                 let feedback = PFObject(className: "Feedback")
                 feedback["userProfile"] = false
-                feedback["user"] = PFUser.currentUser()
+                feedback["user"] = PFUser.current()
                 feedback.saveInBackground()
-            }.addAction("Cancel", style: .Cancel, handler: nil)
+            }.addAction("Cancel", style: .cancel, handler: nil)
         
         return alert
     }
@@ -228,9 +229,9 @@ class ListingDetailsViewController: UIViewController {
         listingQuery.getFirstObjectInBackground { (listing: PFObject?, error: NSError?) -> Void in
             if let foundListing = listing {
                 let alert = Alert(title: "Remove Post", message: "Remove this post from your watchlist?")
-                    .addAction("Yes", style: .Default) { action in
+                    .addAction("Yes", style: .default) { action in
                         self.removeListingFromWatchlist(foundListing)
-                    }.addAction("No", style: .Cancel, handler: nil)
+                    }.addAction("No", style: .cancel, handler: nil)
                 alert.show()
             }
         }
