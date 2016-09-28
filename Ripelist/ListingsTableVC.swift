@@ -37,7 +37,7 @@ class ListingsTableViewController: PFQueryTableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        Apptentive.sharedConnection().engage("AppLaunched", from: self)
+        Apptentive.shared.engage(event: "AppLaunched", from: self)
         self.logRegistrationEvents(forPossibleUser: PFUser.current(), atLocation: locationService.locationManager.location)
         
         locationService.locationManager.delegate = self
@@ -115,7 +115,7 @@ class ListingsTableViewController: PFQueryTableViewController {
         }
     }
     
-    func objectsDidLoad(_ error: NSError?) {
+    override func objectsDidLoad(_ error: Error?) {
         super.objectsDidLoad(error)
         if error == nil {
             tableView.scrollRectToVisible(CGRect(x: 0, y: 0, width: 1, height: 1), animated: true)
@@ -216,13 +216,13 @@ class ListingsTableViewController: PFQueryTableViewController {
         if let currentUser = PFUser.current() {
             feedback["user"] = currentUser
         }
-        alert.addAction("Filter between listings/requests", style: .Default) { action in
+        alert.addAction("Filter between listings/requests", style: .default) { action in
             feedback["slideMenu"] = "LR"
             feedback.saveInBackground()
-            }.addAction("Filter by category", style: .Default) { action in
+            }.addAction("Filter by category", style: .default) { action in
                 feedback["slideMenu"] = "C"
                 feedback.saveInBackground()
-            }.addAction("Cancel", style: .Cancel, handler: nil)
+            }.addAction("Cancel", style: .cancel, handler: nil)
             .show()
     }
     
