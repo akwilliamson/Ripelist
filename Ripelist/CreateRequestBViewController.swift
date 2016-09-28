@@ -20,7 +20,7 @@ class CreateRequestBViewController: UIViewController,
     // Colors
     let greenColor = UIColor.forestColor()
     //
-    let user = PFUser.currentUser()
+    let user = PFUser.current()
     
 // MARK: - Variables
     
@@ -66,9 +66,9 @@ class CreateRequestBViewController: UIViewController,
         requestAddressField.layer.borderWidth = 2
                   cityField.layer.borderWidth = 2
             requestZipField.layer.borderWidth = 2
-        requestAddressField.layer.borderColor = greenColor.CGColor
-                  cityField.layer.borderColor = greenColor.CGColor
-            requestZipField.layer.borderColor = greenColor.CGColor
+        requestAddressField.layer.borderColor = greenColor.cgColor
+                  cityField.layer.borderColor = greenColor.cgColor
+            requestZipField.layer.borderColor = greenColor.cgColor
         
         // Set textfield delegates
         requestAddressField.delegate = self
@@ -78,27 +78,27 @@ class CreateRequestBViewController: UIViewController,
             requestZipField.text = zip
     }
     
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
         // If a location pin exists, store it for future reference in the delegate
         if locationPin?.coordinate.latitude != nil {
             delegate?.storePin(self.locationPin)
             // If a location pin exists, set the title of the pin on map button to "Change Pin"
             if locationPin?.coordinate.latitude != 0.0 {
-                pinOnMapButton.setTitle("Change Pin", forState: .Normal)
+                pinOnMapButton.setTitle("Change Pin", for: UIControlState())
             }
         } else if addressFromCreateRequestA == false {
             // If the segue is coming from a view higher on the stack
 
             // If a location pin doesn't exist, set the title of the pin on map button to "Add Pin"
-            pinOnMapButton.setTitle("Add Pin", forState: .Normal)
+            pinOnMapButton.setTitle("Add Pin", for: UIControlState())
         } else {
             // Set the address field's text to the address string property
             requestAddressField.text = address
             // Set the zip field's text to the zip string property
             requestZipField.text = zip
             // If a location pin doesn't exist, set the title of the pin on map button to "Add Pin"
-            pinOnMapButton.setTitle("Add Pin", forState: .Normal)
+            pinOnMapButton.setTitle("Add Pin", for: UIControlState())
             // Reset the reference of the address property to not come from Create Request A
             addressFromCreateRequestA = false
         }
@@ -115,40 +115,40 @@ class CreateRequestBViewController: UIViewController,
 // Text Field Editing Methods
     
     // Dismiss keyboard methods
-    func textFieldShouldReturn(textField: UITextField) -> Bool {
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()
         view.endEditing(true)
         return true
     }
 
     // Dismiss keyboard methods
-    override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         if let _ = touches.first {
             view.endEditing(true)
         }
-        super.touchesBegan(touches, withEvent:event)
+        super.touchesBegan(touches, with:event)
     }
     
     // Text fields should not clear when touched
-    func textFieldShouldClear(textField: UITextField) -> Bool {
+    func textFieldShouldClear(_ textField: UITextField) -> Bool {
         return false
     }
     
     // When address is being edited, the location pin is removed from memory and related views
-    func textFieldDidBeginEditing(textField: UITextField) {
+    func textFieldDidBeginEditing(_ textField: UITextField) {
         if self.view.frame.width < 325 {
-            UIView.animateWithDuration(0.3, animations: { self.view.frame.origin.y -= 27 }, completion: nil)
+            UIView.animate(withDuration: 0.3, animations: { self.view.frame.origin.y -= 27 }, completion: nil)
         }
         // Remove pin from custom delegate
         locationPin = nil
         delegate?.storePin(locationPin)
         // Set title of pin on map button "Add Pin"
-        pinOnMapButton.setTitle("Add Pin", forState: .Normal)
+        pinOnMapButton.setTitle("Add Pin", for: UIControlState())
     }
     
-    func textFieldDidEndEditing(textField: UITextField) {
+    func textFieldDidEndEditing(_ textField: UITextField) {
         if self.view.frame.width < 325 {
-            UIView.animateWithDuration(0.3, animations: { self.view.frame.origin.y += 27 }, completion: nil)
+            UIView.animate(withDuration: 0.3, animations: { self.view.frame.origin.y += 27 }, completion: nil)
         }
         // If a delegate exists for the text field, store the value in custom delegate when finished editing
         if delegate != nil {
@@ -168,65 +168,65 @@ class CreateRequestBViewController: UIViewController,
 // Custom Methods
     
     // Check if zip code is valid
-    func isZipValid(zip: String) -> Bool! {
+    func isZipValid(_ zip: String) -> Bool! {
         return Int(zip) != nil && zip.characters.count == 5 ? true : false
     }
     
 // Action Methods
     
-    @IBAction func saveAddressButton(sender: UIButton) {
+    @IBAction func saveAddressButton(_ sender: UIButton) {
         requestAddressField.resignFirstResponder()
         requestZipField.resignFirstResponder()
-        let user = PFUser.currentUser()
+        let user = PFUser.current()
         if requestAddressField.text != "" && requestZipField.text != "" && saveUserAddress == false {
-            saveAddressButton.setTitle("Remove Address", forState: .Normal)
+            saveAddressButton.setTitle("Remove Address", for: UIControlState())
             saveUserAddress = true
             user?["streetAddress"] = requestAddressField.text
             user?["cityState"] = "Portland, OR"
             user?["zipCode"] = requestZipField.text
             
-            user?.saveInBackgroundWithBlock(nil)
+            user?.saveInBackground(block: nil)
         } else {
-            saveAddressButton.setTitle("Remember Address", forState: .Normal)
+            saveAddressButton.setTitle("Remember Address", for: UIControlState())
             saveUserAddress = false
-            user?.removeObjectForKey("streetAddress")
-            user?.removeObjectForKey("cityState")
-            user?.removeObjectForKey("zipCode")
-            user?.saveInBackgroundWithBlock(nil)
+            user?.remove(forKey: "streetAddress")
+            user?.remove(forKey: "cityState")
+            user?.remove(forKey: "zipCode")
+            user?.saveInBackground(block: nil)
         }
     }
     
 // Segue Methods
     
-    @IBAction func unwindToCreateRequestBController(segue: UIStoryboardSegue) {
+    @IBAction func unwindToCreateRequestBController(_ segue: UIStoryboardSegue) {
     }
     
-    override func shouldPerformSegueWithIdentifier(identifier: String?, sender: AnyObject?) -> Bool {
+    override func shouldPerformSegue(withIdentifier identifier: String?, sender: Any?) -> Bool {
         if identifier == "ShowRequestPreview" {
             let invalidAddressFieldController = UIAlertController.invalidAddressAlertController()
             if requestAddressField.text == "" && locationPin == nil {
-                self.presentViewController(invalidAddressFieldController, animated: true, completion: nil)
+                self.present(invalidAddressFieldController, animated: true, completion: nil)
                 return false
             }
             if requestZipField.text == "" && locationPin == nil {
-                self.presentViewController(invalidAddressFieldController, animated: true, completion: nil)
+                self.present(invalidAddressFieldController, animated: true, completion: nil)
                 return false
             }
             if isZipValid(requestZipField.text!) == false && locationPin == nil {
                 let invalidZipFieldController = UIAlertController.invalidZipAlertController()
-                self.presentViewController(invalidZipFieldController, animated: true, completion: nil)
+                self.present(invalidZipFieldController, animated: true, completion: nil)
                 return false
             }
         }
         return true
     }
     
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        self.navigationItem.backBarButtonItem = UIBarButtonItem(title:"", style:.Plain, target:nil, action:nil)
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        self.navigationItem.backBarButtonItem = UIBarButtonItem(title:"", style:.plain, target:nil, action:nil)
         if segue.identifier == "ShowRequestPreview" {
-            let preview = segue.destinationViewController as! CreateRequestCViewController
+            let preview = segue.destination as! CreateRequestCViewController
             let addressString = "\(requestAddressField.text) Portland, OR \(requestZipField.text) USA"
-            let name = PFUser.currentUser()?.valueForKey("name") as! String
+            let name = PFUser.current()?.value(forKey: "name") as! String
             preview.addressString = addressString
             preview.name = name
             preview.zipCode = requestZipField.text
@@ -238,7 +238,7 @@ class CreateRequestBViewController: UIViewController,
             preview.locationPin = locationPin
         }
         if segue.identifier == "AddPinToMap" {
-            let navigationController = segue.destinationViewController as! UINavigationController
+            let navigationController = segue.destination as! UINavigationController
             let pinOnMapController = navigationController.topViewController as! PutPinOnRequestMapViewController
             pinOnMapController.navigationController?.setNavigationBarHidden(false, animated: true)
             pinOnMapController.shouldRemoveLastPin = shouldRemoveLastPin

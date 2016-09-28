@@ -40,9 +40,9 @@ class RequestCell: PFTableViewCell {
     }
     
     internal func setDistanceAway(fromPoint currentPoint: CLLocation?, toPoint postPoint: PFGeoPoint?) {
-        if let currentPoint = currentPoint, postGeoPoint = postPoint {
+        if let currentPoint = currentPoint, let postGeoPoint = postPoint {
             let currentGeoPoint = PFGeoPoint(location: currentPoint)
-            var distanceBetween = postGeoPoint.distanceInMilesTo(currentGeoPoint)
+            var distanceBetween = postGeoPoint.distanceInMiles(to: currentGeoPoint)
             distanceBetween = Double(round(100*distanceBetween)/100)
             switch distanceBetween {
             case 0...0.038:
@@ -57,7 +57,7 @@ class RequestCell: PFTableViewCell {
             }
         } else {
             distanceAwayLabel.numberOfLines = 2
-            distanceAwayLabel.lineBreakMode = .ByWordWrapping
+            distanceAwayLabel.lineBreakMode = .byWordWrapping
             distanceAwayLabel.text = "Location disabled"
         }
     }

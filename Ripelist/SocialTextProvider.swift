@@ -10,28 +10,28 @@ import UIKit
 
 class SocialTextProvider: UIActivityItemProvider {
     
-    private var title: String
+    fileprivate var title: String
     
     init(onPostWithTitle title: String) {
         self.title = title
         super.init(placeholderItem: title)
     }
     
-    override func activityViewController(activityViewController: UIActivityViewController, itemForActivityType activityType: String) -> AnyObject? {
+    override func activityViewController(_ activityViewController: UIActivityViewController, itemForActivityType activityType: UIActivityType) -> Any? {
         
         switch activityType {
-        case UIActivityTypePostToTwitter:
-            return "Found on Ripelist \(title) \(NSURL(string: "bit.ly/1LiLjMo")!)"
-        case UIActivityTypeMail:
-            return "\(title) \(NSURL(string: "bit.ly/1LiLjMo")!)"
-        case UIActivityTypeMessage:
-            return "\(title) \(NSURL(string: "bit.ly/1LiLjMo")!)"
+        case UIActivityType.postToTwitter:
+            return "Found on Ripelist \(title) \(URL(string: "bit.ly/1LiLjMo")!)"
+        case UIActivityType.mail:
+            return "\(title) \(URL(string: "bit.ly/1LiLjMo")!)"
+        case UIActivityType.message:
+            return "\(title) \(URL(string: "bit.ly/1LiLjMo")!)"
         default:
             return nil
         }
     }
     
-    override func activityViewController(activityViewController: UIActivityViewController, subjectForActivityType activityType: String?) -> String {
+    override func activityViewController(_ activityViewController: UIActivityViewController, subjectForActivityType activityType: UIActivityType?) -> String {
         return "Ripelist - \(title)"
     }
     

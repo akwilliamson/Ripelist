@@ -14,7 +14,7 @@ import Flurry_iOS_SDK
 
 class MappedPostsViewController: UIViewController {
 
-    let whiteColor = UIColor.whiteColor()
+    let whiteColor = UIColor.white
     
     var mapLatitude: Double?
     var mapLongitude: Double?
@@ -35,7 +35,7 @@ class MappedPostsViewController: UIViewController {
     }
     
     func logStatusEvents() {
-        let status = PFUser.currentUser() == nil ? "Not Registered" : "Registered"
+        let status = PFUser.current() == nil ? "Not Registered" : "Registered"
         Flurry.logEvent("Main Listings Map View", withParameters: ["status": status], timed: true)
     }
     
@@ -52,7 +52,7 @@ class MappedPostsViewController: UIViewController {
     
     func queryLocations() {
         let locationQuery = PFQuery(className: "Listing").includeKey("owner")
-        locationQuery.findObjectsInBackgroundWithBlock { (results: [PFObject]?, error: NSError?) -> Void in
+        locationQuery.findObjectsInBackground { (results: [PFObject]?, error: NSError?) -> Void in
             guard let fetchedPosts = results else { return }
             for post in fetchedPosts {
                 let title = post["title"] as! String
@@ -65,17 +65,17 @@ class MappedPostsViewController: UIViewController {
         }
     }
     
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         Flurry.endTimedEvent("Main Listings Map View", withParameters: nil)
         if segue.identifier == "ListingDetails" {
-            let listingDetailsVC = segue.destinationViewController as! ListingDetailsViewController
+            let listingDetailsVC = segue.destination as! ListingDetailsViewController
             listingDetailsVC.hidesBottomBarWhenPushed = true
             if let tappedPost = tappedPost {
                 listingDetailsVC.localPost = LocalPost(postObject: tappedPost, postAuthor: (tappedPost["owner"] as! PFUser))
             }
         }
         if segue.identifier == "RequestDetails" {
-            let requestDetailsVC = segue.destinationViewController as! RequestDetailsViewController
+            let requestDetailsVC = segue.destination as! RequestDetailsViewController
             requestDetailsVC.hidesBottomBarWhenPushed = true
             if let tappedPost = tappedPost {
                 requestDetailsVC.localPost = LocalPost(postObject: tappedPost, postAuthor: (tappedPost["owner"] as! PFUser))
@@ -86,7 +86,7 @@ class MappedPostsViewController: UIViewController {
 
 extension MappedPostsViewController: MKMapViewDelegate {
     
-    func mapView(mapView: MKMapView, annotationView view: MKAnnotationView, calloutAccessoryControlTapped control: UIControl) {
+    func mapView(_ mapView: MKMapView, annotationView view: MKAnnotationView, calloutAccessoryControlTapped control: UIControl) {
         self.logEvents("Main View Map Pin Tapped")
         let annotation = view.annotation as! PostAnnotation
         self.tappedPost = annotation.post
@@ -97,18 +97,18 @@ extension MappedPostsViewController: MKMapViewDelegate {
         self.tappedRegion = MKCoordinateRegionMake(annotation.coordinate, span)
         
         let segueString = annotation.post["postType"] as! String == "listing" ? "ListingDetails" : "RequestDetails"
-        self.performSegueWithIdentifier(segueString, sender: self)
+        self.performSegue(withIdentifier: segueString, sender: self)
     }
     
-    func mapView(mapView: MKMapView, viewForAnnotation annotation: MKAnnotation) -> MKAnnotationView? {
+    func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
         let postPin = MKPinAnnotationView(annotation: annotation, reuseIdentifier: "PostPin")
-        postPin.pinColor = .Purple
+        postPin.pinColor = .purple
         postPin.canShowCallout = true
-        postPin.rightCalloutAccessoryView = UIButton(type: .DetailDisclosure)
+        postPin.rightCalloutAccessoryView = UIButton(type: .detailDisclosure)
         return postPin
     }
     
-    func mapView(mapView: MKMapView, rendererForOverlay overlay: MKOverlay) -> MKOverlayRenderer {
+    func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
         let circle = MKCircleRenderer(overlay: overlay)
         circle.fillColor = UIColor.purpleRadiusColor()
         return circle

@@ -12,11 +12,11 @@ import Flurry_iOS_SDK
 
 extension UIViewController {
     
-    func logEvents(eventString: String) {
+    func logEvents(_ eventString: String) {
         Flurry.logEvent(eventString)
     }
     
-    func logEvents(eventString: String, withParameters parameters: [String: String], timed: Bool) {
+    func logEvents(_ eventString: String, withParameters parameters: [String: String], timed: Bool) {
         Flurry.logEvent(eventString, withParameters: parameters, timed: timed)
     }
     
@@ -28,7 +28,7 @@ extension UIViewController {
         let imageToShare = SocialImageProvider(onPostWithImage: PFImageView(), file: postImageFile)
         
         let activityVC = UIActivityViewController(activityItems: [textToShare, imageToShare], applicationActivities: nil)
-        activityVC.excludedActivityTypes = [UIActivityTypeCopyToPasteboard, UIActivityTypeAssignToContact]
+        activityVC.excludedActivityTypes = [UIActivityType.copyToPasteboard, UIActivityType.assignToContact]
         
         return activityVC
     }

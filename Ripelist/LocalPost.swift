@@ -84,7 +84,7 @@ class LocalPost {
         guard let currentLocation = currentLocation else { return "Location disabled" }
         
         let currentLocationPoint = PFGeoPoint(location: currentLocation)
-        var distanceBetweenPoints = postLocation.distanceInMilesTo(currentLocationPoint)
+        var distanceBetweenPoints = postLocation.distanceInMiles(to: currentLocationPoint)
         distanceBetweenPoints = Double(round(100*distanceBetweenPoints)/100)
         
         switch distanceBetweenPoints {

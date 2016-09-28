@@ -19,7 +19,7 @@ class NextPageCell: PFTableViewCell {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         self.textLabel?.text = "Load More"
         self.textLabel?.textColor = UIColor.forestColor()
-        self.textLabel?.textAlignment = .Center
+        self.textLabel?.textAlignment = .center
         self.textLabel?.font = UIFont(name: "ArialRoundedMTBold", size: 25)
         self.tintColor = UIColor.forestColor()
     }

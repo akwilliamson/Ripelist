@@ -15,8 +15,8 @@ class PrivacyPolicyVC: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        let url = NSURL(string: "https://www.iubenda.com/privacy-policy/689270")
-        let requestObj = NSURLRequest(URL: url!)
+        let url = URL(string: "https://www.iubenda.com/privacy-policy/689270")
+        let requestObj = URLRequest(url: url!)
         webView.loadRequest(requestObj)
     }
 

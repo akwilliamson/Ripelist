@@ -15,7 +15,7 @@ import MapKit
 */
 
 protocol CreateRequestBViewControllerDelegate {
-    func storeAddress(data: String?)
-    func storeZip(data: String?)
-    func storePin(data: MKPointAnnotation?)
+    func storeAddress(_ data: String?)
+    func storeZip(_ data: String?)
+    func storePin(_ data: MKPointAnnotation?)
 }

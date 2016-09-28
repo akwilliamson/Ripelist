@@ -5,7 +5,7 @@ extension String {
     
     public func validEmail() -> Bool {
         let emailRegex = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,6}"
-        return NSPredicate(format: "SELF MATCHES %@", emailRegex).evaluateWithObject(self)
+        return NSPredicate(format: "SELF MATCHES %@", emailRegex).evaluate(with: self)
     }
     
     public func validName() -> Bool {
@@ -25,9 +25,9 @@ extension String {
 
 extension NSMutableAttributedString {
     
-    public func setAsLink(textToFind:String, linkURL:String) -> Bool {
+    public func setAsLink(_ textToFind:String, linkURL:String) -> Bool {
         
-        let foundRange = self.mutableString.rangeOfString(textToFind)
+        let foundRange = self.mutableString.range(of: textToFind)
         if foundRange.location != NSNotFound {
             self.addAttribute(NSLinkAttributeName, value: linkURL, range: foundRange)
             return true

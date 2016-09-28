@@ -11,8 +11,8 @@ import ParseUI
 
 class SocialImageProvider: UIActivityItemProvider {
     
-    private var imageView: PFImageView
-    private var file: PFFile?
+    fileprivate var imageView: PFImageView
+    fileprivate var file: PFFile?
     
     init(onPostWithImage imageView: PFImageView, file: PFFile?) {
         self.imageView = imageView
@@ -20,12 +20,12 @@ class SocialImageProvider: UIActivityItemProvider {
         super.init(placeholderItem: imageView)
     }
     
-    override func activityViewController(activityViewController: UIActivityViewController, itemForActivityType activityType: String) -> AnyObject? {
+    override func activityViewController(_ activityViewController: UIActivityViewController, itemForActivityType activityType: UIActivityType) -> Any? {
         var image = UIImage(named: "logo.png")
         
         if file != nil {
             imageView.file = file
-            imageView.loadInBackground({ (loadedImage: UIImage?, error: NSError?) -> Void in
+            imageView.load(inBackground: { (loadedImage: UIImage?, error: NSError?) -> Void in
                 image = loadedImage
             })
         }

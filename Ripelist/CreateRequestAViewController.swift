@@ -25,13 +25,13 @@ class CreateRequestAViewController: UIViewController,
     var categoryArray:[NSString] = []
     var swapTypeArray:[NSString] = []
     // ?
-    let user = PFUser.currentUser()
+    let user = PFUser.current()
     
 // MARK: - Variables
     
     // ?
-    var categoryPickerView = UIPickerView(frame: CGRectMake(0, 15, 304, 0))
-    var swapTypePickerView = UIPickerView(frame: CGRectMake(0, 15, 304, 0))
+    var categoryPickerView = UIPickerView(frame: CGRect(x: 0, y: 15, width: 304, height: 0))
+    var swapTypePickerView = UIPickerView(frame: CGRect(x: 0, y: 15, width: 304, height: 0))
     var titleValid = false
     var categoryValid = false
     var swapTypeValid = false
@@ -59,20 +59,20 @@ class CreateRequestAViewController: UIViewController,
         Flurry.logEvent("Create Request A")
         self.navigationController?.setToolbarHidden(true, animated: false) // Hide empty black box on push
         
-        let path = NSBundle.mainBundle().pathForResource("Categories", ofType:"plist")
+        let path = Bundle.main.path(forResource: "Categories", ofType:"plist")
         let dict = NSDictionary(contentsOfFile: path!)
         categoryArray = dict!["CategoryType"] as! [NSString]
         swapTypeArray = dict!["RequestSwapType"] as! [NSString]
         
         // Set picker view width depending on iOS device used
         if self.view.frame.width > 320 {
-            categoryPickerView = UIPickerView(frame: CGRectMake(0, 15, 360, 0))
-            swapTypePickerView = UIPickerView(frame: CGRectMake(0, 15, 360, 0))
+            categoryPickerView = UIPickerView(frame: CGRect(x: 0, y: 15, width: 360, height: 0))
+            swapTypePickerView = UIPickerView(frame: CGRect(x: 0, y: 15, width: 360, height: 0))
         }
 
         // For sliding view up when keyboard is displayed
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(CreateRequestAViewController.keyboardWillShow(_:)), name:UIKeyboardWillShowNotification, object: nil);
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(CreateRequestAViewController.keyboardWillHide(_:)), name:UIKeyboardWillHideNotification, object: nil);
+        NotificationCenter.default.addObserver(self, selector: #selector(CreateRequestAViewController.keyboardWillShow(_:)), name:NSNotification.Name.UIKeyboardWillShow, object: nil);
+        NotificationCenter.default.addObserver(self, selector: #selector(CreateRequestAViewController.keyboardWillHide(_:)), name:NSNotification.Name.UIKeyboardWillHide, object: nil);
         
         // Setting initial border and color values
         
@@ -80,7 +80,7 @@ class CreateRequestAViewController: UIViewController,
         swapTypeButton.clipsToBounds = true
         nextButton.layer.cornerRadius = 25
         descriptionTextView.text = "Enter a description (optional)"
-        descriptionTextView.textColor = UIColor.lightGrayColor()
+        descriptionTextView.textColor = UIColor.lightGray
         
         // Assigning proper delegates/data sources/tags
         titleLabel.delegate = self
@@ -97,156 +97,156 @@ class CreateRequestAViewController: UIViewController,
     
 // MARK: - Custom Delegate Methods
     
-    func storeAddress(data: String?) {
+    func storeAddress(_ data: String?) {
         self.addressField = data
     }
     
-    func storeZip(data: String?) {
+    func storeZip(_ data: String?) {
         self.zipField = data
     }
     
-    func storePin(data: MKPointAnnotation?) {
+    func storePin(_ data: MKPointAnnotation?) {
         self.locationPin = data
     }
     
 // MARK: - Text Field Delegate Methods
     
-    func textFieldShouldReturn(textField: UITextField) -> Bool {
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()
         return true
     }
     
-    func textFieldShouldClear(textField: UITextField) -> Bool {
+    func textFieldShouldClear(_ textField: UITextField) -> Bool {
         return false
     }
     
-    override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         if let _ = touches.first {
             view.endEditing(true)
         }
-        super.touchesBegan(touches, withEvent:event)
+        super.touchesBegan(touches, with:event)
     }
     
-    func keyboardWillShow(sender: NSNotification) {
-        if descriptionTextView.isFirstResponder() {
+    func keyboardWillShow(_ sender: Notification) {
+        if descriptionTextView.isFirstResponder {
             if self.view.frame.width > 325 {
-                UIView.animateWithDuration(1.0, animations: { self.view.frame.origin.y -= 72 }, completion: nil)
+                UIView.animate(withDuration: 1.0, animations: { self.view.frame.origin.y -= 72 }, completion: nil)
             } else {
-                UIView.animateWithDuration(1.0, animations: { self.view.frame.origin.y -= 155 }, completion: nil)
+                UIView.animate(withDuration: 1.0, animations: { self.view.frame.origin.y -= 155 }, completion: nil)
             }
         }
     }
-    func keyboardWillHide(sender: NSNotification) {
-        if descriptionTextView.isFirstResponder() {
+    func keyboardWillHide(_ sender: Notification) {
+        if descriptionTextView.isFirstResponder {
             if self.view.frame.width > 325 {
-                UIView.animateWithDuration(1.0, animations: { self.view.frame.origin.y += 72}, completion: nil)
+                UIView.animate(withDuration: 1.0, animations: { self.view.frame.origin.y += 72}, completion: nil)
             } else {
-                UIView.animateWithDuration(1.0, animations: { self.view.frame.origin.y += 155 }, completion: nil)
+                UIView.animate(withDuration: 1.0, animations: { self.view.frame.origin.y += 155 }, completion: nil)
             }
         }
     }
     
-    func textFieldDidBeginEditing(textField: UITextField) {
-        descriptionTextView.userInteractionEnabled = false
-             categoryButton.userInteractionEnabled = false
-             swapTypeButton.userInteractionEnabled = false
+    func textFieldDidBeginEditing(_ textField: UITextField) {
+        descriptionTextView.isUserInteractionEnabled = false
+             categoryButton.isUserInteractionEnabled = false
+             swapTypeButton.isUserInteractionEnabled = false
     }
     
-    func textFieldDidEndEditing(textField: UITextField) {
-        descriptionTextView.userInteractionEnabled = true
-             categoryButton.userInteractionEnabled = true
-             swapTypeButton.userInteractionEnabled = true
+    func textFieldDidEndEditing(_ textField: UITextField) {
+        descriptionTextView.isUserInteractionEnabled = true
+             categoryButton.isUserInteractionEnabled = true
+             swapTypeButton.isUserInteractionEnabled = true
         if textField.text != "" {
             titleValid = true
         }
     }
     
-    func textViewDidEndEditing(textView: UITextView) {
-        swapTypeButton.userInteractionEnabled = true
+    func textViewDidEndEditing(_ textView: UITextView) {
+        swapTypeButton.isUserInteractionEnabled = true
         if textView.text.isEmpty {
             textView.text = "Enter a description (optional)"
-            textView.textColor = UIColor.lightGrayColor()
+            textView.textColor = UIColor.lightGray
         }
     }
     
-    func textViewDidBeginEditing(textView: UITextView) {
-        swapTypeButton.userInteractionEnabled = false
-        if textView.textColor == UIColor.lightGrayColor() {
+    func textViewDidBeginEditing(_ textView: UITextView) {
+        swapTypeButton.isUserInteractionEnabled = false
+        if textView.textColor == UIColor.lightGray {
             textView.text = nil
             textView.textColor = greenColor
         }
     }
     
-    @IBAction func categoryButton(sender: AnyObject) {
+    @IBAction func categoryButton(_ sender: AnyObject) {
         titleLabel.resignFirstResponder()
         descriptionTextView.resignFirstResponder()
         
         let picker = ActionSheetStringPicker(title: "Category", rows: categoryArray, initialSelection: 0,
             doneBlock: { (picker, value, index) -> Void in
                 let title = self.categoryArray[value] as String
-                self.categoryButton.setTitleColor(self.greenColor, forState: .Normal)
-                self.categoryButton.setTitle(title, forState: .Normal)
+                self.categoryButton.setTitleColor(self.greenColor, for: UIControlState())
+                self.categoryButton.setTitle(title, for: UIControlState())
                 self.categoryValid = true
             },
-            cancelBlock: { action in }, origin: self.view)
+            cancel: { action in }, origin: self.view)
         
-            let doneButton = UIBarButtonItem(title: "Done", style: .Done, target: nil, action: nil)
+            let doneButton = UIBarButtonItem(title: "Done", style: .done, target: nil, action: nil)
             doneButton.tintColor = greenColor
-            picker.setDoneButton(doneButton)
-            let cancelButton = UIBarButtonItem(title: "Cancel", style: .Plain, target: nil, action: nil)
+            picker?.setDoneButton(doneButton)
+            let cancelButton = UIBarButtonItem(title: "Cancel", style: .plain, target: nil, action: nil)
             cancelButton.tintColor = greenColor
-            picker.setCancelButton(cancelButton)
+            picker?.setCancelButton(cancelButton)
         
-            picker.pickerTextAttributes = [NSFontAttributeName: UIFont(name: "ArialRoundedMTBold", size: 25)!, NSForegroundColorAttributeName: greenColor]
-            picker.titleTextAttributes = [NSFontAttributeName: UIFont(name: "ArialRoundedMTBold", size: 25)!, NSForegroundColorAttributeName: greenColor]
-            picker.showActionSheetPicker()
+            picker?.pickerTextAttributes = [NSFontAttributeName: UIFont(name: "ArialRoundedMTBold", size: 25)!, NSForegroundColorAttributeName: greenColor]
+            picker?.titleTextAttributes = [NSFontAttributeName: UIFont(name: "ArialRoundedMTBold", size: 25)!, NSForegroundColorAttributeName: greenColor]
+            picker?.show()
         
     }
-    @IBAction func swapTypeButton(sender: AnyObject) {
+    @IBAction func swapTypeButton(_ sender: AnyObject) {
         titleLabel.resignFirstResponder()
         descriptionTextView.resignFirstResponder()
         
         let picker = ActionSheetStringPicker(title: "Swap Type", rows: swapTypeArray, initialSelection: 0,
             doneBlock: { (picker, value, index) -> Void in
                 let title = self.swapTypeArray[value] as String
-                self.swapTypeButton.setTitleColor(self.greenColor, forState: .Normal)
-                self.swapTypeButton.setTitle(title, forState: .Normal)
+                self.swapTypeButton.setTitleColor(self.greenColor, for: UIControlState())
+                self.swapTypeButton.setTitle(title, for: UIControlState())
                 self.swapTypeValid = true
             },
-            cancelBlock: { action in
+            cancel: { action in
                 
             }, origin: self.view)
         
-        let doneButton = UIBarButtonItem(title: "Done", style: .Done, target: nil, action: nil)
+        let doneButton = UIBarButtonItem(title: "Done", style: .done, target: nil, action: nil)
         doneButton.tintColor = greenColor
-        picker.setDoneButton(doneButton)
+        picker?.setDoneButton(doneButton)
         
-        let cancelButton = UIBarButtonItem(title: "Cancel", style: .Plain, target: nil, action: nil)
+        let cancelButton = UIBarButtonItem(title: "Cancel", style: .plain, target: nil, action: nil)
         cancelButton.tintColor = greenColor
-        picker.setCancelButton(cancelButton)
+        picker?.setCancelButton(cancelButton)
         
-        picker.pickerTextAttributes = [NSFontAttributeName: UIFont(name: "ArialRoundedMTBold", size: 25)!, NSForegroundColorAttributeName: greenColor]
-        picker.titleTextAttributes = [NSFontAttributeName: UIFont(name: "ArialRoundedMTBold", size: 25)!, NSForegroundColorAttributeName: greenColor]
-        picker.showActionSheetPicker()
+        picker?.pickerTextAttributes = [NSFontAttributeName: UIFont(name: "ArialRoundedMTBold", size: 25)!, NSForegroundColorAttributeName: greenColor]
+        picker?.titleTextAttributes = [NSFontAttributeName: UIFont(name: "ArialRoundedMTBold", size: 25)!, NSForegroundColorAttributeName: greenColor]
+        picker?.show()
         
     }
     
-    override func shouldPerformSegueWithIdentifier(identifier: String?, sender: AnyObject?) -> Bool {
+    override func shouldPerformSegue(withIdentifier identifier: String?, sender: Any?) -> Bool {
         self.view.endEditing(true)
         let invalidFieldController = UIAlertController.invalidFieldAlertController()
         if identifier == "ShowLocation" {
             if !titleValid || !categoryValid || !swapTypeValid {
-                presentViewController(invalidFieldController, animated: true, completion: nil)
+                present(invalidFieldController, animated: true, completion: nil)
                 return false
             }
         }
         return true
     }
     
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        self.navigationItem.backBarButtonItem = UIBarButtonItem(title:"", style:.Plain, target:nil, action:nil)
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        self.navigationItem.backBarButtonItem = UIBarButtonItem(title:"", style:.plain, target:nil, action:nil)
         if segue.identifier == "ShowLocation" {
-            let createRequestBController = segue.destinationViewController as! CreateRequestBViewController
+            let createRequestBController = segue.destination as! CreateRequestBViewController
             createRequestBController.requestTitle = titleLabel.text
             createRequestBController.requestCategory = categoryButton.currentTitle
             createRequestBController.requestSwapType = swapTypeButton.currentTitle

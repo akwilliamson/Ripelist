@@ -12,13 +12,13 @@ import ParseUI
 // This extension adds custom alerts that are presented more than once throughout the application.
 
 extension UIAlertController {
-    class func failedLoginOrSignupNotice(title: String, message: String) -> UIAlertController {
+    class func failedLoginOrSignupNotice(_ title: String, message: String) -> UIAlertController {
         let controller = UIAlertController(title: title,
             message: message,
-            preferredStyle: .Alert)
+            preferredStyle: .alert)
         
         controller.addAction(UIAlertAction(title: "Dismiss",
-            style: .Cancel,
+            style: .cancel,
             handler: nil))
         
         return controller
@@ -27,10 +27,10 @@ extension UIAlertController {
     class func invalidFieldAlertController() -> UIAlertController {
         let controller = UIAlertController(title: "Invalid Field",
                                            message: "Please add a title, category and swap type before continuing.",
-                                           preferredStyle: .Alert)
+                                           preferredStyle: .alert)
         
         controller.addAction(UIAlertAction(title: "Dismiss",
-                                           style: .Default,
+                                           style: .default,
                                            handler: nil))
         return controller
     }
@@ -38,20 +38,20 @@ extension UIAlertController {
     class func possibleFeatureAlertController() -> UIAlertController {
         let controller = UIAlertController(title: "Bookmarked Posts",
             message: "A feature to see posts you've saved. Should we build it?",
-            preferredStyle: .Alert)
-        let yesAction = UIAlertAction(title: "Yes build it now!", style: .Default) { action in
+            preferredStyle: .alert)
+        let yesAction = UIAlertAction(title: "Yes build it now!", style: .default) { action in
             let feedback = PFObject(className: "Feedback")
             feedback["bookmarkedPosts"] = true
-            feedback["user"] = PFUser.currentUser()
+            feedback["user"] = PFUser.current()
             feedback.saveInBackground()
         }
-        let noAction = UIAlertAction(title: "Not that important", style: .Default) { action in
+        let noAction = UIAlertAction(title: "Not that important", style: .default) { action in
             let feedback = PFObject(className: "Feedback")
             feedback["bookmarkedPosts"] = false
-            feedback["user"] = PFUser.currentUser()
+            feedback["user"] = PFUser.current()
             feedback.saveInBackground()
         }
-        let cancelAction = UIAlertAction(title: "Cancel", style: .Cancel, handler: nil)
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
         controller.addAction(yesAction)
         controller.addAction(noAction)
         controller.addAction(cancelAction)
@@ -62,10 +62,10 @@ extension UIAlertController {
     class func photoCouldNotBeSavedAlertController() -> UIAlertController {
         let controller = UIAlertController(title: "Save Failed",
                                          message: "Photo could not be saved.",
-                                  preferredStyle: .Alert)
+                                  preferredStyle: .alert)
         
         controller.addAction(UIAlertAction(title: "Dismiss",
-                                           style: .Default,
+                                           style: .default,
                                          handler: nil))
         return controller
     }
@@ -73,10 +73,10 @@ extension UIAlertController {
     class func chooseCategoryAlertController() -> UIAlertController {
         let controller = UIAlertController(title: "Choose Category",
                                            message: "\n\n\n\n\n\n\n\n\n\n",
-                                           preferredStyle: .ActionSheet)
+                                           preferredStyle: .actionSheet)
         
         controller.view.tintColor = UIColor.forestColor()
-        controller.view.backgroundColor = UIColor.whiteColor()
+        controller.view.backgroundColor = UIColor.white
         
         return controller
     }
@@ -84,10 +84,10 @@ extension UIAlertController {
     class func chooseSwapTypeAlertController() -> UIAlertController {
         let controller = UIAlertController(title: "Choose Swap Type",
                                            message: "\n\n\n\n\n\n\n\n\n\n",
-                                           preferredStyle: .ActionSheet)
+                                           preferredStyle: .actionSheet)
      
         controller.view.tintColor = UIColor.forestColor()
-        controller.view.backgroundColor = UIColor.whiteColor()
+        controller.view.backgroundColor = UIColor.white
         
         return controller
     }
@@ -95,10 +95,10 @@ extension UIAlertController {
     class func invalidAddressAlertController() -> UIAlertController {
         let controller = UIAlertController(title: "Invalid Location",
                                            message: "Please provide an address or location before continuing.",
-                                           preferredStyle: .Alert)
+                                           preferredStyle: .alert)
         
         controller.addAction(UIAlertAction(title: "Dismiss",
-                                           style: .Cancel,
+                                           style: .cancel,
                                            handler: nil))
         return controller
     }
@@ -106,10 +106,10 @@ extension UIAlertController {
     class func invalidZipAlertController() -> UIAlertController {
         let controller = UIAlertController(title: "Invalid Zip Code",
                                            message: "Please provide a valid zip code before continuing.",
-                                           preferredStyle: .Alert)
+                                           preferredStyle: .alert)
         
         controller.addAction(UIAlertAction(title: "Dismiss",
-                                           style: .Cancel,
+                                           style: .cancel,
                                            handler: nil))
         return controller
     }
@@ -117,10 +117,10 @@ extension UIAlertController {
     class func cannotMessageYourselfController() -> UIAlertController {
         let controller = UIAlertController(title: "Wait a Minute...",
                                            message: "No need to message yourself!",
-                                           preferredStyle: .Alert)
+                                           preferredStyle: .alert)
         
         controller.addAction(UIAlertAction(title: "Dismiss",
-                                           style: .Cancel,
+                                           style: .cancel,
                                            handler: nil))
         return controller
     }

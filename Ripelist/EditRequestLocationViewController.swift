@@ -32,7 +32,7 @@ class EditRequestLocationViewController: UIViewController,
         Flurry.logEvent("Edit Request Location")
         // Navigation bar title
         self.navigationController?.navigationBar.titleTextAttributes = [NSFontAttributeName: UIFont(name: "ArialRoundedMTBold", size: 25)!,
-            NSForegroundColorAttributeName: UIColor.whiteColor()]
+            NSForegroundColorAttributeName: UIColor.white]
         
         saveButton.layer.cornerRadius = 25
         
@@ -54,7 +54,7 @@ class EditRequestLocationViewController: UIViewController,
 // MARK: - Custom Methods
     
     // Sets region for map view
-    func setUpMapView(location: PFGeoPoint) {
+    func setUpMapView(_ location: PFGeoPoint) {
         let coordinates: CLLocationCoordinate2D = CLLocationCoordinate2D(latitude: location.latitude, longitude: location.longitude)
         let span: MKCoordinateSpan = MKCoordinateSpanMake(0.01, 0.01)
         let region: MKCoordinateRegion = MKCoordinateRegionMake(coordinates, span)
@@ -62,10 +62,10 @@ class EditRequestLocationViewController: UIViewController,
     }
     
     // When user presses map
-    func action(gestureRecognizer:UIGestureRecognizer) {
+    func action(_ gestureRecognizer:UIGestureRecognizer) {
         // Create a new annotation with the proper coordinates for the point pressed
-        let touchPoint = gestureRecognizer.locationInView(self.mapView)
-        let newCoordinate: CLLocationCoordinate2D = mapView.convertPoint(touchPoint, toCoordinateFromView: self.mapView)
+        let touchPoint = gestureRecognizer.location(in: self.mapView)
+        let newCoordinate: CLLocationCoordinate2D = mapView.convert(touchPoint, toCoordinateFrom: self.mapView)
         
         // Remove previous pin from map
         mapView.removeAnnotation(newPin)
@@ -78,32 +78,32 @@ class EditRequestLocationViewController: UIViewController,
 // MARK: - Mapview Delegate Methods
     
     // Returns a customized pin to display on the map
-    func mapView(mapView: MKMapView, viewForAnnotation annotation: MKAnnotation) -> MKAnnotationView? {
-        var pinView = mapView.dequeueReusableAnnotationViewWithIdentifier("pin") as? MKPinAnnotationView
+    func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
+        var pinView = mapView.dequeueReusableAnnotationView(withIdentifier: "pin") as? MKPinAnnotationView
         if pinView == nil {
             pinView = MKPinAnnotationView(annotation: annotation, reuseIdentifier: "pin")
             pinView?.canShowCallout = true
         } else {
             pinView!.annotation = annotation
         }
-        pinView!.pinColor = .Purple
+        pinView!.pinColor = .purple
         
         return pinView
     }
     
-    @IBAction func saveButton(sender: AnyObject) {
+    @IBAction func saveButton(_ sender: AnyObject) {
         let newGeopoint = PFGeoPoint(latitude: newPin.coordinate.latitude, longitude: newPin.coordinate.longitude)
         delegate?.storePin(newGeopoint)
-        let activityView = UIActivityIndicatorView(activityIndicatorStyle: .Gray)
-        activityView.transform = CGAffineTransformMakeScale(2, 2)
+        let activityView = UIActivityIndicatorView(activityIndicatorStyle: .gray)
+        activityView.transform = CGAffineTransform(scaleX: 2, y: 2)
         activityView.center = self.view.center
         activityView.startAnimating()
         self.view.addSubview(activityView)
         requestObject["location"] = newGeopoint
-        requestObject.saveInBackgroundWithBlock { (success: Bool, error: NSError?) -> Void in
+        requestObject.saveInBackground { (success: Bool, error: NSError?) -> Void in
             if success {
                 activityView.stopAnimating()
-                self.performSegueWithIdentifier("UnwindToEditListing", sender: self)
+                self.performSegue(withIdentifier: "UnwindToEditListing", sender: self)
             } else {
                 print(error?.localizedDescription)
             }

@@ -51,30 +51,30 @@ class PutPinOnRequestMapViewController: UIViewController,
     }
     
     // Returns a customized pin to display on the map
-    func mapView(mapView: MKMapView, viewForAnnotation annotation: MKAnnotation) -> MKAnnotationView? {
-            var pinView = mapView.dequeueReusableAnnotationViewWithIdentifier("pin") as? MKPinAnnotationView
+    func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
+            var pinView = mapView.dequeueReusableAnnotationView(withIdentifier: "pin") as? MKPinAnnotationView
             if pinView == nil {
                 pinView = MKPinAnnotationView(annotation: annotation, reuseIdentifier: "pin")
                 pinView!.canShowCallout = true
             } else {
                 pinView!.annotation = annotation
             }
-            pinView!.pinColor = .Purple
+            pinView!.pinColor = .purple
             
             return pinView
     }
     
     // Action to take place when a user presses the map
-    func action(gestureRecognizer:UIGestureRecognizer) {
+    func action(_ gestureRecognizer:UIGestureRecognizer) {
         // Create a new annotation with the proper coordinates for the point pressed
-        let touchPoint = gestureRecognizer.locationInView(self.mapView)
-        let newCoordinate: CLLocationCoordinate2D = mapView.convertPoint(touchPoint, toCoordinateFromView: self.mapView)
+        let touchPoint = gestureRecognizer.location(in: self.mapView)
+        let newCoordinate: CLLocationCoordinate2D = mapView.convert(touchPoint, toCoordinateFrom: self.mapView)
         let newAnnotation = MKPointAnnotation()
         newAnnotation.coordinate = newCoordinate
         
         // Remove previous pin from map and from the lastPin array
         mapView.removeAnnotation(lastPin[0])
-        lastPin.removeAtIndex(0)
+        lastPin.remove(at: 0)
         
         // Add the new pin to the map and to the lastPin array
         mapView.addAnnotation(newAnnotation)
@@ -84,15 +84,15 @@ class PutPinOnRequestMapViewController: UIViewController,
         pinHasBeenPlaced = true
     }
     
-    override func shouldPerformSegueWithIdentifier(identifier: String?, sender: AnyObject?) -> Bool {
+    override func shouldPerformSegue(withIdentifier identifier: String?, sender: Any?) -> Bool {
         // Let user select "Done" if a pin has been placed on the map
         if identifier == "FinishPinOnMap" {
             // Don't perform the "Done" segue unless a pin has been placed
             if !pinHasBeenPlaced {
-                let alert = UIAlertController(title: "No Pin", message: "Please add a pin before continuing", preferredStyle: .Alert)
-                let action = UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.Default, handler: nil)
+                let alert = UIAlertController(title: "No Pin", message: "Please add a pin before continuing", preferredStyle: .alert)
+                let action = UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.default, handler: nil)
                 alert.addAction(action)
-                self.presentViewController(alert, animated: true, completion: nil)
+                self.present(alert, animated: true, completion: nil)
                 return false
             } else {
                 // If pin has been placed, allow "Done" segue
@@ -103,8 +103,8 @@ class PutPinOnRequestMapViewController: UIViewController,
         }
     }
     
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        let requestBController = segue.destinationViewController as! CreateRequestBViewController
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        let requestBController = segue.destination as! CreateRequestBViewController
         if segue.identifier == "FinishPinOnMap" {
             // If segue is allowed, set Create Request B's locationPin to the placed pin
             requestBController.locationPin = lastPin[0]

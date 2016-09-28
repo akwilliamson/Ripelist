@@ -15,40 +15,40 @@ class FeedbackTableViewController: UITableViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        let backgroundView = UIView(frame: CGRectZero)
+        let backgroundView = UIView(frame: CGRect.zero)
         self.tableView.tableFooterView = backgroundView
         self.tableView.backgroundColor = UIColor.labelGreyColor()
     }
 
 // MARK: - Table view data source
 
-    override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+    override func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
 
-    override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return 4
     }
 
-    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("Feedback", forIndexPath: indexPath)
-        cell.textLabel?.text = cellTitles[indexPath.row]
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "Feedback", for: indexPath)
+        cell.textLabel?.text = cellTitles[(indexPath as NSIndexPath).row]
         cell.textLabel?.textColor = UIColor.forestColor()
         cell.textLabel?.font = UIFont(name: "ArialRoundedMTBold", size: 20)
-        cell.detailTextLabel?.text = "unread messages: \(Apptentive.sharedConnection().unreadMessageCount())"
+        cell.detailTextLabel?.text = "unread messages: \(Apptentive.sharedConnection().unreadMessageCount)"
         return cell
     }
 
-    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        if tableView.cellForRowAtIndexPath(indexPath)?.textLabel?.text == "Give Feedback" {
-            Apptentive.sharedConnection().presentMessageCenterFromViewController(self)
-        } else if tableView.cellForRowAtIndexPath(indexPath)?.textLabel?.text == "Rate Ripelist" {
-            UIApplication.sharedApplication().openURL(NSURL(string: "https://itunes.apple.com/us/app/ripelist/id989376836?mt=8")!)
-        } else if tableView.cellForRowAtIndexPath(indexPath)?.textLabel?.text == "Privacy Policy" {
-            self.performSegueWithIdentifier("PrivacyPolicy", sender: self)
-        } else if tableView.cellForRowAtIndexPath(indexPath)?.textLabel?.text == "FAQ" {
-            self.performSegueWithIdentifier("FAQ", sender: self)
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        if tableView.cellForRow(at: indexPath)?.textLabel?.text == "Give Feedback" {
+            Apptentive.sharedConnection().presentMessageCenter(from: self)
+        } else if tableView.cellForRow(at: indexPath)?.textLabel?.text == "Rate Ripelist" {
+            UIApplication.shared.openURL(URL(string: "https://itunes.apple.com/us/app/ripelist/id989376836?mt=8")!)
+        } else if tableView.cellForRow(at: indexPath)?.textLabel?.text == "Privacy Policy" {
+            self.performSegue(withIdentifier: "PrivacyPolicy", sender: self)
+        } else if tableView.cellForRow(at: indexPath)?.textLabel?.text == "FAQ" {
+            self.performSegue(withIdentifier: "FAQ", sender: self)
         }
-        tableView.deselectRowAtIndexPath(indexPath, animated: false)
+        tableView.deselectRow(at: indexPath, animated: false)
     }
 }

@@ -10,6 +10,26 @@ import UIKit
 import MapKit
 import LKAlertController
 import ParseUI
+fileprivate func < <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
+  switch (lhs, rhs) {
+  case let (l?, r?):
+    return l < r
+  case (nil, _?):
+    return true
+  default:
+    return false
+  }
+}
+
+fileprivate func > <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
+  switch (lhs, rhs) {
+  case let (l?, r?):
+    return l > r
+  default:
+    return rhs < lhs
+  }
+}
+
 
 class RequestDetailsViewController: UIViewController {
 
@@ -50,7 +70,7 @@ class RequestDetailsViewController: UIViewController {
 // MARK: - View Setup Helper Methods
     
     func setDescriptionHeight() {
-        descriptionTextField.sizeThatFits(CGSize(width: descriptionTextField.frame.size.width, height: CGFloat.max))
+        descriptionTextField.sizeThatFits(CGSize(width: descriptionTextField.frame.size.width, height: CGFloat.greatestFiniteMagnitude))
     }
     
     func addTapGestureOnImageView() {
@@ -63,7 +83,7 @@ class RequestDetailsViewController: UIViewController {
         self.titleLabel.text = localPost.getTitle()
         self.descriptionTextField.text = localPost.getDescription()
         
-        self.nameLabel.setTitle(localPost.getUsername(), forState: .Normal)
+        self.nameLabel.setTitle(localPost.getUsername(), for: UIControlState())
         self.swapTypeLabel.text = localPost.getSwapType()
         self.distanceLabel.text = localPost.getDistance(from: locationService.locationManager.location)
         let location = localPost.getLocation()
@@ -71,7 +91,7 @@ class RequestDetailsViewController: UIViewController {
         self.mapView.addOverlay(latitude: location.latitude, longitude: location.longitude)
     }
     
-    internal func setTimeAgo(atTime date: NSDate?) {
+    internal func setTimeAgo(atTime date: Date?) {
         if let date = date {
             self.timeAgoLabel.text = "posted " + date.timeAgoSinceDate()
         }
@@ -79,21 +99,21 @@ class RequestDetailsViewController: UIViewController {
     
 // MARK: - Actions
     
-    @IBAction func shareRequest(sender: AnyObject) {
+    @IBAction func shareRequest(_ sender: AnyObject) {
         self.logEvents("Share Button Tapped")
         let activityVC = self.createActivityVC(forPost: localPost.postObject)
-        self.presentViewController(activityVC, animated: true, completion: nil)
+        self.present(activityVC, animated: true, completion: nil)
     }
     
-    @IBAction func contactSeller(sender: AnyObject) {
-        guard let currentUser = PFUser.currentUser() else {
+    @IBAction func contactSeller(_ sender: AnyObject) {
+        guard let currentUser = PFUser.current() else {
             presentLogin()
             return
         }
         
         let chatRoomQuery = self.createChatRoomQuery(forCurrentUser: currentUser)
         
-        chatRoomQuery.findObjectsInBackgroundWithBlock({ (fetchedChatRoom: [PFObject]?, error: NSError?) -> Void in
+        chatRoomQuery.findObjectsInBackground(block: { (fetchedChatRoom: [PFObject]?, error: NSError?) -> Void in
             if error != nil { print(error?.localizedDescription) } else {
                 if currentUser.objectId == self.localPost.postAuthor.objectId {
                     self.presentCannotMessageYourselfAlert()
@@ -104,17 +124,17 @@ class RequestDetailsViewController: UIViewController {
         })
     }
     
-    private func presentLogin() {
+    fileprivate func presentLogin() {
         let loginSB = UIStoryboard(name: "Onboard", bundle: nil)
-        let OnboardVC = loginSB.instantiateViewControllerWithIdentifier("onboard_vc")
-        presentViewController(OnboardVC, animated: true, completion: nil)
+        let OnboardVC = loginSB.instantiateViewController(withIdentifier: "onboard_vc")
+        present(OnboardVC, animated: true, completion: nil)
     }
     
-    @IBAction func nameTapped(sender: UIButton) {
+    @IBAction func nameTapped(_ sender: UIButton) {
         self.logEvents("Name Tapped")
     }
     
-    func imageTapped(sender: UITapGestureRecognizer) {
+    func imageTapped(_ sender: UITapGestureRecognizer) {
         self.logEvents("Stars Tapped")
     }
     
@@ -122,10 +142,10 @@ class RequestDetailsViewController: UIViewController {
     
     func presentCannotMessageYourselfAlert() {
         let alert = UIAlertController.cannotMessageYourselfController()
-        self.presentViewController(alert, animated: true, completion: nil)
+        self.present(alert, animated: true, completion: nil)
     }
     
-    func createChatRoomQuery(forCurrentUser currentUser: PFUser) -> PFQuery {
+    func createChatRoomQuery(forCurrentUser currentUser: PFUser) -> PFQuery<PFObject> {
         let predicate = NSPredicate(format: "(user1 = %@ AND user2 = %@ AND postId = %@) OR (user1 = %@ AND user2 = %@ AND postId = %@)",
             currentUser, localPost.postAuthor, localPost.postObject, localPost.postAuthor, currentUser, localPost.postObject)
         return PFQuery(className: "Room", predicate: predicate)
@@ -135,14 +155,14 @@ class RequestDetailsViewController: UIViewController {
     
     func performSegue(withChatRoom chatRoom: [PFObject]?) {
         self.chatRoom = chatRoom?.count > 0 ? chatRoom?.last : PFObject(className: "Room")
-        self.performSegueWithIdentifier("ContactPostAuthor", sender: self)
+        self.performSegue(withIdentifier: "ContactPostAuthor", sender: self)
     }
     
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        self.navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .Plain, target: nil, action: nil)
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        self.navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
         
         if segue.identifier == "ContactPostAuthor" {
-            let contactRequesterVC = segue.destinationViewController as! ContactPostAuthorVC
+            let contactRequesterVC = segue.destination as! ContactPostAuthorVC
             
             contactRequesterVC.postAuthor = localPost.postAuthor
             contactRequesterVC.postObject = localPost.postObject
@@ -150,7 +170,7 @@ class RequestDetailsViewController: UIViewController {
         }
     }
     
-    @IBAction func unwindToContactLister(segue: UIStoryboardSegue) {
+    @IBAction func unwindToContactLister(_ segue: UIStoryboardSegue) {
     }
 }
 
@@ -158,7 +178,7 @@ class RequestDetailsViewController: UIViewController {
 
 extension RequestDetailsViewController: MKMapViewDelegate {
     
-    func mapView(mapView: MKMapView, rendererForOverlay overlay: MKOverlay) -> MKOverlayRenderer {
+    func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
         let circleArea = MKCircleRenderer(overlay: overlay)
         circleArea.fillColor = UIColor.purpleRadiusColor()
         return circleArea

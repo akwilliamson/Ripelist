@@ -16,14 +16,14 @@ class NavigationVC: UINavigationController {
         setAppearance(ofNavBar: self.navigationBar)
         
         if #available(iOS 9.0, *) {
-            UINavigationBar.appearanceWhenContainedInInstancesOfClasses([ApptentiveNavigationController.self]).barTintColor = UIColor.forestColor()
+            UINavigationBar.appearance(whenContainedInInstancesOf: [ApptentiveNavigationController.self]).barTintColor = UIColor.forestColor()
         }
     }
     
-    private func setAppearance(ofNavBar navBar: UINavigationBar) -> Void {
+    fileprivate func setAppearance(ofNavBar navBar: UINavigationBar) -> Void {
         navBar.barTintColor = UIColor.forestColor()
-        navBar.tintColor = UIColor.whiteColor()
+        navBar.tintColor = UIColor.white
         guard let fontSize = UIFont(name: "ArialRoundedMTBold", size: 25) else { return }
-        navBar.titleTextAttributes = [NSFontAttributeName: fontSize, NSForegroundColorAttributeName: UIColor.whiteColor()]
+        navBar.titleTextAttributes = [NSFontAttributeName: fontSize, NSForegroundColorAttributeName: UIColor.white]
     }
 }

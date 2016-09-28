@@ -14,13 +14,13 @@ class UIInsetLabel: UILabel {
     let leftInset = CGFloat(5.0)
     let rightInset = CGFloat(5.0)
     
-    override func drawTextInRect(rect: CGRect) {
+    override func drawText(in rect: CGRect) {
         let insets: UIEdgeInsets = UIEdgeInsets(top: 0.0, left: leftInset, bottom: 0.0, right: rightInset)
-        super.drawTextInRect(UIEdgeInsetsInsetRect(rect, insets))
+        super.drawText(in: UIEdgeInsetsInsetRect(rect, insets))
     }
     
-    override func intrinsicContentSize() -> CGSize {
-        var intrinsicSuperViewContentSize = super.intrinsicContentSize()
+    override var intrinsicContentSize : CGSize {
+        var intrinsicSuperViewContentSize = super.intrinsicContentSize
         intrinsicSuperViewContentSize.width += leftInset + rightInset
         return intrinsicSuperViewContentSize
     }

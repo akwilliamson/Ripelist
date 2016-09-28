@@ -9,11 +9,11 @@
 import UIKit
 
 class CustomSegmentedControl: UISegmentedControl {
-    override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         if let _ = touches.first {
-            self.sendActionsForControlEvents(UIControlEvents.ValueChanged)
-            self.tintColor = UIColor.whiteColor()
+            self.sendActions(for: UIControlEvents.valueChanged)
+            self.tintColor = UIColor.white
         }
-        super.touchesBegan(touches , withEvent:event)
+        super.touchesBegan(touches , with:event)
     }
 }

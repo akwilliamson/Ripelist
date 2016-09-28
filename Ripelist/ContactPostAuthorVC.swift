@@ -38,18 +38,18 @@ class ContactPostAuthorVC: JSQMessagesViewController {
         
         inputToolbar?.contentView?.leftBarButtonItem = nil
         
-        senderId = PFUser.currentUser()?.objectId
-        senderDisplayName = PFUser.currentUser()?.username
+        senderId = PFUser.current()?.objectId
+        senderDisplayName = PFUser.current()?.username
 
     }
     
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         loadMessages()
     }
     
     func setBubblesAndAvatars() {
         currentUserBubbleImage = bubbleImage(withBackgroundColor: goldColor)
-        currentUserAvatar = avatarImageWithInitials(forUser: PFUser.currentUser(), withColor: goldColor)
+        currentUserAvatar = avatarImageWithInitials(forUser: PFUser.current(), withColor: goldColor)
     
         postAuthorBubbleImage = bubbleImage(withBackgroundColor: greenColor)
         postAuthorAvatar = avatarImageWithInitials(forUser: postAuthor, withColor: greenColor)
@@ -59,21 +59,21 @@ class ContactPostAuthorVC: JSQMessagesViewController {
         let bubbleFactory = JSQMessagesBubbleImageFactory()
         switch color {
         case goldColor:
-            return bubbleFactory.outgoingMessagesBubbleImageWithColor(goldColor)
+            return bubbleFactory?.outgoingMessagesBubbleImage(with: goldColor)
         case greenColor:
-            return bubbleFactory.incomingMessagesBubbleImageWithColor(greenColor)
+            return bubbleFactory?.incomingMessagesBubbleImage(with: greenColor)
         default:
             return nil
         }
     }
     
     func avatarImageWithInitials(forUser user: PFUser?, withColor color: UIColor) -> JSQMessagesAvatarImage? {
-        guard let username = user?.objectForKey("name") as? NSString else { return nil }
-        let firstInitial = username.substringWithRange(NSMakeRange(0,1))
-        let avatarFont = UIFont.systemFontOfSize(14)
+        guard let username = user?.object(forKey: "name") as? NSString else { return nil }
+        let firstInitial = username.substring(with: NSMakeRange(0,1))
+        let avatarFont = UIFont.systemFont(ofSize: 14)
         let avatarDiameter = UInt(kJSQMessagesCollectionViewAvatarSizeDefault)
         
-        return JSQMessagesAvatarImageFactory.avatarImageWithUserInitials(firstInitial, backgroundColor: color, textColor: UIColor.whiteColor(), font: avatarFont, diameter: avatarDiameter)
+        return JSQMessagesAvatarImageFactory.avatarImage(withUserInitials: firstInitial, backgroundColor: color, textColor: UIColor.white, font: avatarFont, diameter: avatarDiameter)
     }
     
     func loadMessages() {
@@ -82,9 +82,9 @@ class ContactPostAuthorVC: JSQMessagesViewController {
             let messageQuery = PFQuery(className: "Message").whereKey("room", equalTo: chatRoom)
             messageQuery.includeKey("user")
             messageQuery.limit = 100
-            messageQuery.orderByAscending("createdAt")
+            messageQuery.order(byAscending: "createdAt")
             
-            messageQuery.findObjectsInBackgroundWithBlock { (results: [PFObject]?, error: NSError?) -> Void in
+            messageQuery.findObjectsInBackground { (results: [PFObject]?, error: NSError?) -> Void in
                 if error == nil {
                     guard let messages = results as [PFObject]? else { return }
                     
@@ -107,26 +107,26 @@ class ContactPostAuthorVC: JSQMessagesViewController {
     }
 
 // Send Messages
-    override func didPressSendButton(button: UIButton!, withMessageText text: String!, senderId: String!, senderDisplayName: String!, date: NSDate!) {
+    override func didPressSend(_ button: UIButton!, withMessageText text: String!, senderId: String!, senderDisplayName: String!, date: Date!) {
         if chatRoom.objectId == nil {
-            chatRoom["user1"] = PFUser.currentUser()
+            chatRoom["user1"] = PFUser.current()
             chatRoom["user2"] = postAuthor
-            chatRoom.addObject(postAuthor.objectId!, forKey: "hasUnreadMessages")
+            chatRoom.add(postAuthor.objectId!, forKey: "hasUnreadMessages")
             chatRoom["postId"] = postObject
             
-            chatRoom.saveInBackgroundWithBlock(nil)
+            chatRoom.saveInBackground(block: nil)
         }
         
         let message = PFObject(className: "Message")
         message["content"] = text
         message["room"] = chatRoom
-        message["user"] = PFUser.currentUser()
+        message["user"] = PFUser.current()
         
-        message.saveInBackgroundWithBlock { (success:Bool, error:NSError?) -> Void in
+        message.saveInBackground { (success:Bool, error:NSError?) -> Void in
             if error == nil {
                 self.loadMessages()
-                self.chatRoom["lastUpdate"] = NSDate()
-                self.chatRoom.saveInBackgroundWithBlock(nil)
+                self.chatRoom["lastUpdate"] = Date()
+                self.chatRoom.saveInBackground(block: nil)
             } else {
                 print("error sending message: \(error?.localizedDescription)")
             }
@@ -137,49 +137,49 @@ class ContactPostAuthorVC: JSQMessagesViewController {
         pushQuery!.whereKey("user", equalTo: postAuthor)
         
         let push = PFPush()
-        push.setQuery(pushQuery)
-        let senderName = PFUser.currentUser()!.objectForKey("name") as! String
+        push.setQuery(pushQuery as! PFQuery<PFInstallation>?)
+        let senderName = PFUser.current()!.object(forKey: "name") as! String
         let data = ["alert":"New message from \(senderName)", "badge":"Increment"]
         
         push.setData(data)
-        push.sendPushInBackground()
+        push.sendInBackground()
     }
     
 // Delegate Methods
-    override func collectionView(collectionView: JSQMessagesCollectionView!, messageDataForItemAtIndexPath indexPath: NSIndexPath!) -> JSQMessageData! {
+    override func collectionView(_ collectionView: JSQMessagesCollectionView!, messageDataForItemAt indexPath: IndexPath!) -> JSQMessageData! {
         return messages[indexPath.row]
     }
     
-    override func collectionView(collectionView: JSQMessagesCollectionView!, messageBubbleImageDataForItemAtIndexPath indexPath: NSIndexPath!) -> JSQMessageBubbleImageDataSource! {
+    override func collectionView(_ collectionView: JSQMessagesCollectionView!, messageBubbleImageDataForItemAt indexPath: IndexPath!) -> JSQMessageBubbleImageDataSource! {
         let message = messages[indexPath.row]
         return message.senderId == self.senderId ? currentUserBubbleImage : postAuthorBubbleImage
     }
     
-    override func collectionView(collectionView: JSQMessagesCollectionView!, avatarImageDataForItemAtIndexPath indexPath: NSIndexPath!) -> JSQMessageAvatarImageDataSource! {
+    override func collectionView(_ collectionView: JSQMessagesCollectionView!, avatarImageDataForItemAt indexPath: IndexPath!) -> JSQMessageAvatarImageDataSource! {
         let message = messages[indexPath.row]
         return message.senderId == self.senderId ? currentUserAvatar : postAuthorAvatar
     }
     
-    override func collectionView(collectionView: JSQMessagesCollectionView!, attributedTextForCellTopLabelAtIndexPath indexPath: NSIndexPath!) -> NSAttributedString! {
+    override func collectionView(_ collectionView: JSQMessagesCollectionView!, attributedTextForCellTopLabelAt indexPath: IndexPath!) -> NSAttributedString! {
         if indexPath.item % 3 == 0 {
             let message = messages[indexPath.item]
-            return JSQMessagesTimestampFormatter.sharedFormatter().attributedTimestampForDate(message.date)
+            return JSQMessagesTimestampFormatter.shared().attributedTimestamp(for: message.date)
         }
         return nil
     }
     
-    override func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
-        let cell = super.collectionView(collectionView, cellForItemAtIndexPath: indexPath) as! JSQMessagesCollectionViewCell
-        cell.textView!.textColor = UIColor.whiteColor()
+    override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = super.collectionView(collectionView, cellForItemAt: indexPath) as! JSQMessagesCollectionViewCell
+        cell.textView!.textColor = UIColor.white
 
         return cell
     }
     
-    override func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+    override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return messages.count
     }
     
-    override func collectionView(collectionView: JSQMessagesCollectionView!, layout collectionViewLayout: JSQMessagesCollectionViewFlowLayout!, heightForCellTopLabelAtIndexPath indexPath: NSIndexPath!) -> CGFloat {
+    override func collectionView(_ collectionView: JSQMessagesCollectionView!, layout collectionViewLayout: JSQMessagesCollectionViewFlowLayout!, heightForCellTopLabelAt indexPath: IndexPath!) -> CGFloat {
             return kJSQMessagesCollectionViewCellLabelHeightDefault
     }
 }

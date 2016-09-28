@@ -18,7 +18,7 @@ class LocationSettingsViewController: UIViewController,
     
     // Colors
     let greenColor = UIColor.forestColor()
-    let user = PFUser.currentUser()
+    let user = PFUser.current()
     
 // MARK: - Outlets
 
@@ -40,8 +40,8 @@ class LocationSettingsViewController: UIViewController,
         // Hide empty black box on push
         self.navigationController?.setToolbarHidden(true, animated: false)
         
-        savedAddressField.layer.borderColor = greenColor.CGColor
-        savedZipField.layer.borderColor = greenColor.CGColor
+        savedAddressField.layer.borderColor = greenColor.cgColor
+        savedZipField.layer.borderColor = greenColor.cgColor
         
         savedAddressField.layer.borderWidth = 2
         savedZipField.layer.borderWidth = 2
@@ -59,82 +59,82 @@ class LocationSettingsViewController: UIViewController,
         self.savedAddressField.text = address
         self.savedZipField.text = zipCode
         
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(LocationSettingsViewController.keyboardWillShow(_:)), name:UIKeyboardWillShowNotification, object: nil)
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(LocationSettingsViewController.keyboardWillHide(_:)), name:UIKeyboardWillHideNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(LocationSettingsViewController.keyboardWillShow(_:)), name:NSNotification.Name.UIKeyboardWillShow, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(LocationSettingsViewController.keyboardWillHide(_:)), name:NSNotification.Name.UIKeyboardWillHide, object: nil)
     }
     
-    func textFieldShouldReturn(textField: UITextField) -> Bool {
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()
         view.endEditing(true)
         return true
     }
     
-    override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         if let _ = touches.first {
             view.endEditing(true)
         }
-        super.touchesBegan(touches , withEvent:event)
+        super.touchesBegan(touches , with:event)
     }
     
-    func keyboardWillShow(sender: NSNotification) {
+    func keyboardWillShow(_ sender: Notification) {
         if self.view.frame.width < 325 {
-            if savedZipField.isFirstResponder() {
-                UIView.animateWithDuration(1.0, animations: { self.view.frame.origin.y -= 155 }, completion: nil)
+            if savedZipField.isFirstResponder {
+                UIView.animate(withDuration: 1.0, animations: { self.view.frame.origin.y -= 155 }, completion: nil)
             }
         }
     }
-    func keyboardWillHide(sender: NSNotification) {
+    func keyboardWillHide(_ sender: Notification) {
         if self.view.frame.width < 325 {
-            if savedZipField.isFirstResponder() {
-                UIView.animateWithDuration(1.0, animations: { self.view.frame.origin.y += 155 }, completion: nil)
+            if savedZipField.isFirstResponder {
+                UIView.animate(withDuration: 1.0, animations: { self.view.frame.origin.y += 155 }, completion: nil)
             }
         }
     }
     
-    func textFieldDidBeginEditing(textField: UITextField) {
+    func textFieldDidBeginEditing(_ textField: UITextField) {
         if textField == savedAddressField {
-            savedZipField.userInteractionEnabled = false
+            savedZipField.isUserInteractionEnabled = false
         }
     }
     
-    func textFieldDidEndEditing(textField: UITextField) {
+    func textFieldDidEndEditing(_ textField: UITextField) {
         if textField == savedAddressField {
-            savedZipField.userInteractionEnabled = true
+            savedZipField.isUserInteractionEnabled = true
         }
     }
     
     
     
-    @IBAction func updateAddress(sender: AnyObject) {
-        self.addressHasBeenUpdatedCheckmark.hidden = true
+    @IBAction func updateAddress(_ sender: AnyObject) {
+        self.addressHasBeenUpdatedCheckmark.isHidden = true
         user?["streetAddress"] = savedAddressField.text
-        user?.saveInBackgroundWithBlock { (success: Bool, error: NSError?) -> Void in
+        user?.saveInBackground { (success: Bool, error: NSError?) -> Void in
             if success == true {
-                self.addressHasBeenUpdatedCheckmark.hidden = false
+                self.addressHasBeenUpdatedCheckmark.isHidden = false
             }
         }
     }
     
-    @IBAction func updateZipCode(sender: AnyObject) {
-        self.zipCodeHasBeenUpdatedCheckmark.hidden = true
+    @IBAction func updateZipCode(_ sender: AnyObject) {
+        self.zipCodeHasBeenUpdatedCheckmark.isHidden = true
         user?["zipCode"] = savedZipField.text
-        user?.saveInBackgroundWithBlock { (success: Bool, error: NSError?) -> Void in
+        user?.saveInBackground { (success: Bool, error: NSError?) -> Void in
             if success == true {
-                self.zipCodeHasBeenUpdatedCheckmark.hidden = false
+                self.zipCodeHasBeenUpdatedCheckmark.isHidden = false
             }
         }
     }
     
-    @IBAction func deleteZipAndAddress(sender: AnyObject) {
-        user?.removeObjectForKey("streetAddress")
-        user?.removeObjectForKey("zipCode")
-        user?.saveInBackgroundWithBlock {
+    @IBAction func deleteZipAndAddress(_ sender: AnyObject) {
+        user?.remove(forKey: "streetAddress")
+        user?.remove(forKey: "zipCode")
+        user?.saveInBackground {
             (success: Bool, error: NSError?) -> Void in
             if (success) {
                 self.savedAddressField.text = nil
                 self.savedZipField.text = nil
-                self.addressHasBeenUpdatedCheckmark.hidden = true
-                self.zipCodeHasBeenUpdatedCheckmark.hidden = true
+                self.addressHasBeenUpdatedCheckmark.isHidden = true
+                self.zipCodeHasBeenUpdatedCheckmark.isHidden = true
             }
         }
     }

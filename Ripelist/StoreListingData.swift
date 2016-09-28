@@ -15,8 +15,8 @@ import MapKit
 */
 
 protocol CreateListingBViewControllerDelegate {
-    func storeAddress(data: String?)
-    func storeZip(data: String?)
-    func storePin(data: MKPointAnnotation?)
-    func storeImageView(data: UIImageView?)
+    func storeAddress(_ data: String?)
+    func storeZip(_ data: String?)
+    func storePin(_ data: MKPointAnnotation?)
+    func storeImageView(_ data: UIImageView?)
 }

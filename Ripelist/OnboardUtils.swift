@@ -7,29 +7,29 @@ enum FBPermission: String {
 
 enum Error {
     
-    case InvalidCredentials
-    case InvalidName
-    case InvalidEmail
-    case PasswordLength
-    case SignUpFailure
-    case NetworkError
-    case GeneralError
+    case invalidCredentials
+    case invalidName
+    case invalidEmail
+    case passwordLength
+    case signUpFailure
+    case networkError
+    case generalError
     
     var string: String {
         switch self {
-        case .InvalidCredentials:
+        case .invalidCredentials:
             return "Invalid Credentials"
-        case .InvalidName:
+        case .invalidName:
             return "Please enter a valid name"
-        case .InvalidEmail:
+        case .invalidEmail:
             return "Please enter a valid email"
-        case .PasswordLength:
+        case .passwordLength:
             return "Password must be 6 or more characters"
-        case .SignUpFailure:
+        case .signUpFailure:
             return "Sign up failed. Please try again"
-        case .NetworkError:
+        case .networkError:
             return "Network error, try again later"
-        case .GeneralError:
+        case .generalError:
             return "There was an error, try again"
         }
     }

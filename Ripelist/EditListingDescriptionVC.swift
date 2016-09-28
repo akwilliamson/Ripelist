@@ -31,12 +31,12 @@ class EditListingDescriptionViewController: UIViewController,
         super.viewDidLoad()
         Flurry.logEvent("Edit Listing Description")
         self.navigationController?.navigationBar.titleTextAttributes = [NSFontAttributeName: UIFont(name: "ArialRoundedMTBold", size: 25)!,
-                                                                        NSForegroundColorAttributeName: UIColor.whiteColor()]
+                                                                        NSForegroundColorAttributeName: UIColor.white]
         // Setup views
-        listingTitleTextField.layer.borderColor = UIColor.forestColor().CGColor
+        listingTitleTextField.layer.borderColor = UIColor.forestColor().cgColor
         listingTitleTextField.layer.borderWidth = 2
         listingTitleTextField.delegate = self
-        listingDescriptionView.layer.borderColor = UIColor.forestColor().CGColor
+        listingDescriptionView.layer.borderColor = UIColor.forestColor().cgColor
         listingDescriptionView.layer.borderWidth = 2
         listingDescriptionView.textColor = UIColor.forestColor()
         listingDescriptionView.delegate = self
@@ -48,69 +48,69 @@ class EditListingDescriptionViewController: UIViewController,
         }
         // Setup layout
         if self.view.frame.width > 320 {
-            listingDescriptionView.font = UIFont.systemFontOfSize(17)
+            listingDescriptionView.font = UIFont.systemFont(ofSize: 17)
         }
         if self.view.frame.width == 320 {
             descriptionHeight.constant = 130
         }
     }
     
-    override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         if let _ = touches.first {
             view.endEditing(true)
         }
-        super.touchesBegan(touches , withEvent:event)
+        super.touchesBegan(touches , with:event)
     }
     
-    func textViewDidBeginEditing(textView: UITextView) {
-        listingTitleTextField.userInteractionEnabled = false
+    func textViewDidBeginEditing(_ textView: UITextView) {
+        listingTitleTextField.isUserInteractionEnabled = false
     }
     
-    func textViewDidEndEditing(textView: UITextView) {
-        listingTitleTextField.userInteractionEnabled = true
+    func textViewDidEndEditing(_ textView: UITextView) {
+        listingTitleTextField.isUserInteractionEnabled = true
     }
     
-    func textFieldDidBeginEditing(textField: UITextField) {
-        listingDescriptionView.userInteractionEnabled = false
+    func textFieldDidBeginEditing(_ textField: UITextField) {
+        listingDescriptionView.isUserInteractionEnabled = false
     }
     
-    func textFieldDidEndEditing(textField: UITextField) {
-        listingDescriptionView.userInteractionEnabled = true
+    func textFieldDidEndEditing(_ textField: UITextField) {
+        listingDescriptionView.isUserInteractionEnabled = true
     }
     
-    func textViewDidChange(textView: UITextView) {
-        let line = textView.caretRectForPosition((textView.selectedTextRange?.start)!) as CGRect
+    func textViewDidChange(_ textView: UITextView) {
+        let line = textView.caretRect(for: (textView.selectedTextRange?.start)!) as CGRect
         let overflow = line.origin.y + line.size.height - (textView.contentOffset.y + textView.bounds.size.height - textView.contentInset.bottom - textView.contentInset.top) as CGFloat
         if overflow > 0 {
             var offset = textView.contentOffset as CGPoint
             offset.y += overflow + 7
-            UIView.animateWithDuration(0.2, animations: {textView.setContentOffset(offset, animated: true)})
+            UIView.animate(withDuration: 0.2, animations: {textView.setContentOffset(offset, animated: true)})
         }
     }
     
-    @IBAction func saveDescription(sender: AnyObject) {
+    @IBAction func saveDescription(_ sender: AnyObject) {
         delegate?.storeDescription(listingDescriptionView.text)
         delegate?.storeTitle(listingTitleTextField.text!)
-        let activityView = UIActivityIndicatorView(activityIndicatorStyle: .Gray)
-        activityView.transform = CGAffineTransformMakeScale(2, 2)
+        let activityView = UIActivityIndicatorView(activityIndicatorStyle: .gray)
+        activityView.transform = CGAffineTransform(scaleX: 2, y: 2)
         activityView.center = self.view.center
         activityView.startAnimating()
         self.view.addSubview(activityView)
         listingObject["description"] = listingDescriptionView.text
         listingObject["title"] = listingTitleTextField.text
-        listingObject.saveInBackgroundWithBlock { (success: Bool, error: NSError?) -> Void in
+        listingObject.saveInBackground { (success: Bool, error: NSError?) -> Void in
             if success {
                 activityView.stopAnimating()
-                self.performSegueWithIdentifier("UnwindToEditListing", sender: self)
+                self.performSegue(withIdentifier: "UnwindToEditListing", sender: self)
             } else {
                 print(error?.localizedDescription)
             }
         }
     }
     
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "UnwindToEditListing" {
-            let editListingVC = segue.destinationViewController as! EditListingViewController
+            let editListingVC = segue.destination as! EditListingViewController
             editListingVC.listingDescription = listingDescriptionView.text
         }
     }

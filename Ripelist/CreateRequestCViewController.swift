@@ -55,8 +55,8 @@ class CreateRequestCViewController: UIViewController,
         Flurry.logEvent("Create Request C")
         styleView()
         // To remove random white bar under the navigation bar
-        self.edgesForExtendedLayout = UIRectEdge.None
-        self.navigationController?.navigationBar.translucent = false
+        self.edgesForExtendedLayout = UIRectEdge()
+        self.navigationController?.navigationBar.isTranslucent = false
         
         let latitudeDelta: CLLocationDegrees = 0.01
         let longitudeDelta: CLLocationDegrees = 0.01
@@ -74,7 +74,7 @@ class CreateRequestCViewController: UIViewController,
                     let locationForRadius = CLLocation(latitude: self.latitude!, longitude: self.longitude!)
                     self.addRadiusCircle(locationForRadius)
                 }
-            })
+            } as! CLGeocodeCompletionHandler)
         } else {
             let location = locationPin!.coordinate
             self.latitude = locationPin!.coordinate.latitude
@@ -84,7 +84,7 @@ class CreateRequestCViewController: UIViewController,
             let locationForRadius = CLLocation(latitude: latitude!, longitude: longitude!)
             addRadiusCircle(locationForRadius)
         }
-        userName.setTitle(name, forState: .Normal)
+        userName.setTitle(name, for: UIControlState())
         titleLabel.text = requestTitle
         swapTypeLabel.text = " \(requestSwapType)  "
         descriptionTextField.text = requestDescription
@@ -98,7 +98,7 @@ class CreateRequestCViewController: UIViewController,
     func setTitleText() {
         let navigationBar = navigationController?.navigationBar
         let fontSize = UIFont(name: "ArialRoundedMTBold", size: 25)!
-        navigationBar?.titleTextAttributes = [NSFontAttributeName: fontSize, NSForegroundColorAttributeName: UIColor.whiteColor()]
+        navigationBar?.titleTextAttributes = [NSFontAttributeName: fontSize, NSForegroundColorAttributeName: UIColor.white]
     }
     
     func setUIStyles() {
@@ -107,25 +107,25 @@ class CreateRequestCViewController: UIViewController,
         image.layer.cornerRadius = 18
         image.clipsToBounds = true
         swapTypeLabel.layer.cornerRadius = 13
-        swapTypeLabel.textAlignment = .Center
+        swapTypeLabel.textAlignment = .center
         swapTypeLabel.clipsToBounds = true
         descriptionTextField.textColor = greenTextColor
     }
     
-    func addRadiusCircle(location: CLLocation){
+    func addRadiusCircle(_ location: CLLocation){
         self.mapView.delegate = self
-        let circleForCoordinates = MKCircle(centerCoordinate: location.coordinate, radius: 300 as CLLocationDistance)
-        self.mapView.addOverlay(circleForCoordinates)
+        let circleForCoordinates = MKCircle(center: location.coordinate, radius: 300 as CLLocationDistance)
+        self.mapView.add(circleForCoordinates)
     }
     
-    func mapView(mapView: MKMapView, rendererForOverlay overlay: MKOverlay) -> MKOverlayRenderer {
+    func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
         let circleOverlay = MKCircleRenderer(overlay: overlay)
         circleOverlay.fillColor = purpleRadiusColor
         validAddress = true
         return circleOverlay
     }
     
-    @IBAction func submitRequestButton(sender: AnyObject) {
+    @IBAction func submitRequestButton(_ sender: AnyObject) {
         if validAddress == true {
             let listing = PFObject(className:"Listing")
             listing["title"] = requestTitle
@@ -138,14 +138,14 @@ class CreateRequestCViewController: UIViewController,
             } else {
                 listing["description"] = NSNull()
             }
-            listing["owner"] = PFUser.currentUser()
-            listing.saveInBackgroundWithBlock(nil)
-            self.performSegueWithIdentifier("SubmitToPosts", sender: self)
+            listing["owner"] = PFUser.current()
+            listing.saveInBackground(block: nil)
+            self.performSegue(withIdentifier: "SubmitToPosts", sender: self)
         } else {
-            let alert = UIAlertController(title: "Invalid Location", message: "Please provide a valid location before submitting.", preferredStyle: .Alert)
-            let action = UIAlertAction(title: "Dismiss", style: .Default, handler: nil)
+            let alert = UIAlertController(title: "Invalid Location", message: "Please provide a valid location before submitting.", preferredStyle: .alert)
+            let action = UIAlertAction(title: "Dismiss", style: .default, handler: nil)
             alert.addAction(action)
-            self.presentViewController(alert, animated: true, completion: nil)
+            self.present(alert, animated: true, completion: nil)
         }
     }
 }

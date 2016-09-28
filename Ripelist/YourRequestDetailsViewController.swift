@@ -13,9 +13,9 @@ import ParseUI
 import Flurry_iOS_SDK
 
 protocol StoreRequestEditsDelegate {
-    func storeTitle(title: String)
-    func storeDescription(description: String?)
-    func storePin(pin: PFGeoPoint)
+    func storeTitle(_ title: String)
+    func storeDescription(_ description: String?)
+    func storePin(_ pin: PFGeoPoint)
 }
 
 class YourRequestDetailsViewController: UIViewController,
@@ -56,7 +56,7 @@ class YourRequestDetailsViewController: UIViewController,
                swapTypeLabel.layer.cornerRadius = 10
                swapTypeLabel.clipsToBounds = true
         descriptionTextField.textColor = greenTextColor
-        descriptionTextField.layer.borderColor = greenColor.CGColor
+        descriptionTextField.layer.borderColor = greenColor.cgColor
         descriptionTextField.layer.borderWidth = 2
         // Content setup
                   titleLabel.text = requestObject["title"] as? String
@@ -68,7 +68,7 @@ class YourRequestDetailsViewController: UIViewController,
         // If iPhone 4s, squeeze description details and minimize description/title font sizes
         if self.view.frame.width == 320 {
             descriptionHeight.constant = 110
-            descriptionTextField.font = UIFont.systemFontOfSize(14)
+            descriptionTextField.font = UIFont.systemFont(ofSize: 14)
         } else {
             if strlen(titleLabel.text!) <= 24 {
                 titleLabel.font = UIFont(name: "ArialRoundedMTBold", size: 20)
@@ -76,10 +76,10 @@ class YourRequestDetailsViewController: UIViewController,
         }
     }
     
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
-        if PFUser.currentUser() == nil {
-            self.performSegueWithIdentifier("UnwindToPosts", sender: AnyObject?())
+        if PFUser.current() == nil {
+            self.performSegue(withIdentifier: "UnwindToPosts", sender: AnyObject?())
         } else {
             location = requestObject["location"] as! PFGeoPoint
             setUpMapView(location)
@@ -88,19 +88,19 @@ class YourRequestDetailsViewController: UIViewController,
     
 // MARK: - Custom Delegate Methods
     
-    func storeTitle(title: String) {
+    func storeTitle(_ title: String) {
         titleLabel.text = title
     }
     
-    func storeDescription(description: String?) {
+    func storeDescription(_ description: String?) {
         descriptionTextField.text = description
     }
     
-    func storePin(newLocation: PFGeoPoint) {
+    func storePin(_ newLocation: PFGeoPoint) {
         setUpMapView(newLocation)
     }
     
-    @IBAction func updateRequest(sender: AnyObject) {
+    @IBAction func updateRequest(_ sender: AnyObject) {
         let alert = Alert(title: "Refresh Listing", message: "This will refresh your post and move it to the top of the listings feed. Would you like to refresh?")
         alert.addAction("Yes", style: .Default) { action in
             self.requestObject["updatedAt"] = NSDate()
@@ -110,17 +110,17 @@ class YourRequestDetailsViewController: UIViewController,
     
 // MARK: - Custom Methods
     
-    func addRadiusCircle(location: CLLocation){
+    func addRadiusCircle(_ location: CLLocation){
         self.mapView.delegate = self
         if overlay != nil {
-            self.mapView.removeOverlay(overlay)
+            self.mapView.remove(overlay)
         }
-        let circle = MKCircle(centerCoordinate: location.coordinate, radius: 300 as CLLocationDistance)
+        let circle = MKCircle(center: location.coordinate, radius: 300 as CLLocationDistance)
         overlay = circle
-        self.mapView.addOverlay(overlay)
+        self.mapView.add(overlay)
     }
     
-    func setUpMapView(newLocation: PFGeoPoint) {
+    func setUpMapView(_ newLocation: PFGeoPoint) {
         let coordinates: CLLocationCoordinate2D = CLLocationCoordinate2D(latitude: location.latitude, longitude: location.longitude)
         let span: MKCoordinateSpan = MKCoordinateSpanMake(0.01, 0.01)
         let region: MKCoordinateRegion = MKCoordinateRegionMake(coordinates, span)
@@ -131,7 +131,7 @@ class YourRequestDetailsViewController: UIViewController,
     
 // MARK: - Map View Delegate Methods
     
-    func mapView(mapView: MKMapView, rendererForOverlay overlay: MKOverlay) -> MKOverlayRenderer {
+    func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
         let circle = MKCircleRenderer(overlay: overlay)
         circle.fillColor = purpleRadiusColor
         return circle
@@ -139,9 +139,9 @@ class YourRequestDetailsViewController: UIViewController,
     
 // MARK: - Segue Methods
     
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "EditRequest" {
-            let editRequestVC = segue.destinationViewController as! EditRequestViewController
+            let editRequestVC = segue.destination as! EditRequestViewController
             if let description = requestObject["description"] as? String {
                 editRequestVC.requestObject = requestObject
                 editRequestVC.delegate = self

@@ -18,13 +18,13 @@ class YourListingsViewController: PFQueryTableViewController {
         self.logEvents("Your Listings Main View")
         registerCustomCellNibs()
         styleLoadingActivityIndicator(withinViews: self.view.subviews)
-        tableView.tableFooterView = UIView(frame: CGRectZero)
+        tableView.tableFooterView = UIView(frame: CGRect.zero)
     }
     
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
-        if PFUser.currentUser() == nil {
-            self.performSegueWithIdentifier("UnwindToPosts", sender: AnyObject?())
+        if PFUser.current() == nil {
+            self.performSegue(withIdentifier: "UnwindToPosts", sender: AnyObject?())
         }
     }
     
@@ -32,16 +32,16 @@ class YourListingsViewController: PFQueryTableViewController {
     
     func registerCustomCellNibs() {
         let listingCellNib = UINib(nibName: "ListingCell", bundle: nil)
-        tableView.registerNib(listingCellNib, forCellReuseIdentifier: "ListingCell")
+        tableView.register(listingCellNib, forCellReuseIdentifier: "ListingCell")
     }
     
     func styleLoadingActivityIndicator(withinViews views: [UIView]) {
         // go through all of the subviews until you find a PFLoadingView subclass
         views.forEach({ if NSStringFromClass($0.classForCoder) == "PFLoadingView" {
             // find the loading label and loading activity indicator inside the PFLoadingView subviews
-            $0.subviews.forEach({ if $0 is UILabel { $0.hidden = true } else if $0 is UIActivityIndicatorView {
+            $0.subviews.forEach({ if $0 is UILabel { $0.isHidden = true } else if $0 is UIActivityIndicatorView {
                 let indicatorView = $0 as! UIActivityIndicatorView
-                indicatorView.activityIndicatorViewStyle = .White // Don't know how to hide so I made it white
+                indicatorView.activityIndicatorViewStyle = .white // Don't know how to hide so I made it white
                 self.addCustomLoadingSubview(forView: indicatorView)
                 }
             })
@@ -56,22 +56,22 @@ class YourListingsViewController: PFQueryTableViewController {
     
 // MARK: - Parse Initialization
     
-    override func queryForTable() -> PFQuery {
+    override func queryForTable() -> PFQuery<PFObject> {
         let query = PFQuery(className: "Listing")
-        query.whereKey("owner", equalTo: PFObject(withoutDataWithClassName:"_User", objectId: PFUser.currentUser()!.objectId))
+        query.whereKey("owner", equalTo: PFObject(withoutDataWithClassName:"_User", objectId: PFUser.current()!.objectId))
         query.whereKey("postType", equalTo: "listing")
-        query.orderByDescending("updatedAt")
+        query.order(byDescending: "updatedAt")
         
         return query
     }
     
 // MARK: Tableview Data Source
 
-    override func tableView(tableView: UITableView?, cellForRowAtIndexPath indexPath: NSIndexPath?, object: PFObject!) -> PFTableViewCell? {
+    override func tableView(_ tableView: UITableView?, cellForRowAt indexPath: IndexPath?, object: PFObject!) -> PFTableViewCell? {
         
-        let localPost = LocalPost(postObject: object, postAuthor: (object.objectForKey("owner") as! PFUser))
+        let localPost = LocalPost(postObject: object, postAuthor: (object.object(forKey: "owner") as! PFUser))
         
-        let listingCell = tableView!.dequeueReusableCellWithIdentifier("ListingCell", forIndexPath: indexPath!) as! ListingCell
+        let listingCell = tableView!.dequeueReusableCell(withIdentifier: "ListingCell", for: indexPath!) as! ListingCell
         
         let imageFile = object["image"] as? PFFile
         self.loadImage(inImageView: listingCell.listingImageView, withFile: imageFile)
@@ -84,15 +84,15 @@ class YourListingsViewController: PFQueryTableViewController {
         return listingCell
     }
     
-    override func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
+    override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
         return true
     }
     
-    override func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
+    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
     }
     
-    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        self.performSegueWithIdentifier("ListingDetails", sender: self)
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        self.performSegue(withIdentifier: "ListingDetails", sender: self)
     }
     
 // MARK: Tableview Data Source Helpers
@@ -101,12 +101,12 @@ class YourListingsViewController: PFQueryTableViewController {
         imageView.image = UIImage(named: "placeholder.png")
         if let imageFile = imageFile {
             imageView.file = imageFile
-            imageView.loadInBackground(nil)
+            imageView.load(inBackground: nil)
         }
     }
     
-    func colorBarterLabels(barterLabels: [UILabel], barterTypes: [Bool?]) {
-        for (index, barterType) in barterTypes.enumerate() {
+    func colorBarterLabels(_ barterLabels: [UILabel], barterTypes: [Bool?]) {
+        for (index, barterType) in barterTypes.enumerated() {
             guard let barterType = barterType else { return }
             barterLabels[index].backgroundColor = barterType == false ? UIColor.labelGreyColor() : UIColor.goldColor()
         }
@@ -114,12 +114,12 @@ class YourListingsViewController: PFQueryTableViewController {
     
 // MARK: - Transitions
     
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        self.navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .Plain, target: nil, action: nil)
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        self.navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
         
-        let yourListingDetailsVC = segue.destinationViewController as! YourListingDetailsViewController
+        let yourListingDetailsVC = segue.destination as! YourListingDetailsViewController
         
-        guard let listing = objects?[tableView.indexPathForSelectedRow!.row] else { return }
+        guard let listing = objects?[(tableView.indexPathForSelectedRow! as NSIndexPath).row] else { return }
         yourListingDetailsVC.localPost = LocalPost(postObject: listing, postAuthor: (listing["owner"] as! PFUser))
     }
 }

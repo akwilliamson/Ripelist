@@ -20,7 +20,7 @@ class ShowFullImageViewController: UIViewController {
         if let image = image { listingImage.image = image }
     }
 
-    @IBAction func dismissButton(sender: AnyObject) {
-        self.performSegueWithIdentifier("DismissPhotoView", sender: self)
+    @IBAction func dismissButton(_ sender: AnyObject) {
+        self.performSegue(withIdentifier: "DismissPhotoView", sender: self)
     }
 }

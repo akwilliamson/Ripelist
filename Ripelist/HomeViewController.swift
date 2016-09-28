@@ -18,12 +18,12 @@ class HomeViewController: UITabBarController {
         self.styleTabBarItems(forTabBar: self.tabBar)
     }
     
-    private func setAppearance(ofTabBar tabBar: UITabBar) -> Void {
+    fileprivate func setAppearance(ofTabBar tabBar: UITabBar) -> Void {
         tabBar.barTintColor = UIColor.forestColor()
-        tabBar.tintColor = UIColor.whiteColor()
+        tabBar.tintColor = UIColor.white
     }
     
-    private func styleTabBarItems(forTabBar tabBar: UITabBar) {
+    fileprivate func styleTabBarItems(forTabBar tabBar: UITabBar) {
         let tabBarItemSize = CGSize(width: tabBar.frame.width/4, height: tabBar.frame.height)
         tabBar.selectionIndicatorImage = UIImage.selectedImageWithColor(UIColor.goldColor(), size: tabBarItemSize)
         tabBar.frame.origin.x = -2
@@ -31,7 +31,7 @@ class HomeViewController: UITabBarController {
         if let tabBarIcons = tabBar.items as [UITabBarItem]? {
             tabBarIcons.forEach {
                 if let tabBarImage = $0.image {
-                    $0.image = tabBarImage.imageWithColor(UIColor.whiteColor()).imageWithRenderingMode(.AlwaysOriginal)
+                    $0.image = tabBarImage.imageWithColor(UIColor.white).withRenderingMode(.alwaysOriginal)
                 }
             }
         }

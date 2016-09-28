@@ -30,29 +30,29 @@ class SettingsTableViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         Flurry.logEvent("Settings Main View")
-        let backgroundView = UIView(frame: CGRectZero)
-        let borderLine =  UIView(frame: CGRectMake(0, 0, self.tableView.frame.size.width, 1))
+        let backgroundView = UIView(frame: CGRect.zero)
+        let borderLine =  UIView(frame: CGRect(x: 0, y: 0, width: self.tableView.frame.size.width, height: 1))
         self.navigationController?.setToolbarHidden(true, animated: false)
         
         self.tableView.tableFooterView = backgroundView
-        self.tableView.backgroundColor = UIColor.whiteColor()
+        self.tableView.backgroundColor = UIColor.white
         self.tableView.tableFooterView = borderLine
-        self.tableView.tableFooterView?.backgroundColor = UIColor.clearColor()
+        self.tableView.tableFooterView?.backgroundColor = UIColor.clear
         self.tableView.backgroundColor = greyColor
         
         self.navigationController?.navigationBar.titleTextAttributes = [NSFontAttributeName: UIFont(name: "ArialRoundedMTBold",
                                                                                                     size: 25)!,
-                                                                        NSForegroundColorAttributeName: UIColor.whiteColor()]
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(SettingsTableViewController.refresh), name: "updateParent", object: nil)
+                                                                        NSForegroundColorAttributeName: UIColor.white]
+        NotificationCenter.default.addObserver(self, selector: #selector(SettingsTableViewController.refresh), name: NSNotification.Name(rawValue: "updateParent"), object: nil)
     }
     
-    override func viewDidAppear(animated: Bool) {
+    override func viewDidAppear(_ animated: Bool) {
         // Set badge value on tab to proper number when view appears
         let currentTabBarItem = self.tabBarController!.tabBar.items![2] as UITabBarItem
         
-        if PFInstallation.currentInstallation()?.badge != 0 {
+        if PFInstallation.current()?.badge != 0 {
             tableView.reloadData()
-            currentTabBarItem.badgeValue = String(PFInstallation.currentInstallation()?.badge)
+            currentTabBarItem.badgeValue = String(describing: PFInstallation.current()?.badge)
         } else {
             currentTabBarItem.badgeValue = nil
         }
@@ -63,11 +63,11 @@ class SettingsTableViewController: UITableViewController {
     }
     
     // Add "logout" cell if user is logged in, otherwise don't
-    override func viewWillAppear(animated: Bool) {
-        if PFUser.currentUser() != nil {
+    override func viewWillAppear(_ animated: Bool) {
+        if PFUser.current() != nil {
             isTheUserLoggedIn = true
             if !settingsCells.contains("LogoutCell") {
-                settingsCells.insert("LogoutCell", atIndex: settingsCells.count)
+                settingsCells.insert("LogoutCell", at: settingsCells.count)
                 tableView.reloadData()
             }
         } else {
@@ -82,24 +82,24 @@ class SettingsTableViewController: UITableViewController {
 // MARK: - Tableview Data Source Methods
     
     // Sections in table
-    override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+    override func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
 
     // Rows in section
-    override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return settingsCells.count
     }
     
     // Cell in row
-    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier(settingsCells[indexPath.row], forIndexPath: indexPath)
-        if PFInstallation.currentInstallation()?.badge != 0 {
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: settingsCells[(indexPath as NSIndexPath).row], for: indexPath)
+        if PFInstallation.current()?.badge != 0 {
             cell.viewWithTag(1)?.layer.cornerRadius = 10
             cell.viewWithTag(1)?.clipsToBounds = true
-            cell.viewWithTag(1)?.hidden = false
+            cell.viewWithTag(1)?.isHidden = false
         } else {
-            cell.viewWithTag(1)?.hidden = true
+            cell.viewWithTag(1)?.isHidden = true
         }
         
         return cell
@@ -108,30 +108,30 @@ class SettingsTableViewController: UITableViewController {
 // MARK: - Tableview Delegate Methods
     
     // Row height
-    override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 60.0
     }
     
-    private func presentLogin() {
+    fileprivate func presentLogin() {
         let loginSB = UIStoryboard(name: "Onboard", bundle: nil)
-        let OnboardVC = loginSB.instantiateViewControllerWithIdentifier("onboard_vc")
-        presentViewController(OnboardVC, animated: true, completion: nil)
+        let OnboardVC = loginSB.instantiateViewController(withIdentifier: "onboard_vc")
+        present(OnboardVC, animated: true, completion: nil)
     }
     
     // Segue to onboard view or a logout conformation depending on whether user is logged in or not
-    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        tableView.deselectRowAtIndexPath(indexPath, animated: true)
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
         if !isTheUserLoggedIn {
             presentLogin()
-        } else if settingsCells[indexPath.row] == "LogoutCell" {
-            let alert = UIAlertController(title: "Logout", message: "Are you sure?", preferredStyle: .Alert)
-            let cancelAction = UIAlertAction(title: "No", style: .Cancel, handler: { action in
-                tableView.deselectRowAtIndexPath(indexPath, animated: true)
+        } else if settingsCells[(indexPath as NSIndexPath).row] == "LogoutCell" {
+            let alert = UIAlertController(title: "Logout", message: "Are you sure?", preferredStyle: .alert)
+            let cancelAction = UIAlertAction(title: "No", style: .cancel, handler: { action in
+                tableView.deselectRow(at: indexPath, animated: true)
             })
-            let confirmAction = UIAlertAction(title: "Yes", style: .Default, handler: { action in
-                let userInstallation = PFInstallation.currentInstallation()
-                userInstallation?.removeObjectForKey("user")
-                userInstallation?.saveInBackgroundWithBlock(nil)
+            let confirmAction = UIAlertAction(title: "Yes", style: .default, handler: { action in
+                let userInstallation = PFInstallation.current()
+                userInstallation?.remove(forKey: "user")
+                userInstallation?.saveInBackground(block: nil)
 
                 PFUser.logOut()
                 self.isTheUserLoggedIn = false
@@ -140,39 +140,39 @@ class SettingsTableViewController: UITableViewController {
             })
             alert.addAction(cancelAction)
             alert.addAction(confirmAction)
-            self.presentViewController(alert, animated: true, completion: nil)
-        } else if indexPath.row == 0 {
-            PFInstallation.currentInstallation()?.badge = 0
-            PFInstallation.currentInstallation()?.saveInBackground()
-        } else if settingsCells[indexPath.row] == "Watchlist" {
+            self.present(alert, animated: true, completion: nil)
+        } else if (indexPath as NSIndexPath).row == 0 {
+            PFInstallation.current()?.badge = 0
+            PFInstallation.current()?.saveInBackground()
+        } else if settingsCells[(indexPath as NSIndexPath).row] == "Watchlist" {
         }
     }
     
 // MARK: - Segue Methods
     
-    @IBAction func unwindToSettingsAfterLogin(segue: UIStoryboardSegue) {
+    @IBAction func unwindToSettingsAfterLogin(_ segue: UIStoryboardSegue) {
     }
     
-    @IBAction func unwindToSettings(segue: UIStoryboardSegue) {
+    @IBAction func unwindToSettings(_ segue: UIStoryboardSegue) {
     }
     
-    override func shouldPerformSegueWithIdentifier(identifier: String?, sender: AnyObject?) -> Bool {
-        return PFUser.currentUser() == nil ? false : true
+    override func shouldPerformSegue(withIdentifier identifier: String?, sender: Any?) -> Bool {
+        return PFUser.current() == nil ? false : true
     }
 
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        self.navigationItem.backBarButtonItem = UIBarButtonItem(title:"", style:.Plain, target:nil, action:nil)
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        self.navigationItem.backBarButtonItem = UIBarButtonItem(title:"", style:.plain, target:nil, action:nil)
 
         if segue.identifier == "ShowLocationPreferences" {
-            let showLocationPreferencesVC = segue.destinationViewController as! LocationSettingsViewController
+            let showLocationPreferencesVC = segue.destination as! LocationSettingsViewController
             showLocationPreferencesVC.hidesBottomBarWhenPushed = true
         }
         if segue.identifier == "ShowConversations" {
-            let showConversationsVC = segue.destinationViewController as! ConversationsTableViewController
+            let showConversationsVC = segue.destination as! ConversationsTableViewController
             showConversationsVC.hidesBottomBarWhenPushed = true
         }
         if segue.identifier == "ShowWatchlist" {
-            let showWatchlistVC = segue.destinationViewController as! WatchlistTableViewController
+            let showWatchlistVC = segue.destination as! WatchlistTableViewController
             showWatchlistVC.hidesBottomBarWhenPushed = true
         }
     }

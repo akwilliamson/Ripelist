@@ -41,32 +41,32 @@ class ConversationViewController: JSQMessagesViewController {
         Flurry.logEvent("Conversation Details")
         if postDeletedMessage == nil {
             
-            deletedLabel.hidden = true
+            deletedLabel.isHidden = true
             
             inputToolbar!.contentView!.leftBarButtonItem = nil
             
             title = "Messages"
-            senderId = PFUser.currentUser()!.objectId
-            senderDisplayName = PFUser.currentUser()!.username
+            senderId = PFUser.current()!.objectId
+            senderDisplayName = PFUser.current()!.username
             
-            let selfUsername = PFUser.currentUser()!.objectForKey("name") as! NSString
-            incomingUser.fetchIfNeededInBackgroundWithBlock { (result: PFObject?, error: NSError?) -> Void in
-            let incomingUsername = result?.objectForKey("name") as! NSString
+            let selfUsername = PFUser.current()!.object(forKey: "name") as! NSString
+            incomingUser.fetchIfNeededInBackground { (result: PFObject?, error: NSError?) -> Void in
+            let incomingUsername = result?.object(forKey: "name") as! NSString
                 
-            self.incomingAvatar = JSQMessagesAvatarImageFactory.avatarImageWithUserInitials(incomingUsername.substringWithRange(NSMakeRange(0, 1)), backgroundColor: self.greenColor, textColor: UIColor.whiteColor(), font: UIFont.systemFontOfSize(14), diameter: UInt(kJSQMessagesCollectionViewAvatarSizeDefault))
+            self.incomingAvatar = JSQMessagesAvatarImageFactory.avatarImage(withUserInitials: incomingUsername.substring(with: NSMakeRange(0, 1)), backgroundColor: self.greenColor, textColor: UIColor.white, font: UIFont.systemFont(ofSize: 14), diameter: UInt(kJSQMessagesCollectionViewAvatarSizeDefault))
             }
             
-            selfAvatar = JSQMessagesAvatarImageFactory.avatarImageWithUserInitials(selfUsername.substringWithRange(NSMakeRange(0, 1)), backgroundColor: goldColor, textColor: UIColor.whiteColor(), font: UIFont.systemFontOfSize(14), diameter: UInt(kJSQMessagesCollectionViewAvatarSizeDefault))
+            selfAvatar = JSQMessagesAvatarImageFactory.avatarImage(withUserInitials: selfUsername.substring(with: NSMakeRange(0, 1)), backgroundColor: goldColor, textColor: UIColor.white, font: UIFont.systemFont(ofSize: 14), diameter: UInt(kJSQMessagesCollectionViewAvatarSizeDefault))
             
             let bubbleFactory = JSQMessagesBubbleImageFactory()
-            outgoingBubbleImage = bubbleFactory.outgoingMessagesBubbleImageWithColor(goldColor)
-            incomingBubbleImage = bubbleFactory.incomingMessagesBubbleImageWithColor(greenColor)
+            outgoingBubbleImage = bubbleFactory?.outgoingMessagesBubbleImage(with: goldColor)
+            incomingBubbleImage = bubbleFactory?.incomingMessagesBubbleImage(with: greenColor)
         } else {
-            deletedLabel.hidden = false
+            deletedLabel.isHidden = false
         }
     }
     
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         if postDeletedMessage == nil {
             loadMessages()
         }
@@ -82,7 +82,7 @@ class ConversationViewController: JSQMessagesViewController {
         
         let messageQuery = PFQuery(className: "Message")
         messageQuery.whereKey("room", equalTo: room)
-        messageQuery.orderByAscending("createdAt")
+        messageQuery.order(byAscending: "createdAt")
         messageQuery.limit = 20
         messageQuery.includeKey("user")
         
@@ -90,7 +90,7 @@ class ConversationViewController: JSQMessagesViewController {
             messageQuery.whereKey("createdAt", greaterThan: lastMessage!.date)
         }
         
-        messageQuery.findObjectsInBackgroundWithBlock { (results: [PFObject]?, error: NSError?) -> Void in
+        messageQuery.findObjectsInBackground { (results: [PFObject]?, error: NSError?) -> Void in
             if error == nil {
                 let messages = results as [PFObject]!
                 for message in messages {
@@ -111,18 +111,18 @@ class ConversationViewController: JSQMessagesViewController {
     }
     
     // Send Messages
-    override func didPressSendButton(button: UIButton!, withMessageText text: String!, senderId: String!, senderDisplayName: String!, date: NSDate!) {
+    override func didPressSend(_ button: UIButton!, withMessageText text: String!, senderId: String!, senderDisplayName: String!, date: Date!) {
         let message = PFObject(className: "Message")
         message["content"] = text
         message["room"] = room
-        message["user"] = PFUser.currentUser()
+        message["user"] = PFUser.current()
         
-        message.saveInBackgroundWithBlock { (success:Bool, error:NSError?) -> Void in
+        message.saveInBackground { (success:Bool, error:NSError?) -> Void in
             if error == nil {
                 self.loadMessages()
-                self.room["lastUpdate"] = NSDate()
-                self.room.addObject(self.incomingUser.objectId!, forKey: "hasUnreadMessages")
-                self.room.saveInBackgroundWithBlock(nil)
+                self.room["lastUpdate"] = Date()
+                self.room.add(self.incomingUser.objectId!, forKey: "hasUnreadMessages")
+                self.room.saveInBackground(block: nil)
             } else {
                 print("error sending message: \(error!.localizedDescription)")
             }
@@ -134,14 +134,14 @@ class ConversationViewController: JSQMessagesViewController {
         pushQuery!.whereKey("user", equalTo: incomingUser)
         
         let push = PFPush()
-        push.setQuery(pushQuery)
-        let senderName = PFUser.currentUser()!.objectForKey("name") as! String
+        push.setQuery(pushQuery as! PFQuery<PFInstallation>?)
+        let senderName = PFUser.current()!.object(forKey: "name") as! String
         let data = [
             "alert" : "New message from \(senderName)",
             "badge" : "Increment"
         ]
         push.setData(data)
-        push.sendPushInBackgroundWithBlock { (success: Bool, error: NSError?) -> Void in
+        push.sendInBackground { (success: Bool, error: NSError?) -> Void in
             if success {
                 print("success")
             } else {
@@ -150,16 +150,16 @@ class ConversationViewController: JSQMessagesViewController {
         }
     }
     
-    override func viewWillDisappear(animated: Bool) {
-        NSNotificationCenter.defaultCenter().postNotificationName("updateParent", object: nil)
+    override func viewWillDisappear(_ animated: Bool) {
+        NotificationCenter.default.post(name: Notification.Name(rawValue: "updateParent"), object: nil)
     }
     
     // Delegate Methods
-    override func collectionView(collectionView: JSQMessagesCollectionView!, messageDataForItemAtIndexPath indexPath: NSIndexPath!) -> JSQMessageData! {
+    override func collectionView(_ collectionView: JSQMessagesCollectionView!, messageDataForItemAt indexPath: IndexPath!) -> JSQMessageData! {
         return messages[indexPath.row]
     }
     
-    override func collectionView(collectionView: JSQMessagesCollectionView!, messageBubbleImageDataForItemAtIndexPath indexPath: NSIndexPath!) -> JSQMessageBubbleImageDataSource! {
+    override func collectionView(_ collectionView: JSQMessagesCollectionView!, messageBubbleImageDataForItemAt indexPath: IndexPath!) -> JSQMessageBubbleImageDataSource! {
         let message = messages[indexPath.row]
         
         if message.senderId == self.senderId {
@@ -169,7 +169,7 @@ class ConversationViewController: JSQMessagesViewController {
         return incomingBubbleImage
     }
     
-    override func collectionView(collectionView: JSQMessagesCollectionView!, avatarImageDataForItemAtIndexPath indexPath: NSIndexPath!) -> JSQMessageAvatarImageDataSource! {
+    override func collectionView(_ collectionView: JSQMessagesCollectionView!, avatarImageDataForItemAt indexPath: IndexPath!) -> JSQMessageAvatarImageDataSource! {
         let message = messages[indexPath.row]
         
         if message.senderId == self.senderId {
@@ -179,28 +179,28 @@ class ConversationViewController: JSQMessagesViewController {
         return incomingAvatar
     }
     
-    override func collectionView(collectionView: JSQMessagesCollectionView!, attributedTextForCellTopLabelAtIndexPath indexPath: NSIndexPath!) -> NSAttributedString! {
+    override func collectionView(_ collectionView: JSQMessagesCollectionView!, attributedTextForCellTopLabelAt indexPath: IndexPath!) -> NSAttributedString! {
         if indexPath.item % 3 == 0 {
             let message = messages[indexPath.item]
             
-            return JSQMessagesTimestampFormatter.sharedFormatter().attributedTimestampForDate(message.date)
+            return JSQMessagesTimestampFormatter.shared().attributedTimestamp(for: message.date)
         }
         
         return nil
     }
     
-    override func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
-        let cell = super.collectionView(collectionView, cellForItemAtIndexPath: indexPath) as! JSQMessagesCollectionViewCell
-        cell.textView!.textColor = UIColor.whiteColor()
+    override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = super.collectionView(collectionView, cellForItemAt: indexPath) as! JSQMessagesCollectionViewCell
+        cell.textView!.textColor = UIColor.white
         
         return cell
     }
     
-    override func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+    override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return messages.count
     }
     
-    override func collectionView(collectionView: JSQMessagesCollectionView!, layout collectionViewLayout: JSQMessagesCollectionViewFlowLayout!, heightForCellTopLabelAtIndexPath indexPath: NSIndexPath!) -> CGFloat {
+    override func collectionView(_ collectionView: JSQMessagesCollectionView!, layout collectionViewLayout: JSQMessagesCollectionViewFlowLayout!, heightForCellTopLabelAt indexPath: IndexPath!) -> CGFloat {
         return kJSQMessagesCollectionViewCellLabelHeightDefault
     }
 }

@@ -27,7 +27,7 @@ class WatchlistTableViewController: PFQueryTableViewController {
         startLocationManager()
     }
     
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
         checkIfUserIsLoggedIn()
     }
@@ -47,8 +47,8 @@ class WatchlistTableViewController: PFQueryTableViewController {
     }
 
     func checkIfUserIsLoggedIn() {
-        if PFUser.currentUser() == nil {
-            self.performSegueWithIdentifier("UnwindToPosts", sender: AnyObject?())
+        if PFUser.current() == nil {
+            self.performSegue(withIdentifier: "UnwindToPosts", sender: AnyObject?())
         }
     }
     
@@ -59,16 +59,16 @@ class WatchlistTableViewController: PFQueryTableViewController {
     }
     
     // All watchlist items for current user
-    override func queryForTable() -> PFQuery {
+    override func queryForTable() -> PFQuery<PFObject> {
         let watchlistQuery = PFQuery(className: "Watchlist")
-            watchlistQuery.whereKey("user", equalTo: PFUser.currentUser()!)
+            watchlistQuery.whereKey("user", equalTo: PFUser.current()!)
             watchlistQuery.includeKey("user")
             watchlistQuery.includeKey("post")
-            watchlistQuery.orderByDescending("updatedAt")
+            watchlistQuery.order(byDescending: "updatedAt")
         return watchlistQuery
     }
     
-    override func objectsDidLoad(error: NSError?) {
+    func objectsDidLoad(_ error: NSError?) {
         super.objectsDidLoad(error)
         if error != nil {
             print(error?.localizedDescription)
@@ -83,11 +83,11 @@ class WatchlistTableViewController: PFQueryTableViewController {
                 for loadingViewSubview in view.subviews {
                     if loadingViewSubview is UILabel {
                         let label = loadingViewSubview as! UILabel
-                        label.hidden = true
+                        label.isHidden = true
                     }
                     if loadingViewSubview is UIActivityIndicatorView {
                         let loadingSubview = loadingViewSubview as! UIActivityIndicatorView
-                        loadingSubview.activityIndicatorViewStyle = UIActivityIndicatorViewStyle.White // Don't know how to hide so I made it white
+                        loadingSubview.activityIndicatorViewStyle = UIActivityIndicatorViewStyle.white // Don't know how to hide so I made it white
                         
                         let indicator = DTIActivityIndicatorView(frame: CGRect(x:0.0, y:0.0, width:80.0, height:80.0))
                         indicator.indicatorColor = UIColor.forestColor()
@@ -101,15 +101,15 @@ class WatchlistTableViewController: PFQueryTableViewController {
         }
     }
     
-    override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 80
     }
     
-    override func tableView(tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+    override func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
         return 0.01
     }
     
-    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath, object: PFObject!) -> PFTableViewCell? {
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath, object: PFObject!) -> PFTableViewCell? {
         // Append to array if neccessary
         if object["post"] == nil {
             object.deleteInBackground()
@@ -119,7 +119,7 @@ class WatchlistTableViewController: PFQueryTableViewController {
             }
         }
         // Dequeue cell
-        let listingCell = tableView.dequeueReusableCellWithIdentifier("ListingCell", forIndexPath: indexPath) as! PFTableViewCell
+        let listingCell = tableView.dequeueReusableCell(withIdentifier: "ListingCell", for: indexPath) as! PFTableViewCell
         // Access labels
         let    photoLabel = listingCell.viewWithTag(1) as! PFImageView
         let    titleLabel = listingCell.viewWithTag(2) as! UILabel
@@ -132,7 +132,7 @@ class WatchlistTableViewController: PFQueryTableViewController {
         // Access parameters
         let    listing = object["post"]        as! PFObject
         let       user = listing["owner"]      as? PFUser
-        let  createdAt = listing["createdAt"]  as? NSDate
+        let  createdAt = listing["createdAt"]  as? Date
         let      title = listing["title"]      as? String
         let      price = listing["price"]      as? String
         let   forTrade = listing["forTrade"]   as? Bool
@@ -171,7 +171,7 @@ class WatchlistTableViewController: PFQueryTableViewController {
         
         // Set username
         if let user = user {
-            user.fetchIfNeededInBackgroundWithBlock({ (result: PFObject?, error: NSError?) -> Void in
+            user.fetchIfNeededInBackground(block: { (result: PFObject?, error: NSError?) -> Void in
                 if let username = result!["name"] as? String {
                     usernameLabel.text = "By: " + username
                 }
@@ -182,14 +182,14 @@ class WatchlistTableViewController: PFQueryTableViewController {
     
     // Custom Methods
     
-    func loadImage(imageView: PFImageView, imageFile: PFFile?) {
+    func loadImage(_ imageView: PFImageView, imageFile: PFFile?) {
         imageView.image = UIImage(named: "placeholder.png")
         imageView.file = imageFile
-        imageView.loadInBackground(nil)
+        imageView.load(inBackground: nil)
     }
     
-    func setBarterLabels(labels: [UILabel], barterTypes: [Bool?]) {
-        for (index, barterType) in barterTypes.enumerate() {
+    func setBarterLabels(_ labels: [UILabel], barterTypes: [Bool?]) {
+        for (index, barterType) in barterTypes.enumerated() {
             let barterLabel = labels[index]
             barterLabel.layer.cornerRadius = 8
             barterLabel.clipsToBounds = true
@@ -205,12 +205,12 @@ class WatchlistTableViewController: PFQueryTableViewController {
     
     // MARK: - Segue Methods
     
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        self.navigationItem.backBarButtonItem = UIBarButtonItem(title:"", style:.Plain, target:nil, action:nil)
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        self.navigationItem.backBarButtonItem = UIBarButtonItem(title:"", style:.plain, target:nil, action:nil)
 
         if segue.identifier == "ListingDetails" {
-            let listing = arrayOfListingsInTable[tableView.indexPathForSelectedRow!.row]
-            let listingDetailsVC = segue.destinationViewController as! ListingDetailsViewController
+            let listing = arrayOfListingsInTable[(tableView.indexPathForSelectedRow! as NSIndexPath).row]
+            let listingDetailsVC = segue.destination as! ListingDetailsViewController
                 listingDetailsVC.hidesBottomBarWhenPushed = true
                 listingDetailsVC.localPost = LocalPost(postObject: listing, postAuthor: (listing["owner"] as! PFUser))
                 listingDetailsVC.displayedFromWatchlist = true
@@ -220,11 +220,11 @@ class WatchlistTableViewController: PFQueryTableViewController {
 
 extension WatchlistTableViewController: CLLocationManagerDelegate {
     
-    func locationManager(manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         currentLocationPoint = locations.last as CLLocation!
     }
     
-    func locationManager(manager: CLLocationManager, didFailWithError error: NSError) {
+    func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
         print("locationManager:didFailWithError: ", error.localizedDescription)
     }
 }

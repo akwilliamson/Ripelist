@@ -37,8 +37,8 @@ class ListingsTableViewController: PFQueryTableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        Apptentive.sharedConnection().engage("AppLaunched", fromViewController: self)
-        self.logRegistrationEvents(forPossibleUser: PFUser.currentUser(), atLocation: locationService.locationManager.location)
+        Apptentive.sharedConnection().engage("AppLaunched", from: self)
+        self.logRegistrationEvents(forPossibleUser: PFUser.current(), atLocation: locationService.locationManager.location)
         
         locationService.locationManager.delegate = self
         locationService.startUpdatingLocation()
@@ -46,7 +46,7 @@ class ListingsTableViewController: PFQueryTableViewController {
         self.registerCustomTableViewCellNibs()
         self.styleLoadingActivityIndicator(withinViews: self.view.subviews)
         self.configureSearchBar()
-        self.addTarget(onControl: recentOrClosestSegmentedControl, forEvent: .ValueChanged)
+        self.addTarget(onControl: recentOrClosestSegmentedControl, forEvent: .valueChanged)
     }
     
 // MARK: View Setup Helpers
@@ -67,21 +67,21 @@ class ListingsTableViewController: PFQueryTableViewController {
     }
     
     func registerCustomTableViewCellNibs() {
-        tableView.registerNib(UINib(nibName: "ListingCell", bundle: nil), forCellReuseIdentifier: "ListingCell")
-        tableView.registerNib(UINib(nibName: "RequestCell", bundle: nil), forCellReuseIdentifier: "RequestCell")
+        tableView.register(UINib(nibName: "ListingCell", bundle: nil), forCellReuseIdentifier: "ListingCell")
+        tableView.register(UINib(nibName: "RequestCell", bundle: nil), forCellReuseIdentifier: "RequestCell")
     }
     
     func addTarget(onControl control: UISegmentedControl, forEvent event: UIControlEvents) {
-        control.addTarget(self, action: #selector(ListingsTableViewController.controlChanged(_:)), forControlEvents: .ValueChanged)
+        control.addTarget(self, action: #selector(ListingsTableViewController.controlChanged(_:)), for: .valueChanged)
     }
     
     func styleLoadingActivityIndicator(withinViews views: [UIView]) {
         // go through all of the subviews until you find a PFLoadingView subclass
         views.forEach({ if NSStringFromClass($0.classForCoder) == "PFLoadingView" {
             // find the loading label and loading activity indicator inside the PFLoadingView subviews
-            $0.subviews.forEach({ if $0 is UILabel { $0.hidden = true } else if $0 is UIActivityIndicatorView {
+            $0.subviews.forEach({ if $0 is UILabel { $0.isHidden = true } else if $0 is UIActivityIndicatorView {
                 let indicatorView = $0 as! UIActivityIndicatorView
-                indicatorView.activityIndicatorViewStyle = .White // Don't know how to hide so I made it white
+                indicatorView.activityIndicatorViewStyle = .white // Don't know how to hide so I made it white
                 self.addCustomLoadingSubview(forView: indicatorView)
                 }
             })
@@ -96,26 +96,26 @@ class ListingsTableViewController: PFQueryTableViewController {
     
 // MARK: - Parse Initialization
 
-    override func queryForTable() -> PFQuery {
+    override func queryForTable() -> PFQuery<PFObject> {
         let query = PFQuery(className: "Listing").includeKey("owner")
-        query.cachePolicy = .NetworkElseCache
+        query.cachePolicy = .networkElseCache
         
-        if searchController.active {
+        if searchController.isActive {
             query.whereKey("title", matchesRegex: searchString, modifiers: "i")
-            return query.orderByDescending("updatedAt")
+            return query.order(byDescending: "updatedAt")
         } else {
             switch recentOrClosestSegmentedControl.selectedSegmentIndex {
             case 0: /* Most Recent */
-                return query.orderByDescending("updatedAt")
+                return query.order(byDescending: "updatedAt")
             case 1: /* Nearest */
                 return query.whereKey("location", nearGeoPoint: PFGeoPoint(location: locationService.locationManager.location))
             default: /* Most Recent */
-                return query.orderByDescending("updatedAt")
+                return query.order(byDescending: "updatedAt")
             }
         }
     }
     
-    override func objectsDidLoad(error: NSError?) {
+    func objectsDidLoad(_ error: NSError?) {
         super.objectsDidLoad(error)
         if error == nil {
             tableView.scrollRectToVisible(CGRect(x: 0, y: 0, width: 1, height: 1), animated: true)
@@ -126,12 +126,12 @@ class ListingsTableViewController: PFQueryTableViewController {
     
 // MARK: Tableview Data Source
     
-    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath, object: PFObject!) -> PFTableViewCell? {
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath, object: PFObject!) -> PFTableViewCell? {
         
-        let localPost = LocalPost(postObject: object, postAuthor: (object.objectForKey("owner") as! PFUser))
+        let localPost = LocalPost(postObject: object, postAuthor: (object.object(forKey: "owner") as! PFUser))
         
         if localPost.getPostType() == "listing" {
-            let listingCell = tableView.dequeueReusableCellWithIdentifier("ListingCell", forIndexPath: indexPath) as! ListingCell
+            let listingCell = tableView.dequeueReusableCell(withIdentifier: "ListingCell", for: indexPath) as! ListingCell
             let imageFile = object["image"] as? PFFile
             self.loadImage(inImageView: listingCell.listingImageView, withFile: imageFile)
             colorBarterLabels([listingCell.forSaleLabel, listingCell.forTradeLabel, listingCell.forFreeLabel],
@@ -143,7 +143,7 @@ class ListingsTableViewController: PFQueryTableViewController {
             
             return listingCell
         } else {
-            let requestCell = tableView.dequeueReusableCellWithIdentifier("RequestCell", forIndexPath: indexPath) as! RequestCell
+            let requestCell = tableView.dequeueReusableCell(withIdentifier: "RequestCell", for: indexPath) as! RequestCell
             
             let swapType = object["swapType"] as? String
             requestCell.setSwapType(withText: swapType)
@@ -155,11 +155,11 @@ class ListingsTableViewController: PFQueryTableViewController {
         }
     }
     
-    override func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
+    override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
         return true
     }
     
-    override func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
+    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
     }
     
 // MARK: Table View Data Source Helpers
@@ -168,12 +168,12 @@ class ListingsTableViewController: PFQueryTableViewController {
         imageView.image = UIImage(named: "placeholder.png")
         if let imageFile = imageFile {
             imageView.file = imageFile
-            imageView.loadInBackground(nil)
+            imageView.load(inBackground: nil)
         }
     }
     
-    func colorBarterLabels(barterLabels: [UILabel], barterTypes: [Bool?]) {
-        for (index, barterType) in barterTypes.enumerate() {
+    func colorBarterLabels(_ barterLabels: [UILabel], barterTypes: [Bool?]) {
+        for (index, barterType) in barterTypes.enumerated() {
             guard let barterType = barterType else { return }
             barterLabels[index].backgroundColor = barterType == false ? UIColor.labelGreyColor() : UIColor.goldColor()
         }
@@ -181,12 +181,12 @@ class ListingsTableViewController: PFQueryTableViewController {
 
 // MARK: - Tableview Delegate
     
-    override func tableView(tableView: UITableView, editActionsForRowAtIndexPath indexPath: NSIndexPath) -> [UITableViewRowAction]? {
-        let shareAction = UITableViewRowAction(style: .Normal, title: "Share") { (action: UITableViewRowAction, indexPath: NSIndexPath) -> Void in
+    override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
+        let shareAction = UITableViewRowAction(style: .normal, title: "Share") { (action: UITableViewRowAction, indexPath: IndexPath) -> Void in
             self.logEvents("Share Action Swiped")
-            guard let postObjectSwiped = self.objects?[indexPath.row] else { return }
+            guard let postObjectSwiped = self.objects?[(indexPath as NSIndexPath).row] else { return }
             let activityVC = self.createActivityVC(forPost: postObjectSwiped)
-            self.presentViewController(activityVC, animated: true, completion: { _ in
+            self.present(activityVC, animated: true, completion: { _ in
                 tableView.setEditing(false, animated: true)
             })
         }
@@ -194,26 +194,26 @@ class ListingsTableViewController: PFQueryTableViewController {
         return [shareAction]
     }
     
-    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        if indexPath.row > (objects?.count)! - 1 {
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        if (indexPath as NSIndexPath).row > (objects?.count)! - 1 {
             loadNextPage()
             return
         }
-        let segueString = tableView.cellForRowAtIndexPath(indexPath) is ListingCell ? "ListingDetails" : "RequestDetails"
-        self.performSegueWithIdentifier(segueString, sender: self)
+        let segueString = tableView.cellForRow(at: indexPath) is ListingCell ? "ListingDetails" : "RequestDetails"
+        self.performSegue(withIdentifier: segueString, sender: self)
     }
     
-    override func tableView(tableView: UITableView, cellForNextPageAtIndexPath indexPath: NSIndexPath) -> PFTableViewCell? {
+    override func tableView(_ tableView: UITableView, cellForNextPageAt indexPath: IndexPath) -> PFTableViewCell? {
         return NextPageCell()
     }
     
 // MARK: - Actions
     
-    @IBAction func menuTapped(sender: AnyObject) {
+    @IBAction func menuTapped(_ sender: AnyObject) {
         self.logEvents("Slide Menu Tapped")
         let alert = Alert(title: "Slide Menu", message: "The ability to filter posts is coming next! Which filter do you prefer?")
         let feedback = PFObject(className: "Feedback")
-        if let currentUser = PFUser.currentUser() {
+        if let currentUser = PFUser.current() {
             feedback["user"] = currentUser
         }
         alert.addAction("Filter between listings/requests", style: .Default) { action in
@@ -226,38 +226,38 @@ class ListingsTableViewController: PFQueryTableViewController {
             .show()
     }
     
-    func controlChanged(sender: UISegmentedControl) {
+    func controlChanged(_ sender: UISegmentedControl) {
         self.loadObjects()
         tableView.setContentOffset(tableView.contentOffset, animated: false)
     }
     
 // MARK: - Transitions
     
-    @IBAction func unwindToListingsTable(segue: UIStoryboardSegue) {
+    @IBAction func unwindToListingsTable(_ segue: UIStoryboardSegue) {
     }
     
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         Flurry.endTimedEvent("Main Listings", withParameters: nil)
-        self.navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .Plain, target:nil, action:nil)
+        self.navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target:nil, action:nil)
         
         if segue.identifier == "RequestDetails" {
-            guard let request = objects?[tableView.indexPathForSelectedRow!.row] else { return }
+            guard let request = objects?[(tableView.indexPathForSelectedRow! as NSIndexPath).row] else { return }
             
-            let requestDetailsVC = segue.destinationViewController as! RequestDetailsViewController
+            let requestDetailsVC = segue.destination as! RequestDetailsViewController
                 requestDetailsVC.hidesBottomBarWhenPushed = true
                 requestDetailsVC.localPost = LocalPost(postObject: request, postAuthor: (request["owner"] as! PFUser))
-                searchController.active = false
+                searchController.isActive = false
             
         } else if segue.identifier == "ListingDetails" {
-            guard let listing = objects?[tableView.indexPathForSelectedRow!.row] else { return }
+            guard let listing = objects?[(tableView.indexPathForSelectedRow! as NSIndexPath).row] else { return }
             
-            let listingDetailsVC = segue.destinationViewController as! ListingDetailsViewController
+            let listingDetailsVC = segue.destination as! ListingDetailsViewController
                 listingDetailsVC.hidesBottomBarWhenPushed = true
                 listingDetailsVC.localPost = LocalPost(postObject: listing, postAuthor: (listing["owner"] as! PFUser))
-                searchController.active = false
+                searchController.isActive = false
             
         } else if segue.identifier == "ShowMappedListings" {
-            let mappedPostsVC = segue.destinationViewController as! MappedPostsViewController
+            let mappedPostsVC = segue.destination as! MappedPostsViewController
                 mappedPostsVC.mapLatitude = locationService.locationManager.location?.coordinate.latitude ?? 45.520591
                 mappedPostsVC.mapLongitude = locationService.locationManager.location?.coordinate.longitude ?? -122.679298
         }
@@ -268,8 +268,8 @@ class ListingsTableViewController: PFQueryTableViewController {
 
 extension ListingsTableViewController: UISearchResultsUpdating {
     
-    func updateSearchResultsForSearchController(searchController: UISearchController) {
-        searchString = searchController.searchBar.text?.lowercaseString ?? ""
+    func updateSearchResults(for searchController: UISearchController) {
+        searchString = searchController.searchBar.text?.lowercased() ?? ""
         self.queryForTable()
         self.loadObjects()
     }
@@ -277,7 +277,7 @@ extension ListingsTableViewController: UISearchResultsUpdating {
 
 extension ListingsTableViewController: UISearchBarDelegate {
     
-    func searchBarSearchButtonClicked(searchBar: UISearchBar) {
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         searchBar.resignFirstResponder()
         tableView.reloadData()
     }
@@ -285,11 +285,11 @@ extension ListingsTableViewController: UISearchBarDelegate {
 
 extension ListingsTableViewController: CLLocationManagerDelegate {
 
-    func locationManager(manager: CLLocationManager, didChangeAuthorizationStatus status: CLAuthorizationStatus) {
+    func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
         self.loadObjects()
     }
     
-    func locationManager(manager: CLLocationManager, didFailWithError error: NSError) {
+    func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
         print("Update Location Error: \(error.localizedDescription)")
     }
 }

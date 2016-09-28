@@ -29,7 +29,7 @@ class EditListingViewController: UIViewController {
         super.viewDidLoad()
         Flurry.logEvent("Edit Listing Main View")
         self.navigationController?.navigationBar.titleTextAttributes = [NSFontAttributeName: UIFont(name: "ArialRoundedMTBold", size: 25)!,
-                                                                        NSForegroundColorAttributeName: UIColor.whiteColor()]
+                                                                        NSForegroundColorAttributeName: UIColor.white]
         
         listingTitleLabel.text = listingObject["title"] as? String
         editDescription.layer.cornerRadius = 25
@@ -38,18 +38,18 @@ class EditListingViewController: UIViewController {
           deleteListing.layer.cornerRadius = 25
     }
     
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
         listingTitleLabel.text = listingObject["title"] as? String
     }
     
-    @IBAction func deleteListing(sender: UIButton) {
-        let alert = UIAlertController(title: "Delete Listing", message: "Are you sure?", preferredStyle: .Alert)
-        let yesAction = UIAlertAction(title: "Yes", style: .Default) { action in
+    @IBAction func deleteListing(_ sender: UIButton) {
+        let alert = UIAlertController(title: "Delete Listing", message: "Are you sure?", preferredStyle: .alert)
+        let yesAction = UIAlertAction(title: "Yes", style: .default) { action in
             let listing = self.listingObject
             let chatRoomQuery = PFQuery(className: "Room")
-            chatRoomQuery.whereKey("postId", equalTo: PFObject(withoutDataWithClassName: "Listing", objectId: listing.objectId))
-            chatRoomQuery.findObjectsInBackgroundWithBlock({ (chatRoomResults: [PFObject]?, error: NSError?) -> Void in
+            chatRoomQuery.whereKey("postId", equalTo: PFObject(withoutDataWithClassName: "Listing", objectId: listing?.objectId))
+            chatRoomQuery.findObjectsInBackground(block: { (chatRoomResults: [PFObject]?, error: NSError?) -> Void in
                 if chatRoomResults!.count > 0 {
                     let chatRooms = chatRoomResults as [PFObject]!
                     for chatRoom in chatRooms {
@@ -57,36 +57,36 @@ class EditListingViewController: UIViewController {
                         
                         let messagesQuery = PFQuery(className: "Message")
                         messagesQuery.whereKey("room", equalTo: PFObject(withoutDataWithClassName: "Room", objectId: chatRoom.objectId))
-                        messagesQuery.findObjectsInBackgroundWithBlock({ (results: [PFObject]?, error: NSError?) -> Void in
+                        messagesQuery.findObjectsInBackground(block: { (results: [PFObject]?, error: NSError?) -> Void in
                             if results != nil {
                                 let messages = results as [PFObject]!
                                 for result in messages {
-                                    result.deleteInBackgroundWithBlock(nil)
+                                    result.deleteInBackground(block: nil)
                                 }
                             }
                         })
-                        chatRoom.deleteInBackgroundWithBlock(nil)
-                        listing.deleteInBackgroundWithBlock(nil)
+                        chatRoom.deleteInBackground(block: nil)
+                        listing.deleteInBackground(block: nil)
                     }
                 } else {
                     let listing = self.listingObject
-                    listing.deleteInBackgroundWithBlock(nil)
+                    listing.deleteInBackground(block: nil)
                 }
             })
-            self.performSegueWithIdentifier("UnwindToPosts", sender: self)
+            self.performSegue(withIdentifier: "UnwindToPosts", sender: self)
         }
-        let noAction = UIAlertAction(title: "No", style: .Cancel, handler: nil)
+        let noAction = UIAlertAction(title: "No", style: .cancel, handler: nil)
         alert.addAction(noAction)
         alert.addAction(yesAction)
-        self.presentViewController(alert, animated: true, completion: nil)
+        self.present(alert, animated: true, completion: nil)
     }
     
-    @IBAction func unwindToEditListing(segue: UIStoryboardSegue) {
+    @IBAction func unwindToEditListing(_ segue: UIStoryboardSegue) {
     }
     
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "EditListingDescription" {
-            let navigationController = segue.destinationViewController as! UINavigationController
+            let navigationController = segue.destination as! UINavigationController
             let editListingDescriptionVC = navigationController.topViewController as! EditListingDescriptionViewController
             editListingDescriptionVC.listingTitle = listingTitleLabel.text
             if let description = listingDescription {
@@ -96,14 +96,14 @@ class EditListingViewController: UIViewController {
             }
         }
         if segue.identifier == "EditListingPhoto" {
-            let navigationController = segue.destinationViewController as! UINavigationController
+            let navigationController = segue.destination as! UINavigationController
             let editListingPhotoVC = navigationController.topViewController as! EditListingPhotoViewController
             editListingPhotoVC.delegate = delegate
             editListingPhotoVC.listingObject = listingObject
             editListingPhotoVC.postImage = listingImage
         }
         if segue.identifier == "EditListingLocation" {
-            let navigationController = segue.destinationViewController as! UINavigationController
+            let navigationController = segue.destination as! UINavigationController
             let editListingLocationVC = navigationController.topViewController as! EditListingLocationViewController
             editListingLocationVC.delegate = delegate
             editListingLocationVC.listingObject = listingObject

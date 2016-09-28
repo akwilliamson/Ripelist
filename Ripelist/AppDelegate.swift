@@ -19,33 +19,33 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
     
     lazy var returningUser: AnyObject? = {
-        return UserDefaults.standardUserDefaults().objectForKey("hasLaunchedOnce")
-    }()
+        return UserDefaults.standard.object(forKey: "hasLaunchedOnce")
+    }() as AnyObject?
     
-    func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
+    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // White status bar
-        application.setStatusBarStyle(.LightContent, animated: false)
+        application.setStatusBarStyle(.lightContent, animated: false)
         
         setRootVC(returningUser)
         integrateSDKs(launchOptions)
         
-        if application.applicationState != .Background {
+        if application.applicationState != .background {
             
             // 2
-            let preBackgroundPush = !application.respondsToSelector(Selector("backgroundRefreshStatus"))
-            let oldPushHandlerOnly = !self.respondsToSelector(.didReceiveRemoteNotification)
+            let preBackgroundPush = !application.responds(to: #selector(getter: UIApplication.backgroundRefreshStatus))
+            let oldPushHandlerOnly = !self.responds(to: .didReceiveRemoteNotification)
             var pushPayload = false
             if let options = launchOptions {
-                pushPayload = options[UIApplicationLaunchOptionsRemoteNotificationKey] != nil
+                pushPayload = options[UIApplicationLaunchOptionsKey.remoteNotification] != nil
             }
             if (preBackgroundPush || oldPushHandlerOnly || pushPayload) {
-                PFAnalytics.trackAppOpenedWithLaunchOptions(launchOptions)
+                PFAnalytics.trackAppOpened(launchOptions: launchOptions)
             }
         }
         
         // 3
-        let types: UIUserNotificationType = [.Alert, .Badge, .Sound]
-        let settings = UIUserNotificationSettings(forTypes: types, categories: nil)
+        let types: UIUserNotificationType = [.alert, .badge, .sound]
+        let settings = UIUserNotificationSettings(types: types, categories: nil)
         application.registerUserNotificationSettings(settings)
         application.registerForRemoteNotifications()
         
@@ -53,51 +53,51 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         return FBSDKApplicationDelegate.sharedInstance().application(application, didFinishLaunchingWithOptions: launchOptions)
     }
     
-    private func setRootVC(returningUser: AnyObject?) {
+    fileprivate func setRootVC(_ returningUser: AnyObject?) {
         
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
 
         switch returningUser {
         case nil:
-            window?.rootViewController = storyboard.instantiateViewControllerWithIdentifier("NoticeVC") as? NoticeViewController
+            window?.rootViewController = storyboard.instantiateViewController(withIdentifier: "NoticeVC") as? NoticeViewController
         default:
-            window?.rootViewController = storyboard.instantiateViewControllerWithIdentifier("HomeVC") as? HomeViewController
+            window?.rootViewController = storyboard.instantiateViewController(withIdentifier: "HomeVC") as? HomeViewController
         }
     }
     
-    private func integrateSDKs(launchOptions: [NSObject : AnyObject]?) -> Void {
+    fileprivate func integrateSDKs(_ launchOptions: [AnyHashable: Any]?) -> Void {
         // Parse configuration
         let config = ParseClientConfiguration {
             $0.applicationId = Service.Parse.appId
             $0.clientKey = Service.Parse.clientKey
             $0.server = Service.Parse.url
         }
-        Parse.initializeWithConfiguration(config)
+        Parse.initialize(with: config)
         // Facebook login integration
-        PFFacebookUtils.initializeFacebookWithApplicationLaunchOptions(launchOptions)
+        PFFacebookUtils.initializeFacebook(applicationLaunchOptions: launchOptions)
         // Flurry analytics integration
         Flurry.startSession(Service.Flurry.apiKey)
         // Apptentive integration
-        Apptentive.sharedConnection().APIKey = Service.Apptentive.apiKey
+        Apptentive.sharedConnection().apiKey = Service.Apptentive.apiKey
     }
     
     // Facebook Authorization
-    func application(application: UIApplication, openURL url: NSURL, sourceApplication: String?, annotation: AnyObject) -> Bool {
-            return FBSDKApplicationDelegate.sharedInstance().application(application, openURL: url, sourceApplication: sourceApplication, annotation: annotation)
+    func application(_ application: UIApplication, open url: URL, sourceApplication: String?, annotation: Any) -> Bool {
+            return FBSDKApplicationDelegate.sharedInstance().application(application, open: url, sourceApplication: sourceApplication, annotation: annotation)
     }
     
     // Push Notifications
-    func application(application: UIApplication, didRegisterUserNotificationSettings notificationSettings: UIUserNotificationSettings) {
+    func application(_ application: UIApplication, didRegister notificationSettings: UIUserNotificationSettings) {
     }
     
-    func application(application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: NSData) {
-        let installation = PFInstallation.currentInstallation()
-        installation?.setDeviceTokenFromData(deviceToken)
+    func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
+        let installation = PFInstallation.current()
+        installation?.setDeviceTokenFrom(deviceToken)
         installation?.saveInBackground()
     }
     
-    func application(application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: NSError) {
-        func application(application: UIApplication, didFailToRegisterForRemoteNotificationsWithError
+    func application(_ application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: Error) {
+        func application(_ application: UIApplication, didFailToRegisterForRemoteNotificationsWithError
             error: NSError) {
             if error.code == 3010 {
                 print("Push notifications are not supported in the iOS Simulator.")
@@ -107,42 +107,42 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
     }
     
-    func application(application: UIApplication, didReceiveRemoteNotification userInfo: [NSObject: AnyObject]) {
+    func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable: Any]) {
         
-        PFPush.handlePush(userInfo)
+        PFPush.handle(userInfo)
         
-        if case(.Inactive) = application.applicationState {
-            PFAnalytics.trackAppOpenedWithRemoteNotificationPayload(userInfo)
+        if case(.inactive) = application.applicationState {
+            PFAnalytics.trackAppOpened(withRemoteNotificationPayload: userInfo)
         }
         
-        if PFUser.currentUser() != nil {
+        if PFUser.current() != nil {
             let tabBarController = self.window!.rootViewController as! HomeViewController
             let settingsTab = tabBarController.tabBar.items![2]
             
-            if let badge = PFInstallation.currentInstallation()?.badge {
+            if let badge = PFInstallation.current()?.badge {
                 settingsTab.badgeValue = String(badge + 1)
             }
             
-            if UIApplication.sharedApplication().applicationState == .Active {
-                PFInstallation.currentInstallation()?.badge += 1
+            if UIApplication.shared.applicationState == .active {
+                PFInstallation.current()?.badge += 1
             }
         }
     }
     
     // App Transitions
-    func applicationWillEnterForeground(application: UIApplication) {
-        if PFUser.currentUser() != nil {
-            if PFInstallation.currentInstallation()?.badge != 0 {
+    func applicationWillEnterForeground(_ application: UIApplication) {
+        if PFUser.current() != nil {
+            if PFInstallation.current()?.badge != 0 {
                 let storyboard = UIStoryboard(name: "Main", bundle: nil)
-                let rootVC = storyboard.instantiateViewControllerWithIdentifier("HomeVC") as! HomeViewController
+                let rootVC = storyboard.instantiateViewController(withIdentifier: "HomeVC") as! HomeViewController
                 self.window!.rootViewController = rootVC
                 let settingsTab = rootVC.tabBar.items![2]
-                settingsTab.badgeValue = String(PFInstallation.currentInstallation()?.badge)
+                settingsTab.badgeValue = String(describing: PFInstallation.current()?.badge)
             }
         }
     }
 
-    func applicationDidBecomeActive(application: UIApplication) {
+    func applicationDidBecomeActive(_ application: UIApplication) {
         FBSDKAppEvents.activateApp()
     }
     

@@ -11,11 +11,11 @@ import ParseUI
 
 extension PFGeoPoint {
     
-    func setDistanceFromLabel(postLocationPoint: PFGeoPoint, currentLocationPoint: CLLocation) -> String {
-        if CLLocationManager.authorizationStatus() == .AuthorizedWhenInUse {
+    func setDistanceFromLabel(_ postLocationPoint: PFGeoPoint, currentLocationPoint: CLLocation) -> String {
+        if CLLocationManager.authorizationStatus() == .authorizedWhenInUse {
 //            distanceFromLabel.font = UIFont(name: distanceFromLabel.font.fontName, size: 14)
             let currentLocation = PFGeoPoint(location: currentLocationPoint)
-            var distanceBetweenPoints = postLocationPoint.distanceInMilesTo(currentLocation)
+            var distanceBetweenPoints = postLocationPoint.distanceInMiles(to: currentLocation)
             distanceBetweenPoints = Double(round(100*distanceBetweenPoints)/100)
             switch distanceBetweenPoints {
             case 0...0.06:

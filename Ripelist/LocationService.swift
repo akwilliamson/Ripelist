@@ -11,14 +11,16 @@ import CoreLocation
 
 class LocationService: NSObject, CLLocationManagerDelegate {
     
+    private static var __once: () = {
+            Static.instance = LocationService()
+        }()
+    
     class var sharedInstance: LocationService {
         struct Static {
-            static var onceToken: dispatch_once_t = 0
+            static var onceToken: Int = 0
             static var instance: LocationService? = nil
         }
-        dispatch_once(&Static.onceToken) {
-            Static.instance = LocationService()
-        }
+        _ = LocationService.__once
         return Static.instance!
     }
     

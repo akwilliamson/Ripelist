@@ -10,15 +10,15 @@ import UIKit
 
 struct SetupViews {
     
-    func setupSubViews(objects: [AnyObject!]) {
+    func setupSubViews(_ objects: [AnyObject?]) {
         for object in objects {
-            object.layer.borderColor = UIColor.forestColor().CGColor
-            object.layer.borderWidth = 2
-            if object.isKindOfClass(UITextView) {
-                object.layer.borderWidth = 1
+            object?.layer.borderColor = UIColor.forestColor().cgColor
+            object?.layer.borderWidth = 2
+            if (object?.isKind(of: UITextView))! {
+                object?.layer.borderWidth = 1
             }
-            if object.isKindOfClass(UIButton) {
-                object.layer.cornerRadius = 10
+            if (object?.isKind(of: UIButton))! {
+                object?.layer.cornerRadius = 10
             }
         }
     }

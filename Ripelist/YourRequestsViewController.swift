@@ -33,18 +33,18 @@ class YourRequestsViewController: PFQueryTableViewController {
         stylePFLoadingViewTheHardWay()
     }
     
-    override func queryForTable() -> PFQuery {
+    override func queryForTable() -> PFQuery<PFObject> {
         let query = PFQuery(className: self.parseClassName!)
-        query.whereKey("owner", equalTo: PFObject(withoutDataWithClassName:"_User", objectId: PFUser.currentUser()!.objectId))
+        query.whereKey("owner", equalTo: PFObject(withoutDataWithClassName:"_User", objectId: PFUser.current()!.objectId))
         query.whereKey("postType", equalTo: "request")
-        query.orderByDescending("updatedAt")
+        query.order(byDescending: "updatedAt")
         return query
     }
     
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
-        if PFUser.currentUser() == nil {
-            self.performSegueWithIdentifier("UnwindToPosts", sender: AnyObject?())
+        if PFUser.current() == nil {
+            self.performSegue(withIdentifier: "UnwindToPosts", sender: AnyObject?())
         } else {
             self.loadObjects() 
         }
@@ -58,11 +58,11 @@ class YourRequestsViewController: PFQueryTableViewController {
                 for loadingViewSubview in view.subviews {
                     if loadingViewSubview is UILabel {
                         let label = loadingViewSubview as! UILabel
-                        label.hidden = true
+                        label.isHidden = true
                     }
                     if loadingViewSubview is UIActivityIndicatorView {
                         let loadingSubview = loadingViewSubview as! UIActivityIndicatorView
-                        loadingSubview.activityIndicatorViewStyle = UIActivityIndicatorViewStyle.White // Don't know how to hide so I made it white
+                        loadingSubview.activityIndicatorViewStyle = UIActivityIndicatorViewStyle.white // Don't know how to hide so I made it white
                         
                         let indicator = DTIActivityIndicatorView(frame: CGRect(x:0.0, y:0.0, width:80.0, height:80.0))
                         indicator.indicatorColor = UIColor.forestColor()
@@ -76,9 +76,9 @@ class YourRequestsViewController: PFQueryTableViewController {
         }
     }
     
-    override func tableView(tableView: UITableView?, cellForRowAtIndexPath indexPath: NSIndexPath?, object: PFObject!) -> PFTableViewCell? {
+    override func tableView(_ tableView: UITableView?, cellForRowAt indexPath: IndexPath?, object: PFObject!) -> PFTableViewCell? {
         arrayOfRequestsInTable.append(object)
-        let requestCell = tableView!.dequeueReusableCellWithIdentifier("YourRequestCell", forIndexPath: indexPath!) as! PFTableViewCell
+        let requestCell = tableView!.dequeueReusableCell(withIdentifier: "YourRequestCell", for: indexPath!) as! PFTableViewCell
         
         let title = requestCell.viewWithTag(1) as! UILabel
         title.text = object["title"] as? String
@@ -102,14 +102,14 @@ class YourRequestsViewController: PFQueryTableViewController {
         return requestCell
     }
     
-    override func tableView(tableView: UITableView, editActionsForRowAtIndexPath indexPath: NSIndexPath) -> [UITableViewRowAction]? {
+    override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
         
-        let deleteAction = UITableViewRowAction(style: .Default, title: "Delete") { (action: UITableViewRowAction, indexPath: NSIndexPath) -> Void in
+        let deleteAction = UITableViewRowAction(style: .default, title: "Delete") { (action: UITableViewRowAction, indexPath: IndexPath) -> Void in
             Flurry.logEvent("Delete Action Swiped")
-            let request = self.arrayOfRequestsInTable[indexPath.row] as PFObject
+            let request = self.arrayOfRequestsInTable[(indexPath as NSIndexPath).row] as PFObject
             let chatRoomQuery = PFQuery(className: "Room")
             chatRoomQuery.whereKey("postId", equalTo: PFObject(withoutDataWithClassName: "Listing", objectId: request.objectId))
-            chatRoomQuery.findObjectsInBackgroundWithBlock({ (chatRoomResults: [PFObject]?, error: NSError?) -> Void in
+            chatRoomQuery.findObjectsInBackground(block: { (chatRoomResults: [PFObject]?, error: NSError?) -> Void in
                 if chatRoomResults!.count > 0 {
                     let chatRooms = chatRoomResults as [PFObject]!
                     for chatRoom in chatRooms {
@@ -117,30 +117,30 @@ class YourRequestsViewController: PFQueryTableViewController {
                         
                         let messagesQuery = PFQuery(className: "Message")
                         messagesQuery.whereKey("room", equalTo: PFObject(withoutDataWithClassName: "Room", objectId: chatRoom.objectId))
-                        messagesQuery.findObjectsInBackgroundWithBlock({ (results: [PFObject]?, error: NSError?) -> Void in
+                        messagesQuery.findObjectsInBackground(block: { (results: [PFObject]?, error: NSError?) -> Void in
                             if results != nil {
                                 let messages = results as [PFObject]!
                                 for result in messages {
-                                    result.deleteInBackgroundWithBlock(nil)
+                                    result.deleteInBackground(block: nil)
                                 }
                             }
                         })
-                        chatRoom.deleteInBackgroundWithBlock(nil)
+                        chatRoom.deleteInBackground(block: nil)
                         
-                        self.removeObjectAtIndexPath(indexPath)
-                        request.deleteInBackgroundWithBlock({ (success: Bool, error: NSError?) -> Void in
+                        self.removeObject(at: indexPath)
+                        request.deleteInBackground(block: { (success: Bool, error: NSError?) -> Void in
                             if success {
-                                self.arrayOfRequestsInTable.removeAll(keepCapacity: false)
+                                self.arrayOfRequestsInTable.removeAll(keepingCapacity: false)
                                 self.loadObjects()
                             }
                         })
                     }
                 } else {
-                    let listing = self.objectAtIndexPath(indexPath)
-                    self.removeObjectAtIndexPath(indexPath)
-                    listing?.deleteInBackgroundWithBlock({ (success: Bool, error: NSError?) -> Void in
+                    let listing = self.object(at: indexPath)
+                    self.removeObject(at: indexPath)
+                    listing?.deleteInBackground(block: { (success: Bool, error: NSError?) -> Void in
                         if success {
-                            self.arrayOfRequestsInTable.removeAll(keepCapacity: false)
+                            self.arrayOfRequestsInTable.removeAll(keepingCapacity: false)
                             self.loadObjects()
                         }
                     })
@@ -149,23 +149,23 @@ class YourRequestsViewController: PFQueryTableViewController {
 
         }
         
-        let refreshAction = UITableViewRowAction(style: .Normal, title: "Refresh") { (action: UITableViewRowAction, indexPath: NSIndexPath) -> Void in
+        let refreshAction = UITableViewRowAction(style: .normal, title: "Refresh") { (action: UITableViewRowAction, indexPath: IndexPath) -> Void in
             Flurry.logEvent("Refresh Action Swiped")
             tableView.setEditing(false, animated: true)
-            let request = self.arrayOfRequestsInTable[indexPath.row] as PFObject
-            request["updatedAt"] = NSDate()
+            let request = self.arrayOfRequestsInTable[(indexPath as NSIndexPath).row] as PFObject
+            request["updatedAt"] = Date()
             request.saveInBackground()
         }
         refreshAction.backgroundColor = UIColor.forestColor()
         
-        let shareAction = UITableViewRowAction(style: .Normal, title: "Share") { (action: UITableViewRowAction, indexPath: NSIndexPath) -> Void in
+        let shareAction = UITableViewRowAction(style: .normal, title: "Share") { (action: UITableViewRowAction, indexPath: IndexPath) -> Void in
             Flurry.logEvent("Share Action Swiped")
-            let request = self.arrayOfRequestsInTable[indexPath.row] as PFObject
+            let request = self.arrayOfRequestsInTable[(indexPath as NSIndexPath).row] as PFObject
             let title = request["title"] as! String
             let string = "Someone is requesting: \(title) on Ripelist! Check out ripelist.com to learn more!"
             
             let activityViewController = UIActivityViewController(activityItems: [string], applicationActivities: nil)
-            self.presentViewController(activityViewController, animated: true, completion: nil)
+            self.present(activityViewController, animated: true, completion: nil)
         }
         shareAction.backgroundColor = UIColor.goldColor()
         
@@ -173,20 +173,20 @@ class YourRequestsViewController: PFQueryTableViewController {
         
     }
     
-    override func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
+    override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
         return true
     }
     
-    override func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
+    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
     }
     
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        self.navigationItem.backBarButtonItem = UIBarButtonItem(title:"", style:.Plain, target:nil, action:nil)
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        self.navigationItem.backBarButtonItem = UIBarButtonItem(title:"", style:.plain, target:nil, action:nil)
 
-        let selectedCell = tableView.cellForRowAtIndexPath(tableView.indexPathForSelectedRow!)
-        let selectedRequest = arrayOfRequestsInTable[tableView.indexPathForSelectedRow!.row]
+        let selectedCell = tableView.cellForRow(at: tableView.indexPathForSelectedRow!)
+        let selectedRequest = arrayOfRequestsInTable[(tableView.indexPathForSelectedRow! as NSIndexPath).row]
         if segue.identifier == "ShowYourRequestDetails" {
-            let yourRequestDetailsVC = segue.destinationViewController as! YourRequestDetailsViewController
+            let yourRequestDetailsVC = segue.destination as! YourRequestDetailsViewController
             yourRequestDetailsVC.requestObject = selectedRequest
             yourRequestDetailsVC.requestSwapType = (selectedCell?.viewWithTag(2) as! UILabel).text
             yourRequestDetailsVC.timeAgoString = (selectedCell?.viewWithTag(4) as! UILabel).text

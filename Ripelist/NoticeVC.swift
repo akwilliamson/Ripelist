@@ -17,40 +17,40 @@ class NoticeViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        NSUserDefaults.standardUserDefaults().setBool(true, forKey: "hasLaunchedOnce")
+        UserDefaults.standard.set(true, forKey: "hasLaunchedOnce")
         createAlert()
     }
     
-    @IBAction func liveSomewhereElseTapped(sender: AnyObject) {
-        self.presentViewController(petitionAlert, animated: true, completion: nil)
+    @IBAction func liveSomewhereElseTapped(_ sender: AnyObject) {
+        self.present(petitionAlert, animated: true, completion: nil)
     }
     
     func createAlert() {
-        petitionAlert = UIAlertController(title: "Petition", message: "Sign up to bring Ripelist to your city!", preferredStyle: .Alert)
+        petitionAlert = UIAlertController(title: "Petition", message: "Sign up to bring Ripelist to your city!", preferredStyle: .alert)
         
-        let cancelAction = UIAlertAction(title: "Cancel", style: .Cancel, handler: nil)
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
         
-        let submitAction = UIAlertAction(title: "Submit", style: .Default) { _ in
-            if let cityText = (self.petitionAlert.textFields?[1])?.text, emailText = (self.petitionAlert.textFields?[2])?.text {
+        let submitAction = UIAlertAction(title: "Submit", style: .default) { _ in
+            if let cityText = (self.petitionAlert.textFields?[1])?.text, let emailText = (self.petitionAlert.textFields?[2])?.text {
                 let nameText = self.petitionAlert.textFields?[0].text
                 self.postMailChimpPetitioner(nameText, inCity: cityText, withEmail: emailText)
-                self.performSegueWithIdentifier("ShowHome", sender: self)
+                self.performSegue(withIdentifier: "ShowHome", sender: self)
             }
         }
-        submitAction.enabled = false
+        submitAction.isEnabled = false
     
-        petitionAlert.addTextFieldWithConfigurationHandler { textField in
+        petitionAlert.addTextField { textField in
             textField.placeholder = "Name (optional)"
         }
         
-        petitionAlert.addTextFieldWithConfigurationHandler { textField in
+        petitionAlert.addTextField { textField in
             textField.placeholder = "Your City"
         }
         
-        petitionAlert.addTextFieldWithConfigurationHandler { textField in
+        petitionAlert.addTextField { textField in
             textField.placeholder = "Email"
-            NSNotificationCenter.defaultCenter().addObserverForName(UITextFieldTextDidChangeNotification, object: textField, queue: NSOperationQueue.mainQueue()) { _ in
-                submitAction.enabled = textField.text != ""
+            NotificationCenter.default.addObserver(forName: NSNotification.Name.UITextFieldTextDidChange, object: textField, queue: OperationQueue.main) { _ in
+                submitAction.isEnabled = textField.text != ""
             }
         }
         
@@ -58,13 +58,13 @@ class NoticeViewController: UIViewController {
         petitionAlert.addAction(submitAction)
     }
     
-    func postMailChimpPetitioner(name: String?, inCity city: String, withEmail email: String) {
+    func postMailChimpPetitioner(_ name: String?, inCity city: String, withEmail email: String) {
         let mailChimpAPI = MailChimpAPI()
         mailChimpAPI.createRequest(name, city: city, email: email)
     }
     
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        let destinationVC = segue.destinationViewController as! HomeViewController
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        let destinationVC = segue.destination as! HomeViewController
         
         destinationVC.tabBar.selectionIndicatorImage = UIImage(named: "gold-background.png")
     }

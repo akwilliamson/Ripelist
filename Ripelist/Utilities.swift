@@ -10,41 +10,41 @@ import Foundation
 
 // Converts the createdAt time of a post to a readable "time ago" string from the current time.
 
-func timeAgoSinceDate(date: NSDate, numericDates: Bool) -> String {
+func timeAgoSinceDate(_ date: Date, numericDates: Bool) -> String {
     
-    let calendar = NSCalendar.currentCalendar()
-    let now = NSDate()
-    let earliest = now.earlierDate(date)
+    let calendar = Calendar.current
+    let now = Date()
+    let earliest = (now as NSDate).earlierDate(date)
     let latest = earliest == now ? date : now
-    let components: NSDateComponents = calendar.components([.Minute, .Hour, .Day, .WeekOfYear], fromDate: earliest, toDate: latest, options: [])
+    let components: DateComponents = (calendar as NSCalendar).components([.minute, .hour, .day, .weekOfYear], from: earliest, to: latest, options: [])
     
-    if components.weekOfYear >= 2 {
+    if components.weekOfYear! >= 2 {
         return "> 2 weeks ago"
-    } else if components.weekOfYear >= 1 {
+    } else if components.weekOfYear! >= 1 {
         if numericDates {
             return "1 week ago"
         } else {
             return "Last week"
         }
-    } else if components.day >= 2 {
+    } else if components.day! >= 2 {
         return "\(components.day) days ago"
-    } else if components.day >= 1 {
+    } else if components.day! >= 1 {
         if numericDates {
             return "1 day ago"
         } else {
             return "Yesterday"
         }
-    } else if components.hour >= 2 {
+    } else if components.hour! >= 2 {
         return "\(components.hour) hours ago"
-    } else if components.hour >= 1 {
+    } else if components.hour! >= 1 {
         if numericDates {
             return "1 hour ago"
         } else {
             return "An hour ago"
         }
-    } else if components.minute >= 2 {
+    } else if components.minute! >= 2 {
         return "\(components.minute) minutes ago"
-    } else if components.minute >= 1 {
+    } else if components.minute! >= 1 {
         if numericDates {
             return "1 minute ago"
         } else {

@@ -12,10 +12,10 @@ import LKAlertController
 import ParseUI
 
 protocol StoreListingEditsDelegate {
-    func storeTitle(title: String)
-    func storeDescription(description: String?)
-    func storeImage(image: UIImage)
-    func storePin(pin: PFGeoPoint)
+    func storeTitle(_ title: String)
+    func storeDescription(_ description: String?)
+    func storeImage(_ image: UIImage)
+    func storePin(_ pin: PFGeoPoint)
 }
 
 class YourListingDetailsViewController: UIViewController, StoreListingEditsDelegate {
@@ -46,7 +46,7 @@ class YourListingDetailsViewController: UIViewController, StoreListingEditsDeleg
     override func viewDidLoad() {
         self.logEvents("Your Listings Details For Listing")
         // View Setup
-        descriptionTextField.layer.borderColor = UIColor.forestColor().CGColor
+        descriptionTextField.layer.borderColor = UIColor.forestColor().cgColor
         descriptionTextField.layer.borderWidth = 2
         // Content Setup
         populateImage()
@@ -57,7 +57,7 @@ class YourListingDetailsViewController: UIViewController, StoreListingEditsDeleg
         // If iPhone 4s, squeeze description details and minimize description/title font sizes
         if self.view.frame.width == 320 {
             descriptionHeight.constant = 110
-            descriptionTextField.font = UIFont.systemFontOfSize(14)
+            descriptionTextField.font = UIFont.systemFont(ofSize: 14)
         } else {
             if strlen(titleLabel.text!) <= 24 {
                 titleLabel.font = UIFont(name: "ArialRoundedMTBold", size: 20)
@@ -65,10 +65,10 @@ class YourListingDetailsViewController: UIViewController, StoreListingEditsDeleg
         }
     }
     
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
-        if PFUser.currentUser() == nil {
-            self.performSegueWithIdentifier("UnwindToPosts", sender: AnyObject?())
+        if PFUser.current() == nil {
+            self.performSegue(withIdentifier: "UnwindToPosts", sender: AnyObject?())
         } else {
             location = localPost.getLocation()
             configureMapView(location)
@@ -79,7 +79,7 @@ class YourListingDetailsViewController: UIViewController, StoreListingEditsDeleg
     
     func populateImage() {
         guard let imageFile = localPost.getImageFile() else { self.listingImage.image = UIImage(named: "placeholder.png"); return }
-        imageFile.getDataInBackgroundWithBlock({ (data: NSData?, error: NSError?) -> Void in
+        imageFile.getDataInBackground(block: { (data: Data?, error: NSError?) -> Void in
             self.listingImage.image = UIImage(data: data!) ?? UIImage(named: "placeholder.png")
         })
     }
@@ -92,7 +92,7 @@ class YourListingDetailsViewController: UIViewController, StoreListingEditsDeleg
             if localPost.forTrade() { // For sale & trade
                 swapTypeLabel1.text! = "Trade"
             } else { // Only for sale
-                swapTypeLabel1.hidden = true
+                swapTypeLabel1.isHidden = true
             }
             
         } else if localPost.forTrade() && localPost.forFree() {
@@ -100,40 +100,40 @@ class YourListingDetailsViewController: UIViewController, StoreListingEditsDeleg
             swapTypeLabel1.text! = "Free"
         } else if localPost.forTrade() {
             swapTypeLabel2.text! = "Trade"
-            swapTypeLabel1.hidden = true
+            swapTypeLabel1.isHidden = true
         } else { // for free
             swapTypeLabel2.text! = "Free"
-            swapTypeLabel1.hidden = true
+            swapTypeLabel1.isHidden = true
         }
     }
     
-    func configureMapView(location: PFGeoPoint) {
+    func configureMapView(_ location: PFGeoPoint) {
         self.mapView.setRegion(latitude: location.latitude, longitude: location.longitude, atSpan: 0.01)
         self.mapView.addOverlay(latitude: location.latitude, longitude: location.longitude)
     }
     
 // MARK: - Custom Delegate Methods
     
-    func storeTitle(title: String) {
+    func storeTitle(_ title: String) {
         titleLabel.text = title
     }
 
-    func storeDescription(description: String?) {
+    func storeDescription(_ description: String?) {
         descriptionTextField.text = description
     }
     
-    func storeImage(image: UIImage) {
+    func storeImage(_ image: UIImage) {
         listingImage.image = image
     }
     
-    func storePin(newLocation: PFGeoPoint) {
+    func storePin(_ newLocation: PFGeoPoint) {
         location = newLocation
         configureMapView(location)
     }
     
 // MARK: - Actions
     
-    @IBAction func updateListing(sender: AnyObject) {
+    @IBAction func updateListing(_ sender: AnyObject) {
         let alert = Alert(title: "Refresh Listing", message: "This will refresh your post and move it to the top of the listings feed. Would you like to refresh?")
         alert.addAction("Yes", style: .Default) { action in
             self.localPost.postObject["updatedAt"] = NSDate()
@@ -143,9 +143,9 @@ class YourListingDetailsViewController: UIViewController, StoreListingEditsDeleg
     
 // MARK: - Transitions
     
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "EditListing" {
-            let editListingVC = segue.destinationViewController as! EditListingViewController
+            let editListingVC = segue.destination as! EditListingViewController
             editListingVC.listingImage = listingImage
             editListingVC.listingDescription = localPost.getDescription()
             editListingVC.delegate = self
@@ -158,7 +158,7 @@ class YourListingDetailsViewController: UIViewController, StoreListingEditsDeleg
 
 extension YourListingDetailsViewController: MKMapViewDelegate {
     
-    func mapView(mapView: MKMapView, rendererForOverlay overlay: MKOverlay) -> MKOverlayRenderer {
+    func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
         let circle = MKCircleRenderer(overlay: overlay)
         circle.fillColor = UIColor.purpleRadiusColor()
         return circle

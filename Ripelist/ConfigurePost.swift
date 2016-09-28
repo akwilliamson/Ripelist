@@ -11,13 +11,13 @@ import ParseUI
 
 struct ConfigurePost {
 
-    func setDistanceFromLabel(distanceFromLabel: UILabel,
+    func setDistanceFromLabel(_ distanceFromLabel: UILabel,
                            postLocationPoint: PFGeoPoint,
                            currentLocationPoint: CLLocation) -> Void {
-        if CLLocationManager.authorizationStatus() == CLAuthorizationStatus.AuthorizedWhenInUse {
+        if CLLocationManager.authorizationStatus() == CLAuthorizationStatus.authorizedWhenInUse {
             distanceFromLabel.font = UIFont(name: distanceFromLabel.font.fontName, size: 14)
             let currentLocation = PFGeoPoint(location: currentLocationPoint)
-            var distanceBetweenPoints = postLocationPoint.distanceInMilesTo(currentLocation)
+            var distanceBetweenPoints = postLocationPoint.distanceInMiles(to: currentLocation)
             distanceBetweenPoints = Double(round(100*distanceBetweenPoints)/100)
             switch distanceBetweenPoints {
             case 0...0.06:
@@ -42,7 +42,7 @@ struct ConfigurePost {
             }
         } else {
             distanceFromLabel.numberOfLines = 2
-            distanceFromLabel.lineBreakMode = NSLineBreakMode.ByWordWrapping
+            distanceFromLabel.lineBreakMode = NSLineBreakMode.byWordWrapping
             distanceFromLabel.text = "Location disabled"
         }
     }
