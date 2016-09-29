@@ -98,7 +98,7 @@ class EditListingDescriptionViewController: UIViewController,
         self.view.addSubview(activityView)
         listingObject["description"] = listingDescriptionView.text
         listingObject["title"] = listingTitleTextField.text
-        listingObject.saveInBackground { (success: Bool, error: NSError?) -> Void in
+        listingObject.saveInBackground { (success, error) in
             if success {
                 activityView.stopAnimating()
                 self.performSegue(withIdentifier: "UnwindToEditListing", sender: self)

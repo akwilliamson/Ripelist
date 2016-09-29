@@ -68,7 +68,7 @@ class YourListingDetailsViewController: UIViewController, StoreListingEditsDeleg
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
         if PFUser.current() == nil {
-            self.performSegue(withIdentifier: "UnwindToPosts", sender: AnyObject?())
+            self.performSegue(withIdentifier: "UnwindToPosts", sender: self)
         } else {
             location = localPost.getLocation()
             configureMapView(location)
@@ -79,7 +79,7 @@ class YourListingDetailsViewController: UIViewController, StoreListingEditsDeleg
     
     func populateImage() {
         guard let imageFile = localPost.getImageFile() else { self.listingImage.image = UIImage(named: "placeholder.png"); return }
-        imageFile.getDataInBackground(block: { (data: Data?, error: NSError?) -> Void in
+        imageFile.getDataInBackground(block: { (data, error) in
             self.listingImage.image = UIImage(data: data!) ?? UIImage(named: "placeholder.png")
         })
     }
@@ -135,10 +135,10 @@ class YourListingDetailsViewController: UIViewController, StoreListingEditsDeleg
     
     @IBAction func updateListing(_ sender: AnyObject) {
         let alert = Alert(title: "Refresh Listing", message: "This will refresh your post and move it to the top of the listings feed. Would you like to refresh?")
-        alert.addAction("Yes", style: .Default) { action in
+        alert.addAction("Yes", style: .default) { action in
             self.localPost.postObject["updatedAt"] = NSDate()
             self.localPost.postObject.saveInBackground()
-        }.addAction("No", style: .Cancel, handler: nil).show()
+        }.addAction("No", style: .cancel,handler: nil).show()
     }
     
 // MARK: - Transitions

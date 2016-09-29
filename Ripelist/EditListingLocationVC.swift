@@ -100,7 +100,7 @@ class EditListingLocationViewController: UIViewController,
         activityView.startAnimating()
         self.view.addSubview(activityView)
         listingObject["location"] = newGeopoint
-        listingObject.saveInBackground { (success: Bool, error: NSError?) -> Void in
+        listingObject.saveInBackground { (success, error) in
             if success {
                 activityView.stopAnimating()
                 self.performSegue(withIdentifier: "UnwindToEditListing", sender: self)

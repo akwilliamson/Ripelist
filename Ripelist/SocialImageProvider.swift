@@ -25,7 +25,7 @@ class SocialImageProvider: UIActivityItemProvider {
         
         if file != nil {
             imageView.file = file
-            imageView.load(inBackground: { (loadedImage: UIImage?, error: NSError?) -> Void in
+            imageView.load(inBackground: { (loadedImage, error) in
                 image = loadedImage
             })
         }

@@ -24,7 +24,7 @@ class YourListingsViewController: PFQueryTableViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
         if PFUser.current() == nil {
-            self.performSegue(withIdentifier: "UnwindToPosts", sender: AnyObject?())
+            self.performSegue(withIdentifier: "UnwindToPosts", sender: self)
         }
     }
     

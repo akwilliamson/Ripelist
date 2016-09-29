@@ -222,7 +222,7 @@ class ListingsTableViewController: PFQueryTableViewController {
             }.addAction("Filter by category", style: .default) { action in
                 feedback["slideMenu"] = "C"
                 feedback.saveInBackground()
-            }.addAction("Cancel", style: .cancel, handler: nil)
+            }.addAction("Cancel", style: .cancel,handler: nil)
             .show()
     }
     

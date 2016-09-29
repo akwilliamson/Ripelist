@@ -39,7 +39,7 @@ class CreateListingBViewController: UIViewController,
     var                 placemark: CLPlacemark?
     var          possibleLocation: CLLocationCoordinate2D?
     var                  delegate: CreateListingBViewControllerDelegate?
-    var                     image = UIImage?()
+    var                     image = UIImage()
     var           saveUserAddress = false
     var            isValidAddress = true
     var addressFromCreateListingA = false
@@ -252,15 +252,17 @@ class CreateListingBViewController: UIViewController,
             imageView.image = croppedImage
             addPhotoButton.setTitle("Change Photo", for: UIControlState())
             delegate?.storeImageView(imageView)
-            self.image = imageView.image
+            if let image = imageView.image {
+                self.image = image
+            }
             if (newMedia == true) {
-                UIImageWriteToSavedPhotosAlbum(newImage!, self, #selector(CreateListingBViewController.image(_:didFinishSavingWithError:contextInfo:)), nil)
+                UIImageWriteToSavedPhotosAlbum(newImage!, self, #selector(image(_:didFinishSavingWithError:contextInfo:)), nil)
             }
         }
     }
     
     // Display error message if not saved
-    func image(_ image: UIImage, didFinishSavingWithError error: NSErrorPointer?, contextInfo:UnsafeRawPointer) {
+    func image(_ image: UIImage, didFinishSavingWithError error: Error?, contextInfo: UnsafeRawPointer) {
         if error != nil {
             let alert = UIAlertController(title: "Save Failed",
                 message: "Failed to save image",
@@ -332,7 +334,7 @@ class CreateListingBViewController: UIViewController,
                 self.newMedia = false
             }
         }
-        let cancel = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+        let cancel = UIAlertAction(title: "Cancel", style: .cancel,handler: nil)
         alert.addAction(takePhoto)
         alert.addAction(choosePhoto)
         alert.addAction(cancel)

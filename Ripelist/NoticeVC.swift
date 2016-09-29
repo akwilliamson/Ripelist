@@ -28,7 +28,7 @@ class NoticeViewController: UIViewController {
     func createAlert() {
         petitionAlert = UIAlertController(title: "Petition", message: "Sign up to bring Ripelist to your city!", preferredStyle: .alert)
         
-        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel,handler: nil)
         
         let submitAction = UIAlertAction(title: "Submit", style: .default) { _ in
             if let cityText = (self.petitionAlert.textFields?[1])?.text, let emailText = (self.petitionAlert.textFields?[2])?.text {

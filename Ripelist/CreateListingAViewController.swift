@@ -461,7 +461,7 @@ class CreateListingAViewController: UIViewController,
                          createListingBController.listingPrice = listingPrice.text
                         createListingBController.listingAmount = amountButton.currentTitle
                           createListingBController.locationPin = locationPin
-                                createListingBController.image = imageView?.image
+                                createListingBController.image = (imageView?.image)!
                               createListingBController.address = addressField
                                   createListingBController.zip = zipField
                              createListingBController.forTrade = forTrade

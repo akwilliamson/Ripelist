@@ -48,7 +48,7 @@ class WatchlistTableViewController: PFQueryTableViewController {
 
     func checkIfUserIsLoggedIn() {
         if PFUser.current() == nil {
-            self.performSegue(withIdentifier: "UnwindToPosts", sender: AnyObject?())
+            self.performSegue(withIdentifier: "UnwindToPosts", sender: self)
         }
     }
     
@@ -68,11 +68,12 @@ class WatchlistTableViewController: PFQueryTableViewController {
         return watchlistQuery
     }
     
-    func objectsDidLoad(_ error: NSError?) {
+    override func objectsDidLoad(_ error: Error?) {
         super.objectsDidLoad(error)
         if error != nil {
             print(error?.localizedDescription)
         }
+
     }
     
     func stylePFLoadingViewTheHardWay() {
@@ -171,7 +172,7 @@ class WatchlistTableViewController: PFQueryTableViewController {
         
         // Set username
         if let user = user {
-            user.fetchIfNeededInBackground(block: { (result: PFObject?, error: NSError?) -> Void in
+            user.fetchIfNeededInBackground(block: { (result, error) in
                 if let username = result!["name"] as? String {
                     usernameLabel.text = "By: " + username
                 }

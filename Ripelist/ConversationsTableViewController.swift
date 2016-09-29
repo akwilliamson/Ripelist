@@ -60,7 +60,7 @@ class ConversationsTableViewController: PFQueryTableViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
         if currentUser == nil {
-            self.performSegue(withIdentifier: "UnwindToSettings", sender: AnyObject?())
+            self.performSegue(withIdentifier: "UnwindToSettings", sender: self)
         } else {
             tableView.reloadData()
         }
@@ -125,7 +125,7 @@ class ConversationsTableViewController: PFQueryTableViewController {
         }
         
         if let post = object.object(forKey: "postId") as? PFObject {
-            post.fetchIfNeededInBackground { (result: PFObject?, error: NSError?) -> Void in
+            post.fetchIfNeededInBackground { (result, error) in
                 self.postObjects.append(post)
                 let postTitle = result?["title"] as! String
                 if let chattersWhoHaveUnreadMessages = object["hasUnreadMessages"] as? NSArray {
@@ -141,7 +141,7 @@ class ConversationsTableViewController: PFQueryTableViewController {
         }
 
         messagers.append(messager)
-        messager.fetchIfNeededInBackground { (result: PFObject?, error: NSError?) -> Void in
+        messager.fetchIfNeededInBackground { (result, error) in
             let messagerName = result?["name"] as! NSString
             (cell.viewWithTag(2) as! UILabel).text = messagerName as String
         }
@@ -174,7 +174,7 @@ class ConversationsTableViewController: PFQueryTableViewController {
             conversationVC.postDeletedMessage = "This post has been deleted"
         } else {
             roomQuery.whereKey("postId", equalTo: postObjects[(indexPath as NSIndexPath).row])
-            roomQuery.findObjectsInBackground(block: { (results: [PFObject]?, error: NSError?) -> Void in
+            roomQuery.findObjectsInBackground(block: { (results, error) in
                 if error == nil && results?.count > 0 {
                     room = results!.first as PFObject!
                     // Remove user from having unread notifications for this chat room

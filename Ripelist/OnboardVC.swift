@@ -95,7 +95,7 @@ class OnboardVC: UIViewController {
         
         if !emailText.validEmail() {
             animateActivityIndicator(false)
-            animateError(Error.invalidEmail.string)
+            animateError(CustomError.invalidEmail.string)
             return
         }
         
@@ -108,13 +108,13 @@ class OnboardVC: UIViewController {
             
             if !nameText.validName() {
                 animateActivityIndicator(false)
-                animateError(Error.invalidName.string)
+                animateError(CustomError.invalidName.string)
                 switchOnboardButton.isUserInteractionEnabled = true
                 resetPasswordButton.isUserInteractionEnabled = false
                 return
             } else if !passwordText.validPassword() {
                 animateActivityIndicator(false)
-                animateError(Error.passwordLength.string)
+                animateError(CustomError.passwordLength.string)
                 switchOnboardButton.isUserInteractionEnabled = true
                 resetPasswordButton.isUserInteractionEnabled = false
                 return
@@ -126,10 +126,10 @@ class OnboardVC: UIViewController {
             user.email = emailText
             user.password = passwordText
             
-            user.signUpInBackground { (success: Bool, error: NSError?) -> Void in
+            user.signUpInBackground { (success, error) in
                 if error != nil {
                     self.animateActivityIndicator(false)
-                    self.animateError(Error.networkError.string)
+                    self.animateError(CustomError.networkError.string)
                     return
                 } else {
                     
@@ -145,11 +145,11 @@ class OnboardVC: UIViewController {
             }
         case .login:
             
-            PFUser.logInWithUsername(inBackground: emailText, password: passwordText) { (user: PFUser?, error: NSError?) in
+            PFUser.logInWithUsername(inBackground: emailText, password: passwordText) { (user, error) in
                 
                 guard let user = user else {
                     self.animateActivityIndicator(false)
-                    self.animateError(Error.invalidCredentials.string)
+                    self.animateError(CustomError.invalidCredentials.string)
                     self.switchOnboardButton.isUserInteractionEnabled = true
                     self.resetPasswordButton.isUserInteractionEnabled = false
                     return
@@ -162,11 +162,11 @@ class OnboardVC: UIViewController {
             }
         case .reset:
             
-            PFUser.requestPasswordResetForEmail(inBackground: emailText, block: { (success: Bool, error: NSError?) -> Void in
+            PFUser.requestPasswordResetForEmail(inBackground: emailText, block: { (success, error) in
                 
                 if error != nil {
                     self.animateActivityIndicator(false)
-                    self.animateError(Error.generalError.string)
+                    self.animateError(CustomError.generalError.string)
                 } else {
                     
                     self.animateActivityIndicator(false)
@@ -286,14 +286,14 @@ class OnboardVC: UIViewController {
     }
     
     @IBAction func fbLoginButtonTapped(_ sender: AnyObject) {
-        PFFacebookUtils.logInInBackground(withReadPermissions: fbPermissions, block: { (user: PFUser?, error: NSError?) in
+        PFFacebookUtils.logInInBackground(withReadPermissions: fbPermissions, block: { (user, error) in
             
             guard let user = user else                      { return }
             if FBSDKAccessToken.current() == nil { return }
             
             FBSDKGraphRequest(graphPath: "me", parameters: self.fbParameters).start { (connection, result, error) in
                 
-                if error != nil                                                            { return }
+                if error != nil { return }
                 guard let firstName = result?["first_name"], let email = result?["email"] else { return }
                 
                 user["name"] = firstName

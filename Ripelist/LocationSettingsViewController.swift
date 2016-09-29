@@ -108,7 +108,7 @@ class LocationSettingsViewController: UIViewController,
     @IBAction func updateAddress(_ sender: AnyObject) {
         self.addressHasBeenUpdatedCheckmark.isHidden = true
         user?["streetAddress"] = savedAddressField.text
-        user?.saveInBackground { (success: Bool, error: NSError?) -> Void in
+        user?.saveInBackground { (success, error) in
             if success == true {
                 self.addressHasBeenUpdatedCheckmark.isHidden = false
             }
@@ -118,7 +118,7 @@ class LocationSettingsViewController: UIViewController,
     @IBAction func updateZipCode(_ sender: AnyObject) {
         self.zipCodeHasBeenUpdatedCheckmark.isHidden = true
         user?["zipCode"] = savedZipField.text
-        user?.saveInBackground { (success: Bool, error: NSError?) -> Void in
+        user?.saveInBackground { (success, error) in
             if success == true {
                 self.zipCodeHasBeenUpdatedCheckmark.isHidden = false
             }
@@ -129,7 +129,7 @@ class LocationSettingsViewController: UIViewController,
         user?.remove(forKey: "streetAddress")
         user?.remove(forKey: "zipCode")
         user?.saveInBackground {
-            (success: Bool, error: NSError?) -> Void in
+            (success, error) in
             if (success) {
                 self.savedAddressField.text = nil
                 self.savedZipField.text = nil

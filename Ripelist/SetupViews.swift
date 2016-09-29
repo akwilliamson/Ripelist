@@ -14,10 +14,10 @@ struct SetupViews {
         for object in objects {
             object?.layer.borderColor = UIColor.forestColor().cgColor
             object?.layer.borderWidth = 2
-            if (object?.isKind(of: UITextView))! {
+            
+            if object is UITextView {
                 object?.layer.borderWidth = 1
-            }
-            if (object?.isKind(of: UIButton))! {
+            } else if object is UIButton {
                 object?.layer.cornerRadius = 10
             }
         }

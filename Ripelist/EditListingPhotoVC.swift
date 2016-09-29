@@ -19,7 +19,7 @@ class EditListingPhotoViewController: UIViewController,
     var delegate: StoreListingEditsDelegate?
     var listingObject: PFObject!
     
-    var image = UIImage?()
+    var image = UIImage()
     var newMedia: Bool?
     
     @IBOutlet weak var listingImage: UIImageView!
@@ -64,15 +64,17 @@ class EditListingPhotoViewController: UIViewController,
             let croppedImage = UIImage(cgImage: imageRef!)
             listingImage.image = croppedImage
             addPhotoButton.setTitle("Change Photo", for: UIControlState())
-            self.image = listingImage.image
+            if let image = listingImage.image {
+                self.image = image
+            }
             if (newMedia == true) {
-                UIImageWriteToSavedPhotosAlbum(newImage!, self, #selector(EditListingPhotoViewController.image(_:didFinishSavingWithError:contextInfo:)), nil)
+                UIImageWriteToSavedPhotosAlbum(newImage!, self, #selector(image(_:didFinishSavingWithError:contextInfo:)), nil)
             }
         }
     }
     
     // Display error message if not saved
-    func image(_ image: UIImage, didFinishSavingWithError error: NSErrorPointer?, contextInfo:UnsafeRawPointer) {
+    func image(_ image: UIImage, didFinishSavingWithError error: Error?, contextInfo:UnsafeRawPointer) {
         if error != nil {
             let alert = UIAlertController.photoCouldNotBeSavedAlertController()
             self.present(alert, animated: true, completion: nil)
@@ -113,7 +115,7 @@ class EditListingPhotoViewController: UIViewController,
             }
         }
         
-        let cancel = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+        let cancel = UIAlertAction(title: "Cancel", style: .cancel,handler: nil)
         
         alert.addAction(takePhoto)
         alert.addAction(choosePhoto)
@@ -133,7 +135,7 @@ class EditListingPhotoViewController: UIViewController,
         let imageFile = PFFile(name:"image.png", data:imageData!)
         listingObject["image"] = imageFile
         
-        listingObject.saveInBackground { (success: Bool, error: NSError?) -> Void in
+        listingObject.saveInBackground { (success, error) in
             if success {
                 activityView.stopAnimating()
                 self.performSegue(withIdentifier: "UnwindToEditListing", sender: self)

@@ -51,7 +51,7 @@ extension UIAlertController {
             feedback["user"] = PFUser.current()
             feedback.saveInBackground()
         }
-        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel,handler: nil)
         controller.addAction(yesAction)
         controller.addAction(noAction)
         controller.addAction(cancelAction)

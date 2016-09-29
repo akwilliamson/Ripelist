@@ -113,7 +113,7 @@ class RequestDetailsViewController: UIViewController {
         
         let chatRoomQuery = self.createChatRoomQuery(forCurrentUser: currentUser)
         
-        chatRoomQuery.findObjectsInBackground(block: { (fetchedChatRoom: [PFObject]?, error: NSError?) -> Void in
+        chatRoomQuery.findObjectsInBackground(block: { (fetchedChatRoom, error) in
             if error != nil { print(error?.localizedDescription) } else {
                 if currentUser.objectId == self.localPost.postAuthor.objectId {
                     self.presentCannotMessageYourselfAlert()

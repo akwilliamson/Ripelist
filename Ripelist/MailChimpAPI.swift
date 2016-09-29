@@ -52,7 +52,8 @@ struct MailChimpAPI {
         urlRequest.setValue("Basic \(base64LoginString)", forHTTPHeaderField: "Authorization")
         
         let petitionerName = name != nil ? name! : "N/A"
-        let params = ["email_address": email as AnyObject, "status": "subscribed" as AnyObject, "merge_fields": ["CITY": city, "NAME": petitionerName]] as [String: AnyObject]
+        let params: [String: [String: AnyObject]]
+        params = ["email_address": (email as AnyObject) as! Dictionary<String, AnyObject>, "status": ("subscribed" as AnyObject) as! Dictionary<String, AnyObject>, "merge_fields": ["CITY": city as AnyObject, "NAME": petitionerName as AnyObject]]
         
         do { urlRequest.httpBody = try JSONSerialization.data(withJSONObject: params, options: [])
         } catch let error {

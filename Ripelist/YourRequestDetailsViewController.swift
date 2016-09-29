@@ -79,7 +79,7 @@ class YourRequestDetailsViewController: UIViewController,
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
         if PFUser.current() == nil {
-            self.performSegue(withIdentifier: "UnwindToPosts", sender: AnyObject?())
+            self.performSegue(withIdentifier: "UnwindToPosts", sender: self)
         } else {
             location = requestObject["location"] as! PFGeoPoint
             setUpMapView(location)
@@ -102,10 +102,10 @@ class YourRequestDetailsViewController: UIViewController,
     
     @IBAction func updateRequest(_ sender: AnyObject) {
         let alert = Alert(title: "Refresh Listing", message: "This will refresh your post and move it to the top of the listings feed. Would you like to refresh?")
-        alert.addAction("Yes", style: .Default) { action in
+        alert.addAction("Yes", style: .default) { action in
             self.requestObject["updatedAt"] = NSDate()
             self.requestObject.saveInBackground()
-            }.addAction("No", style: .Cancel, handler: nil).show()
+            }.addAction("No", style: .cancel,handler: nil).show()
     }
     
 // MARK: - Custom Methods

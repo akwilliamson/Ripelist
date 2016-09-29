@@ -12,8 +12,8 @@ import CoreLocation
 class LocationService: NSObject, CLLocationManagerDelegate {
     
     private static var __once: () = {
-            Static.instance = LocationService()
-        }()
+        Static.instance = LocationService()
+    }()
     
     class var sharedInstance: LocationService {
         struct Static {

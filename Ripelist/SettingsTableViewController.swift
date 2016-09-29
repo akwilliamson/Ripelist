@@ -125,7 +125,7 @@ class SettingsTableViewController: UITableViewController {
             presentLogin()
         } else if settingsCells[(indexPath as NSIndexPath).row] == "LogoutCell" {
             let alert = UIAlertController(title: "Logout", message: "Are you sure?", preferredStyle: .alert)
-            let cancelAction = UIAlertAction(title: "No", style: .cancel, handler: { action in
+            let cancelAction = UIAlertAction(title: "No", style: .cancel,handler: { action in
                 tableView.deselectRow(at: indexPath, animated: true)
             })
             let confirmAction = UIAlertAction(title: "Yes", style: .default, handler: { action in

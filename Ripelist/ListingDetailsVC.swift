@@ -217,7 +217,7 @@ class ListingDetailsViewController: UIViewController {
                 feedback["userProfile"] = false
                 feedback["user"] = PFUser.current()
                 feedback.saveInBackground()
-            }.addAction("Cancel", style: .cancel, handler: nil)
+            }.addAction("Cancel", style: .cancel,handler: nil)
         
         return alert
     }
@@ -226,12 +226,12 @@ class ListingDetailsViewController: UIViewController {
         activityIndicator = MBProgressHUD.showAdded(to: self.view, animated: true)
 
         let listingQuery = findPostFromListingsTable()
-        listingQuery.getFirstObjectInBackground { (listing: PFObject?, error: NSError?) -> Void in
+        listingQuery.getFirstObjectInBackground { (listing, error) in
             if let foundListing = listing {
                 let alert = Alert(title: "Remove Post", message: "Remove this post from your watchlist?")
                     .addAction("Yes", style: .default) { action in
                         self.removeListingFromWatchlist(foundListing)
-                    }.addAction("No", style: .cancel, handler: nil)
+                    }.addAction("No", style: .cancel,handler: nil)
                 alert.show()
             }
         }
@@ -251,7 +251,7 @@ class ListingDetailsViewController: UIViewController {
     
     func removeListingFromWatchlist(_ listing: PFObject) {
         let watchlistQuery = getRecordFromWatchlist(listing)
-        watchlistQuery.findObjectsInBackground(block: { (results: [PFObject]?, error: NSError?) -> Void in
+        watchlistQuery.findObjectsInBackground(block: { (results, error) in
             if let userRecord = results!.first as PFObject! {
                 userRecord.deleteInBackground()
                 self.navigationController?.popViewController(animated: true)
@@ -275,14 +275,14 @@ class ListingDetailsViewController: UIViewController {
         let activityIndicator = MBProgressHUD.showAdded(to: self.view, animated: true)
         
         let alert = UIAlertController(title: nil, message: nil, preferredStyle: .alert)
-        let dismissAction = UIAlertAction(title: "Dismiss", style: .cancel, handler: nil)
+        let dismissAction = UIAlertAction(title: "Dismiss", style: .cancel,handler: nil)
         alert.addAction(dismissAction)
         // Only try to access Parse record if user is logged in
         if PFUser.current() != nil {
             // Query to see if any Watchlist records exist for the current user
             let query = createWatchlistQuery()
             
-            query.findObjectsInBackground(block: { (results: [PFObject]?, error: NSError?) -> Void in
+            query.findObjectsInBackground(block: { (results, error) in
                 // If there are any records, then check them all and see if the selected post has already been added
                 if let watchlistItems = results {
                     if watchlistItems.count > 0 {
@@ -299,7 +299,7 @@ class ListingDetailsViewController: UIViewController {
                         let watchlistItem = PFObject(className: "Watchlist")
                         watchlistItem["user"] = PFUser.current()
                         watchlistItem["post"] = self.localPost.postObject
-                        watchlistItem.saveInBackground(block: { (success: Bool, error: NSError?) -> Void in
+                        watchlistItem.saveInBackground(block: { (success, error) in
                             if success {
                                 activityIndicator.hide(animated: true)
                                 self.showAlert(alert, title: "Post Added", message: "This post has been added to your watchlist under the user tab.")
@@ -331,7 +331,7 @@ class ListingDetailsViewController: UIViewController {
                                    currentUser, localPost.postAuthor, localPost.postObject, localPost.postAuthor, currentUser, localPost.postObject)
             let roomQuery = PFQuery(className: "Room", predicate: predicate)
             
-            roomQuery.findObjectsInBackground(block: { (fetchedChatRoom: [PFObject]?, error: NSError?) -> Void in
+            roomQuery.findObjectsInBackground(block: { (fetchedChatRoom, error) in
                 if error == nil {
                     if currentUser.objectId == self.localPost.postAuthor.objectId {
                         let cannotMessageYourselfAlert = UIAlertController.cannotMessageYourselfController()

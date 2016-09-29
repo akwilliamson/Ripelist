@@ -84,7 +84,7 @@ class ContactPostAuthorVC: JSQMessagesViewController {
             messageQuery.limit = 100
             messageQuery.order(byAscending: "createdAt")
             
-            messageQuery.findObjectsInBackground { (results: [PFObject]?, error: NSError?) -> Void in
+            messageQuery.findObjectsInBackground { (results, error) in
                 if error == nil {
                     guard let messages = results as [PFObject]? else { return }
                     
@@ -95,7 +95,7 @@ class ContactPostAuthorVC: JSQMessagesViewController {
                         self.users.append(user)
                         
                         let chatMessage = JSQMessage(senderId: user.objectId, senderDisplayName: user.username, date: message.createdAt, text: message["content"] as! String)
-                        self.messages.append(chatMessage)
+                        self.messages.append(chatMessage!)
                     }
                     
                     if results!.count != 0 {
@@ -122,7 +122,7 @@ class ContactPostAuthorVC: JSQMessagesViewController {
         message["room"] = chatRoom
         message["user"] = PFUser.current()
         
-        message.saveInBackground { (success:Bool, error:NSError?) -> Void in
+        message.saveInBackground { (success, error) in
             if error == nil {
                 self.loadMessages()
                 self.chatRoom["lastUpdate"] = Date()

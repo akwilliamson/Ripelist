@@ -66,7 +66,7 @@ open class LKAlertController {
      Add a new button to the controller.
      
      - parameter title:  Title of the button
-     - parameter style:  Style of the button (.Default, .Cancel, .Destructive)
+     - parameter style:  Style of the button (.default, .cancel,.Destructive)
      - parameter handler:  Closure to call when the button is pressed
      */
     open func addAction(_ title: String, style: UIAlertActionStyle, handler: actionHandler? = nil) -> LKAlertController {
@@ -80,7 +80,7 @@ open class LKAlertController {
     Add a new button to the controller.
     
     - parameter title:  Title of the button
-    - parameter style:  Style of the button (.Default, .Cancel, .Destructive)
+    - parameter style:  Style of the button (.default, .cancel,.Destructive)
     - parameter preferredAction: Whether or not this action is the default action when return is pressed on a hardware keyboard
     - parameter handler:  Closure to call when the button is pressed
     */
@@ -242,14 +242,14 @@ open class Alert: LKAlertController {
     - parameter title:  Title of the button
     */
     open func addAction(_ title: String) -> Alert {
-        return addAction(title, style: .cancel, preferredAction: false, handler: nil)
+        return addAction(title, style: .cancel,preferredAction: false, handler: nil)
     }
     
     /**
     Add a new button to the alert.
     
     - parameter title:  Title of the button
-    - parameter style:  Style of the button (.Default, .Cancel, .Destructive)
+    - parameter style:  Style of the button (.default, .cancel,.Destructive)
     - parameter handler:  Closure to call when the button is pressed
     */
     open override func addAction(_ title: String, style: UIAlertActionStyle, handler: actionHandler?) -> Alert {
@@ -260,7 +260,7 @@ open class Alert: LKAlertController {
      Add a new action to the alert as the preferredAction .
      
      - parameter title:  Title of the button
-     - parameter style:  Style of the button (.Default, .Cancel, .Destructive)
+     - parameter style:  Style of the button (.default, .cancel,.Destructive)
      - parameter handler:  Closure to call when the button is pressed
      - parameter preferredAction: The preferred action for the user to take from an alert.
      */
@@ -308,7 +308,7 @@ open class Alert: LKAlertController {
     
     ///Shortcut method for adding an Okay button and showing the alert
     open func showOkay() {
-        super.addAction("Okay", style: .cancel, preferredAction: false, handler: nil)
+        super.addAction("Okay", style: .cancel,preferredAction: false, handler: nil)
         show()
     }
 }
@@ -360,14 +360,14 @@ open class ActionSheet: LKAlertController {
     - parameter title:  Title of the button
     */
     open func addAction(_ title: String) -> ActionSheet {
-        return addAction(title, style: .cancel, handler: nil)
+        return addAction(title, style: .cancel,handler: nil)
     }
     
     /**
     Add a new button to the action sheet.
     
     - parameter title:  Title of the button
-    - parameter style:  Style of the button (.Default, .Cancel, .Destructive)
+    - parameter style:  Style of the button (.default, .cancel,.Destructive)
     - parameter handler:  Closure to call when the button is pressed
     */
     open override func addAction(_ title: String, style: UIAlertActionStyle, handler: actionHandler?) -> ActionSheet {

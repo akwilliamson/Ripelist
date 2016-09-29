@@ -49,18 +49,18 @@ class EditListingViewController: UIViewController {
             let listing = self.listingObject
             let chatRoomQuery = PFQuery(className: "Room")
             chatRoomQuery.whereKey("postId", equalTo: PFObject(withoutDataWithClassName: "Listing", objectId: listing?.objectId))
-            chatRoomQuery.findObjectsInBackground(block: { (chatRoomResults: [PFObject]?, error: NSError?) -> Void in
+            chatRoomQuery.findObjectsInBackground(block: { (chatRoomResults, error) in
                 if chatRoomResults!.count > 0 {
                     let chatRooms = chatRoomResults as [PFObject]!
-                    for chatRoom in chatRooms {
+                    for chatRoom in chatRooms! {
                         let listing = chatRoom["postId"] as! PFObject
                         
                         let messagesQuery = PFQuery(className: "Message")
                         messagesQuery.whereKey("room", equalTo: PFObject(withoutDataWithClassName: "Room", objectId: chatRoom.objectId))
-                        messagesQuery.findObjectsInBackground(block: { (results: [PFObject]?, error: NSError?) -> Void in
+                        messagesQuery.findObjectsInBackground(block: { (results, error) in
                             if results != nil {
                                 let messages = results as [PFObject]!
-                                for result in messages {
+                                for result in messages! {
                                     result.deleteInBackground(block: nil)
                                 }
                             }
@@ -70,12 +70,12 @@ class EditListingViewController: UIViewController {
                     }
                 } else {
                     let listing = self.listingObject
-                    listing.deleteInBackground(block: nil)
+                    listing?.deleteInBackground(block: nil)
                 }
             })
             self.performSegue(withIdentifier: "UnwindToPosts", sender: self)
         }
-        let noAction = UIAlertAction(title: "No", style: .cancel, handler: nil)
+        let noAction = UIAlertAction(title: "No", style: .cancel,handler: nil)
         alert.addAction(noAction)
         alert.addAction(yesAction)
         self.present(alert, animated: true, completion: nil)

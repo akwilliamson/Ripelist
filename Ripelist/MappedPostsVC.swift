@@ -52,7 +52,7 @@ class MappedPostsViewController: UIViewController {
     
     func queryLocations() {
         let locationQuery = PFQuery(className: "Listing").includeKey("owner")
-        locationQuery.findObjectsInBackground { (results: [PFObject]?, error: NSError?) -> Void in
+        locationQuery.findObjectsInBackground { (results, error) in
             guard let fetchedPosts = results else { return }
             for post in fetchedPosts {
                 let title = post["title"] as! String

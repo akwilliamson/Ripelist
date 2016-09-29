@@ -50,7 +50,7 @@ class ConversationViewController: JSQMessagesViewController {
             senderDisplayName = PFUser.current()!.username
             
             let selfUsername = PFUser.current()!.object(forKey: "name") as! NSString
-            incomingUser.fetchIfNeededInBackground { (result: PFObject?, error: NSError?) -> Void in
+            incomingUser.fetchIfNeededInBackground { (result, error) in
             let incomingUsername = result?.object(forKey: "name") as! NSString
                 
             self.incomingAvatar = JSQMessagesAvatarImageFactory.avatarImage(withUserInitials: incomingUsername.substring(with: NSMakeRange(0, 1)), backgroundColor: self.greenColor, textColor: UIColor.white, font: UIFont.systemFont(ofSize: 14), diameter: UInt(kJSQMessagesCollectionViewAvatarSizeDefault))
@@ -90,21 +90,24 @@ class ConversationViewController: JSQMessagesViewController {
             messageQuery.whereKey("createdAt", greaterThan: lastMessage!.date)
         }
         
-        messageQuery.findObjectsInBackground { (results: [PFObject]?, error: NSError?) -> Void in
+        messageQuery.findObjectsInBackground { (results, error) in
             if error == nil {
-                let messages = results as [PFObject]!
-                for message in messages {
-                    self.messageObjects.append(message)
+                if let messages = results as [PFObject]! {
+                    for message in messages {
+                        self.messageObjects.append(message)
+                        
+                        let user = message["user"] as! PFUser
+                        self.users.append(user)
+                        
+                        if let chatMessage = JSQMessage(senderId: user.objectId, senderDisplayName: user.username, date: message.createdAt, text: message["content"] as! String) {
+                            self.messages.append(chatMessage)
+                        }
+                    }
                     
-                    let user = message["user"] as! PFUser
-                    self.users.append(user)
-                    
-                    let chatMessage = JSQMessage(senderId: user.objectId, senderDisplayName: user.username, date: message.createdAt, text: message["content"] as! String)
-                    self.messages.append(chatMessage)
-                }
-                
-                if results!.count != 0 {
-                    self.finishReceivingMessage()
+                    if results!.count != 0 {
+                        self.finishReceivingMessage()
+                    }
+
                 }
             }
         }
@@ -117,7 +120,7 @@ class ConversationViewController: JSQMessagesViewController {
         message["room"] = room
         message["user"] = PFUser.current()
         
-        message.saveInBackground { (success:Bool, error:NSError?) -> Void in
+        message.saveInBackground { (success, error) in
             if error == nil {
                 self.loadMessages()
                 self.room["lastUpdate"] = Date()
@@ -141,7 +144,7 @@ class ConversationViewController: JSQMessagesViewController {
             "badge" : "Increment"
         ]
         push.setData(data)
-        push.sendInBackground { (success: Bool, error: NSError?) -> Void in
+        push.sendInBackground { (success, error) in
             if success {
                 print("success")
             } else {
